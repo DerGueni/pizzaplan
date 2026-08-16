@@ -1,0 +1,398 @@
+/* PizzaPlan · Grundgestaltung
+   Farben, Schrift und alle Bausteine, die PC-Fassung, Handy-Fassung und
+   Mitarbeiter-App gemeinsam benutzen. Hell und dunkel.
+*/
+
+:root{
+  --rot:#b5322a;
+  --rot-dunkel:#8e2118;
+  --rot-hell:#f6e5e2;
+  --gruen:#2e7d4f;
+  --gruen-hell:#e3f2e8;
+  --gelb:#c98a12;
+  --gelb-hell:#fdf3dc;
+  --blau:#1f6f9c;
+  --blau-hell:#e4f0f7;
+
+  --grund:#f5f2ee;
+  --flaeche:#ffffff;
+  --flaeche2:#faf8f5;
+  --linie:#ddd7cf;
+  --linie-stark:#c6bdb1;
+  --text:#221d1a;
+  --text-leise:#6a635c;
+  --schatten:0 1px 3px rgba(40,30,20,.10), 0 6px 18px rgba(40,30,20,.06);
+  --radius:12px;
+  --radius-klein:8px;
+  --schrift:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --grad:linear-gradient(135deg,#b5322a,#8a1f18);
+}
+
+:root[data-schema="dunkel"]{
+  --rot:#e0655a;
+  --rot-dunkel:#c04b41;
+  --rot-hell:#3a201d;
+  --gruen:#63bd86;
+  --gruen-hell:#1d3226;
+  --gelb:#e5b757;
+  --gelb-hell:#39301a;
+  --blau:#6fb6dd;
+  --blau-hell:#1a2c37;
+
+  --grund:#171514;
+  --flaeche:#211e1c;
+  --flaeche2:#2a2624;
+  --linie:#3b3633;
+  --linie-stark:#544d48;
+  --text:#f2ede8;
+  --text-leise:#a89f97;
+  --schatten:0 1px 3px rgba(0,0,0,.5), 0 6px 18px rgba(0,0,0,.35);
+  --grad:linear-gradient(135deg,#7c231c,#511510);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--schrift);
+  font-size:15.5px;
+  line-height:1.5;
+  color:var(--text);
+  background:var(--grund);
+}
+h1,h2,h3,h4{margin:0 0 10px;line-height:1.25}
+h1{font-size:22px}
+h2{font-size:18.5px}
+h3{font-size:16px}
+p{margin:0 0 10px}
+a{color:var(--blau)}
+small{font-size:12.5px}
+code{font-family:Consolas,"SF Mono",monospace;font-size:13px;background:var(--flaeche2);
+  padding:1px 5px;border-radius:5px;border:1px solid var(--linie)}
+
+/* ---------------------------------------------------------------- Kopfleiste */
+.kopf{
+  background:var(--grad);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 16px;
+  position:sticky;
+  top:0;
+  z-index:60;
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+  padding-top:calc(10px + env(safe-area-inset-top));
+}
+.kopf .zeichen{font-size:26px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+.kopf .name{font-weight:600;font-size:17.5px;line-height:1.15}
+.kopf .name small{display:block;font-weight:400;font-size:12px;opacity:.88}
+.kopf .rechts{margin-left:auto;display:flex;align-items:center;gap:8px}
+.kopf .uhr{font-variant-numeric:tabular-nums;font-size:14px;opacity:.95;white-space:nowrap}
+.kopf button{
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.32);
+  color:#fff;
+  font-size:13.5px;
+  padding:6px 11px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.kopf button:hover{background:rgba(255,255,255,.28)}
+.kopf button.rund{width:36px;height:36px;padding:0;border-radius:50%;font-size:16px}
+
+/* ---------------------------------------------------------------- Menüleiste */
+.menue{
+  display:flex;
+  gap:2px;
+  background:var(--flaeche);
+  border-bottom:1px solid var(--linie);
+  padding:0 10px;
+  overflow-x:auto;
+  position:sticky;
+  z-index:50;
+  scrollbar-width:thin;
+}
+.menue button{
+  border:0;
+  background:none;
+  padding:11px 14px;
+  font-family:inherit;
+  font-size:14.5px;
+  color:var(--text-leise);
+  border-bottom:3px solid transparent;
+  white-space:nowrap;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.menue button .zahl{
+  background:var(--rot);color:#fff;font-size:11px;font-weight:700;
+  min-width:19px;height:19px;border-radius:10px;display:inline-flex;
+  align-items:center;justify-content:center;padding:0 5px;
+}
+.menue button:hover{color:var(--text);background:var(--flaeche2)}
+.menue button.an{color:var(--rot);border-bottom-color:var(--rot);font-weight:600}
+
+/* ---------------------------------------------------------------- Seiten */
+.inhalt{padding:16px;max-width:1560px;margin:0 auto}
+.seite{display:none}
+.seite.an{display:block}
+
+/* ---------------------------------------------------------------- Karten */
+.karte{
+  background:var(--flaeche);
+  border:1px solid var(--linie);
+  border-radius:var(--radius);
+  padding:15px 16px;
+  margin-bottom:14px;
+  box-shadow:var(--schatten);
+}
+.karte > h2:first-child,.karte > h3:first-child{margin-top:0}
+.kacheln{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:16px}
+.kachel{
+  background:var(--flaeche);
+  border:1px solid var(--linie);
+  border-left:4px solid var(--blau);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  box-shadow:var(--schatten);
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.kachel:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(40,30,20,.14)}
+.kachel .wert{font-size:27px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums}
+.kachel .bez{font-size:12.5px;color:var(--text-leise);margin-top:3px}
+.kachel.gut{border-left-color:var(--gruen)}
+.kachel.warn{border-left-color:var(--gelb)}
+.kachel.rot{border-left-color:var(--rot)}
+.gitter{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+
+/* ---------------------------------------------------------------- Knöpfe */
+button,.knopf{
+  font-family:inherit;
+  font-size:14.5px;
+  padding:8px 14px;
+  border-radius:var(--radius-klein);
+  border:1px solid var(--linie-stark);
+  background:var(--flaeche);
+  color:var(--text);
+  cursor:pointer;
+  line-height:1.35;
+}
+button:hover,.knopf:hover{background:var(--flaeche2);border-color:var(--text-leise)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+a:focus-visible{outline:3px solid var(--blau);outline-offset:2px}
+button.haupt{background:var(--rot);border-color:var(--rot);color:#fff;font-weight:600}
+button.haupt:hover{background:var(--rot-dunkel);border-color:var(--rot-dunkel)}
+button.gruen{background:var(--gruen);border-color:var(--gruen);color:#fff;font-weight:600}
+button.gruen:hover{filter:brightness(1.08)}
+button.gefahr{color:var(--rot);border-color:var(--rot)}
+button.gefahr:hover{background:var(--rot-hell)}
+button.still{background:transparent;border-color:transparent;color:var(--text-leise);padding:5px 9px}
+button.still:hover{background:var(--flaeche2)}
+button.gross{padding:15px 20px;font-size:17px;width:100%;font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.gedrueckt{transform:scale(.96)}
+
+/* ---------------------------------------------------------------- Felder */
+input,select,textarea{
+  font-family:inherit;
+  font-size:14.5px;
+  padding:8px 10px;
+  border:1px solid var(--linie-stark);
+  border-radius:var(--radius-klein);
+  background:var(--flaeche);
+  color:var(--text);
+  width:100%;
+}
+input[type=checkbox],input[type=radio]{width:auto}
+textarea{min-height:80px;resize:vertical}
+label{display:block;font-size:12.5px;color:var(--text-leise);margin:0 0 4px}
+.feld{margin-bottom:11px}
+.feldreihe{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}
+.leiste{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-bottom:13px}
+.leiste .wachs{flex:1}
+.leiste .feld{margin-bottom:0}
+.haken{display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--text);margin:0 0 10px}
+.haken input{width:19px;height:19px;flex:0 0 auto;accent-color:var(--rot)}
+
+/* Schieberegler */
+.schieber{display:flex;align-items:center;gap:10px}
+.schieber input[type=range]{flex:1;accent-color:var(--rot);height:26px;padding:0;border:0;background:none}
+.schieber input[type=number]{width:82px;flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums}
+.schieber .einheit{font-size:13px;color:var(--text-leise);flex:0 0 auto;min-width:24px}
+
+/* Farbauswahl */
+.farbtopf{display:flex;flex-wrap:wrap;gap:7px}
+.farbtopf .farbe input{position:absolute;opacity:0;width:0;height:0}
+.farbtopf .farbe span{
+  display:block;width:28px;height:28px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;box-shadow:0 0 0 1px var(--linie);
+}
+.farbtopf .farbe input:checked + span{border-color:var(--text)}
+
+/* ---------------------------------------------------------------- Tabellen */
+.tabelle{overflow:auto;border:1px solid var(--linie);border-radius:var(--radius);background:var(--flaeche)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{border-bottom:1px solid var(--linie);padding:8px 10px;text-align:left;vertical-align:top}
+th{
+  background:var(--flaeche2);font-weight:600;font-size:13px;color:var(--text-leise);
+  position:sticky;top:0;z-index:2;white-space:nowrap;
+}
+tbody tr:hover{background:var(--flaeche2)}
+td.zahl,th.zahl{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{background:var(--flaeche2);font-weight:600}
+tr.aus td{opacity:.55}
+
+/* ---------------------------------------------------------------- Zeilen
+   Eine Zeile mit farbigem Streifen links – überall dort, wo eine Liste
+   keine Tabelle sein soll (Übersicht, Handy, Mitarbeiter-App). */
+.zeile{
+  background:var(--flaeche);
+  border:1px solid var(--linie);
+  border-left:5px solid var(--blau);
+  border-radius:var(--radius);
+  padding:10px 12px;
+  margin-bottom:8px;
+  box-shadow:var(--schatten);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:transform .1s;
+}
+.zeile .haupttext{flex:1;min-width:0}
+.zeile .haupttext b{display:block;font-size:15px;line-height:1.3}
+.zeile .haupttext span{display:block;font-size:13.5px;color:var(--text-leise);margin-top:2px}
+.zeile .rechts{flex:0 0 auto;text-align:right;font-size:13.5px;color:var(--text-leise)}
+.zeile.entwurf{border-left-style:dashed}
+.zeile.frei{border-left-color:var(--linie-stark);opacity:.8}
+.zeile .kreis{
+  width:42px;height:42px;border-radius:50%;color:#fff;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;
+}
+.abschnitt{
+  font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--text-leise);font-weight:600;margin:16px 0 8px;
+}
+
+/* ---------------------------------------------------------------- Etiketten */
+.etikett{
+  display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:20px;
+  background:var(--flaeche2);color:var(--text-leise);white-space:nowrap;
+  border:1px solid var(--linie);
+}
+.etikett.offen{background:var(--gelb-hell);color:var(--gelb);border-color:var(--gelb)}
+.etikett.genehmigt{background:var(--gruen-hell);color:var(--gruen);border-color:var(--gruen)}
+.etikett.abgelehnt{background:var(--rot-hell);color:var(--rot);border-color:var(--rot)}
+.etikett.laeuft{background:var(--blau-hell);color:var(--blau);border-color:var(--blau)}
+
+/* ---------------------------------------------------------------- Hinweise */
+.hinweis{
+  background:var(--blau-hell);border-left:4px solid var(--blau);
+  padding:11px 13px;border-radius:0 var(--radius-klein) var(--radius-klein) 0;
+  font-size:14px;margin-bottom:12px;
+}
+.hinweis.warn{background:var(--gelb-hell);border-left-color:var(--gelb)}
+.hinweis.gut{background:var(--gruen-hell);border-left-color:var(--gruen)}
+.hinweis.rot{background:var(--rot-hell);border-left-color:var(--rot)}
+.leer{text-align:center;color:var(--text-leise);padding:26px 12px;font-size:14.5px}
+
+/* Fortschrittsbalken */
+.balken{height:7px;background:var(--flaeche2);border-radius:4px;overflow:hidden;
+  border:1px solid var(--linie);margin-top:5px}
+.balken i{display:block;height:100%;background:var(--gruen);transition:width .3s ease}
+.balken.warn i{background:var(--gelb)}
+.balken.rot i{background:var(--rot)}
+td.zahl .balken{max-width:130px;margin-left:auto}
+
+/* ---------------------------------------------------------------- Meldungen */
+.melder{position:fixed;right:14px;bottom:14px;z-index:9000;display:flex;
+  flex-direction:column;gap:8px;max-width:min(390px,calc(100vw - 28px));
+  padding-bottom:env(safe-area-inset-bottom)}
+.meldung{
+  background:var(--flaeche);border:1px solid var(--linie);border-left:4px solid var(--blau);
+  border-radius:var(--radius-klein);padding:11px 14px;box-shadow:0 6px 22px rgba(0,0,0,.22);
+  font-size:14.5px;transition:opacity .3s;animation:rein .18s ease;
+}
+.meldung.fehler{border-left-color:var(--rot)}
+.meldung.warn{border-left-color:var(--gelb)}
+.meldung.gut{border-left-color:var(--gruen)}
+@keyframes rein{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+
+.rueckstreifen{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:9100;
+  background:var(--text);color:var(--grund);border-radius:24px;
+  padding:9px 10px 9px 18px;display:flex;align-items:center;gap:12px;
+  box-shadow:0 8px 26px rgba(0,0,0,.3);font-size:14px;transition:opacity .3s;
+  margin-bottom:env(safe-area-inset-bottom);max-width:calc(100vw - 24px);
+}
+.rueckstreifen button{
+  background:var(--grund);color:var(--text);border:0;border-radius:20px;
+  padding:6px 14px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;
+}
+
+/* ---------------------------------------------------------------- Fenster */
+.hintergrund{
+  position:fixed;inset:0;background:rgba(20,15,12,.58);z-index:8000;
+  display:flex;align-items:center;justify-content:center;padding:14px;
+  animation:einblenden .15s ease;
+}
+@keyframes einblenden{from{opacity:0}to{opacity:1}}
+.fenster{
+  background:var(--flaeche);border-radius:16px;width:100%;max-height:92vh;
+  display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.4);
+  animation:hoch .18s ease;
+}
+@keyframes hoch{from{transform:translateY(14px);opacity:.6}to{transform:none;opacity:1}}
+.fkopf{padding:14px 18px;border-bottom:1px solid var(--linie);display:flex;
+  align-items:center;gap:10px;flex:0 0 auto}
+.fkopf h2{margin:0;flex:1;font-size:17.5px}
+.frumpf{padding:16px 18px;overflow:auto;flex:1 1 auto}
+.ffuss{padding:12px 18px;border-top:1px solid var(--linie);display:flex;gap:8px;
+  justify-content:flex-end;flex-wrap:wrap;background:var(--flaeche2);flex:0 0 auto;
+  border-radius:0 0 16px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.ffuss .links{margin-right:auto}
+
+/* ---------------------------------------------------------------- Mikrofon */
+.mikro{
+  display:flex;align-items:center;gap:12px;background:var(--gelb-hell);
+  border:1px solid var(--gelb);border-radius:var(--radius);padding:12px;margin-bottom:14px;
+}
+.mikro button{
+  font-size:23px;width:54px;height:54px;border-radius:50%;padding:0;flex:0 0 auto;
+  background:var(--rot);color:#fff;border-color:var(--rot);
+}
+.mikro button.hoert{animation:puls 1.1s infinite}
+@keyframes puls{
+  0%{box-shadow:0 0 0 0 rgba(181,50,42,.55)}
+  70%{box-shadow:0 0 0 16px rgba(181,50,42,0)}
+  100%{box-shadow:0 0 0 0 rgba(181,50,42,0)}
+}
+.mikro .text{flex:1;font-size:14px}
+.mikro .text b{display:block;margin-bottom:2px}
+
+/* ---------------------------------------------------------------- Anmeldung */
+.anmeldung{max-width:430px;margin:7vh auto;padding:0 14px}
+.anmeldung .karte{padding:24px}
+.pinfeld{font-size:30px;letter-spacing:11px;text-align:center;padding:12px;
+  font-variant-numeric:tabular-nums}
+.zifferblock{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.zifferblock button{padding:17px 0;font-size:21px}
+
+/* ---------------------------------------------------------------- Drucken */
+@media print{
+  .kopf,.menue,.fussleiste,.melder,.rueckstreifen,.leiste,.mikro,
+  .nichtdrucken{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .karte{box-shadow:none;border:1px solid #999;page-break-inside:avoid;margin-bottom:8px}
+  .tabelle{border:0;overflow:visible}
+  th{background:#eee!important;color:#000!important}
+  a{color:#000;text-decoration:none}
+}
+
+/* ---------------------------------------------------------------- Ruhiger */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}

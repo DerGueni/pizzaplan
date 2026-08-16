@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PizzaPlan · Übersicht</title>
+<meta name="theme-color" content="#b5322a">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/basis.css?v=1">
+<style>
+  .band{background:var(--grad);color:#fff;padding:34px 22px 30px;
+    padding-top:calc(34px + env(safe-area-inset-top))}
+  .band .mitte{max-width:1000px;margin:0 auto}
+  .band .marke{font-size:12.5px;letter-spacing:1.4px;text-transform:uppercase;opacity:.85;
+    font-weight:600}
+  .band h1{font-size:clamp(24px,4.4vw,36px);margin:6px 0 8px}
+  .band p{font-size:16.5px;opacity:.94;max-width:640px;margin:0}
+  main{max-width:1000px;margin:0 auto;padding:24px 22px 70px}
+  .tuere{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;
+    margin-bottom:26px}
+  .tuere a{display:block;text-decoration:none;color:var(--text);background:var(--flaeche);
+    border:1px solid var(--linie);border-left:5px solid var(--rot);border-radius:var(--radius);
+    padding:17px 18px;box-shadow:var(--schatten);transition:transform .12s,box-shadow .12s}
+  .tuere a:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(40,30,20,.16)}
+  .tuere a .bild{font-size:27px;display:block;margin-bottom:6px}
+  .tuere a b{font-size:17.5px;display:block;margin-bottom:3px}
+  .tuere a span{font-size:14px;color:var(--text-leise);display:block;line-height:1.45}
+  .tuere a.zweit{border-left-color:var(--blau)}
+  .tuere a.dritt{border-left-color:var(--gruen)}
+  .tuere a.viert{border-left-color:var(--gelb)}
+  h2{font-size:20px;margin:28px 0 12px}
+  .liste{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px}
+  .punktkarte{background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
+    padding:14px 16px}
+  .punktkarte b{display:block;margin-bottom:4px;font-size:15.5px}
+  .punktkarte span{font-size:14px;color:var(--text-leise);line-height:1.5}
+  .fuss{border-top:1px solid var(--linie);margin-top:34px;padding-top:18px;font-size:13.5px;
+    color:var(--text-leise)}
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="mitte">
+    <div class="marke">Pizzeria Gabriels</div>
+    <h1>PizzaPlan – Personal und Dienstplan</h1>
+    <p>Neu aufgebaut: eine Fassung für den Rechner, eine eigene fürs iPhone und die App
+      für das Team. Alles ohne Anmeldung, ohne Installation, einfach über den Link.</p>
+  </div>
+</div>
+
+<main>
+
+  <div class="tuere">
+    <a href="pc.html">
+      <span class="bild">🖥️</span>
+      <b>PC-Fassung</b>
+      <span>Der ganze Wochenplan auf einen Blick, Schichten mit der Maus verschieben,
+        Auswertung und Versand. PIN beim ersten Start: 1234.</span>
+    </a>
+    <a href="handy.html" class="zweit">
+      <span class="bild">📱</span>
+      <b>Handy-Fassung</b>
+      <span>Dasselbe Werkzeug für unterwegs: ein Tag auf einmal, wischen, große Knöpfe,
+        alles mit dem Daumen erreichbar.</span>
+    </a>
+    <a href="team.html" class="dritt">
+      <span class="bild">👥</span>
+      <b>Mitarbeiter-App</b>
+      <span>Was die Mitarbeiter sehen: eigener Plan, Stempeluhr, Frei-Wünsche, eigene
+        Stunden – auf Deutsch oder Italienisch.</span>
+    </a>
+    <a href="Praesentation.html" class="viert">
+      <span class="bild">📊</span>
+      <b>Präsentation</b>
+      <span>Zehn Seiten: was das Werkzeug kann, wie der Import läuft und wie ein
+        Wochenablauf damit aussieht.</span>
+    </a>
+    <a href="Demo_Video.html" class="viert">
+      <span class="bild">🎬</span>
+      <b>Erklärvideo mit Ton</b>
+      <span>Rund fünf Minuten, umschaltbar zwischen Deutsch und Italienisch.</span>
+    </a>
+    <a href="Importvorlage_Mitarbeiter.csv" download>
+      <span class="bild">📄</span>
+      <b>Importvorlage</b>
+      <span>Die Tabelle zum Ausfüllen. Einmal befüllen, einlesen – und das ganze Team
+        steht im Programm.</span>
+    </a>
+  </div>
+
+  <h2>Was neu ist</h2>
+  <div class="liste">
+    <div class="punktkarte"><b>Zwei getrennte Apps</b><span>PC und iPhone sind nicht mehr
+      dieselbe Seite in schmal, sondern jeweils eigens gebaut – jede so, wie man sie dort
+      wirklich bedient.</span></div>
+    <div class="punktkarte"><b>Mitarbeiter einlesen</b><span>Vorhandene Listen aus Excel
+      werden erkannt, geprüft und übernommen. Spalten lassen sich zuordnen, jede Zeile ist
+      vorher zu sehen.</span></div>
+    <div class="punktkarte"><b>Deutsch und Italienisch</b><span>Ein Knopf oben rechts.
+      Jeder Mitarbeiter bekommt seine Nachrichten in seiner Sprache.</span></div>
+    <div class="punktkarte"><b>Rückgängig statt Sicherheitsfragen</b><span>Nach jeder
+      Änderung erscheint kurz ein Streifen. Ein Klick, und alles ist wieder wie vorher.</span></div>
+    <div class="punktkarte"><b>Schieberegler statt Tipparbeit</b><span>Pause, Stundenlohn,
+      Wochenstunden und Zuschläge stellt man mit dem Finger ein – die Zahl daneben geht
+      trotzdem.</span></div>
+    <div class="punktkarte"><b>Ziehen und Ablegen</b><span>Am PC lassen sich Schichten in
+      einen anderen Tag ziehen, und Vorlagen direkt aus der Seitenspalte ins Raster.</span></div>
+    <div class="punktkarte"><b>Es passt auf</b><span>Zu wenig Ruhezeit, doppelte Schicht,
+      Urlaub am selben Tag, mehr Stunden als vereinbart, Minijob-Grenze – es wird gesagt,
+      aber nichts verboten.</span></div>
+    <div class="punktkarte"><b>Sprechen statt tippen</b><span>„Teile Anna am 5.6. um 17 Uhr
+      ein“ – auch auf Italienisch. Vor dem Speichern wird gezeigt, was verstanden wurde.</span></div>
+    <div class="punktkarte"><b>Dunkle Fassung</b><span>Für den Abend im Lokal. Umschaltbar
+      oben rechts, die App merkt es sich.</span></div>
+  </div>
+
+  <h2>Gut zu wissen</h2>
+  <div class="liste">
+    <div class="punktkarte"><b>Nichts wird installiert</b><span>Alles läuft im Browser.
+      Auf dem iPhone „Zum Home-Bildschirm“ wählen, dann sieht es aus wie eine App.</span></div>
+    <div class="punktkarte"><b>Die Daten bleiben im Gerät</b><span>Es geht nichts ins Netz.
+      Über „Sicherungskopie“ lässt sich der Stand als Datei mitnehmen und woanders wieder
+      einspielen.</span></div>
+    <div class="punktkarte"><b>Zum Ausprobieren gefüllt</b><span>Ein kleines Beispielteam
+      mit Plan ist schon drin. Ein Knopf in den Einstellungen räumt es wieder weg.</span></div>
+  </div>
+
+  <div class="fuss">
+    PizzaPlan für die Pizzeria Gabriels · zusammengestellt von CONSEC Sicherheitsdienste ·
+    Stand August 2026
+  </div>
+</main>
+
+<script>
+  (function () {
+    try {
+      var s = localStorage.getItem('pp_schema');
+      if (s) document.documentElement.setAttribute('data-schema', s);
+    } catch (e) { /* egal */ }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+  })();
+</script>
+</body>
+</html>

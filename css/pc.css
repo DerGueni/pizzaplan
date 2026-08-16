@@ -1,0 +1,136 @@
+/* PizzaPlan · nur für die PC-Fassung
+   Breiter Wochenplan, Tabellen, Ziehen mit der Maus, Tastatur.
+*/
+
+.menue{top:56px}
+
+/* ---------------------------------------------------------------- Wochenplan */
+.planbereich{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:start}
+@media (max-width:1180px){.planbereich{grid-template-columns:1fr}}
+
+.vorlagenkasten{
+  background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
+  padding:13px;box-shadow:var(--schatten);position:sticky;top:104px;
+}
+.vorlagenkasten h3{font-size:14.5px;margin-bottom:4px}
+.vorlagenkasten .wozu{font-size:12.5px;color:var(--text-leise);margin-bottom:10px}
+.vorlagechip{
+  display:block;width:100%;text-align:left;color:#fff;border:0;border-radius:8px;
+  padding:8px 10px;margin-bottom:7px;cursor:grab;font-size:13.5px;line-height:1.3;
+}
+.vorlagechip:hover{filter:brightness(1.08);border:0}
+.vorlagechip small{display:block;opacity:.92;font-size:11.5px}
+.vorlagechip:active{cursor:grabbing}
+
+.plan{overflow:auto;border:1px solid var(--linie);border-radius:var(--radius);
+  background:var(--flaeche);box-shadow:var(--schatten);max-height:calc(100vh - 230px)}
+.plan table{min-width:1020px;font-size:14px}
+.plan th.tag{text-align:center;min-width:132px;line-height:1.25}
+.plan th.tag small{display:block;font-weight:400;color:var(--text-leise);font-size:11.5px}
+.plan th.tag.heute{background:var(--gelb-hell);color:var(--text)}
+.plan th.person,.plan td.person{
+  position:sticky;left:0;z-index:3;background:var(--flaeche2);min-width:186px;
+  border-right:1px solid var(--linie);
+}
+.plan th.person{z-index:4}
+.plan td.person{font-weight:600;white-space:nowrap;vertical-align:middle}
+.plan td.person .punkt{display:inline-block;width:11px;height:11px;border-radius:50%;
+  margin-right:7px;vertical-align:baseline}
+.plan td.person small{display:block;font-weight:400;color:var(--text-leise);font-size:11.5px;
+  padding-left:18px}
+.plan td.person .wochenzahl{float:right;font-weight:400;font-size:12.5px;color:var(--text-leise);
+  font-variant-numeric:tabular-nums}
+.plan td.zelle{min-width:132px;height:70px;cursor:pointer;padding:4px;vertical-align:top;
+  transition:background .1s}
+.plan td.zelle:hover{background:var(--blau-hell)}
+.plan td.zelle.ziel{background:var(--gruen-hell);outline:2px dashed var(--gruen);outline-offset:-3px}
+.plan td.zelle.frei{background:repeating-linear-gradient(45deg,
+  var(--gruen-hell),var(--gruen-hell) 7px,transparent 7px,transparent 14px)}
+.plan td.zelle.wunsch{background:repeating-linear-gradient(45deg,
+  var(--gelb-hell),var(--gelb-hell) 7px,transparent 7px,transparent 14px)}
+.plan td.zelle.heute{box-shadow:inset 0 0 0 2px var(--gelb)}
+.plan tfoot td{background:var(--flaeche2);font-weight:600;text-align:center;
+  font-variant-numeric:tabular-nums;font-size:13px}
+
+.schichtchip{
+  display:block;font-size:12.5px;line-height:1.28;border-radius:7px;padding:4px 6px;
+  margin-bottom:4px;color:#fff;overflow:hidden;cursor:grab;
+  box-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+.schichtchip:active{cursor:grabbing}
+.schichtchip small{display:block;opacity:.94;font-size:11px}
+.schichtchip.entwurf{outline:2px dashed rgba(255,255,255,.8);outline-offset:-3px}
+.schichtchip.gezogen{opacity:.35}
+.schichtchip .warnzeichen{float:right}
+
+/* Wochenband über dem Plan */
+.wochenband{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px}
+.wochenband .tagbox{
+  background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius-klein);
+  padding:8px 10px;font-size:12.5px;
+}
+.wochenband .tagbox.heute{border-color:var(--gelb);background:var(--gelb-hell)}
+.wochenband .tagbox b{display:block;font-size:13.5px}
+.wochenband .tagbox .zahlen{color:var(--text-leise);font-variant-numeric:tabular-nums}
+@media (max-width:900px){.wochenband{display:none}}
+
+/* ---------------------------------------------------------------- Team */
+.teamkarte{display:flex;align-items:center;gap:11px}
+.teamkarte .punkt{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;
+  align-items:center;justify-content:center;font-weight:600;font-size:14px;flex:0 0 auto}
+
+/* ---------------------------------------------------------------- Einlesen */
+.einlesefeld{
+  border:2px dashed var(--linie-stark);border-radius:var(--radius);padding:22px;
+  text-align:center;background:var(--flaeche2);transition:all .15s;
+}
+.einlesefeld.drueber{border-color:var(--gruen);background:var(--gruen-hell)}
+.einlesefeld textarea{min-height:130px;font-family:Consolas,monospace;font-size:13px;
+  text-align:left;margin-top:12px}
+.zuordnungsleiste{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.zuordnungsleiste .sp{
+  border:1px solid var(--linie);border-radius:var(--radius-klein);padding:7px 9px;
+  min-width:172px;background:var(--flaeche);flex:0 0 auto;
+}
+.zuordnungsleiste .sp b{display:block;font-size:12px;color:var(--text-leise);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+tr.zeile-neu td:first-child{border-left:4px solid var(--gruen)}
+tr.zeile-aktualisieren td:first-child{border-left:4px solid var(--blau)}
+tr.zeile-fehler td:first-child{border-left:4px solid var(--rot)}
+tr.zeile-fehler{opacity:.65}
+
+/* ---------------------------------------------------------------- Auswertung */
+.lohnzeile{cursor:pointer}
+.lohndetail td{background:var(--flaeche2);padding:0}
+.lohndetail table{margin:0;font-size:13px}
+.lohndetail th{background:var(--flaeche)}
+.lohndetail td.zahl,.lohndetail th.zahl{padding-right:26px}
+
+/* ---------------------------------------------------------------- Versand */
+.empfaengerliste{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:7px;
+  margin-bottom:13px}
+.empfaengerliste label{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--text);
+  background:var(--flaeche2);border:1px solid var(--linie);border-radius:var(--radius-klein);
+  padding:8px 11px;cursor:pointer;margin:0}
+.empfaengerliste label:hover{border-color:var(--linie-stark)}
+.empfaengerliste input{width:18px;height:18px;accent-color:var(--rot)}
+.empfaengerliste .fehlt{color:var(--rot);font-size:12px;margin-left:auto}
+pre.plantext{
+  white-space:pre-wrap;font-family:Consolas,"SF Mono",monospace;font-size:13px;
+  background:var(--flaeche2);border:1px solid var(--linie);border-radius:var(--radius-klein);
+  padding:13px;max-height:360px;overflow:auto;margin:0;
+}
+
+/* ---------------------------------------------------------------- Tastenhilfe */
+.tasten{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;font-size:14px;align-items:center}
+.tasten kbd{
+  background:var(--flaeche2);border:1px solid var(--linie-stark);border-bottom-width:2px;
+  border-radius:5px;padding:2px 8px;font-family:inherit;font-size:12.5px;white-space:nowrap;
+}
+
+/* ---------------------------------------------------------------- Schmaler */
+@media (max-width:820px){
+  .inhalt{padding:12px}
+  .kopf .name small{display:none}
+  .plan{max-height:none}
+}

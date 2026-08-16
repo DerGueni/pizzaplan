@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PizzaPlan · PC-Fassung</title>
+<meta name="theme-color" content="#b5322a">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/basis.css?v=1">
+<link rel="stylesheet" href="css/pc.css?v=1">
+</head>
+<body>
+
+<!-- ===================================================== Anmeldung ===== -->
+<div id="anmeldung" class="anmeldung" style="display:none">
+  <div class="karte" style="text-align:center">
+    <div style="font-size:48px">🍕</div>
+    <h1 id="anmeldung_betrieb">PizzaPlan</h1>
+    <p style="color:var(--text-leise);margin-top:-4px">Personal &amp; Dienstplan</p>
+    <div style="text-align:left;margin-top:16px">
+      <label data-t="chef_pin">Chef-PIN</label>
+      <input id="pin_feld" class="pinfeld" type="password" inputmode="numeric" maxlength="8"
+             autocomplete="off" placeholder="••••">
+    </div>
+    <button class="haupt gross" id="pin_knopf" style="margin-top:14px" data-t="anmelden">Anmelden</button>
+    <p id="pin_fehler" class="hinweis rot" style="display:none;margin-top:12px"></p>
+    <p style="font-size:12.5px;color:var(--text-leise);margin-top:18px">
+      Auf dem Handy geht es hier weiter:
+      <a href="handy.html">Handy-Fassung</a> ·
+      <a href="team.html">Mitarbeiter-App</a>
+    </p>
+  </div>
+</div>
+
+<!-- ==================================================== Anwendung ====== -->
+<div id="haupt" style="display:none">
+
+  <div class="kopf">
+    <div class="zeichen">🍕</div>
+    <div class="name">PizzaPlan<small id="kopf_betrieb">Personal &amp; Dienstplan</small></div>
+    <div class="rechts">
+      <span class="uhr" id="kopf_uhr"></span>
+      <button type="button" id="knopf_mikro" class="rund" title="Sprachbefehl">🎤</button>
+      <button type="button" id="knopf_sprache" title="Deutsch / Italiano">DE</button>
+      <button type="button" id="knopf_schema" class="rund" title="Hell / Dunkel">🌙</button>
+      <button type="button" id="knopf_hilfe" class="rund" data-t-titel="hilfe">?</button>
+      <button type="button" id="knopf_abmelden" data-t="abmelden">Abmelden</button>
+    </div>
+  </div>
+
+  <div class="menue" id="menue">
+    <button type="button" data-seite="uebersicht" class="an"><span data-t="uebersicht">Übersicht</span></button>
+    <button type="button" data-seite="plan"><span data-t="dienstplan">Dienstplan</span></button>
+    <button type="button" data-seite="wuensche"><span data-t="wuensche">Wünsche &amp; Abwesenheit</span><span class="zahl" id="zahl_wuensche" style="display:none"></span></button>
+    <button type="button" data-seite="zeiten"><span data-t="zeiten">Zeiterfassung</span><span class="zahl" id="zahl_zeiten" style="display:none"></span></button>
+    <button type="button" data-seite="team"><span data-t="team">Team</span></button>
+    <button type="button" data-seite="einlesen"><span data-t="einlesen">Mitarbeiter einlesen</span></button>
+    <button type="button" data-seite="auswertung"><span data-t="auswertung">Auswertung</span></button>
+    <button type="button" data-seite="termine"><span data-t="termine">Termine</span></button>
+    <button type="button" data-seite="versand"><span data-t="versand">Plan verschicken</span></button>
+    <button type="button" data-seite="einstellungen"><span data-t="einstellungen">Einstellungen</span></button>
+  </div>
+
+  <div class="inhalt">
+
+    <!-- ------------------------------------------------ Übersicht ----- -->
+    <div class="seite an" id="s_uebersicht">
+      <div class="kacheln" id="u_kacheln"></div>
+      <div class="gitter">
+        <div class="karte"><h2 data-t="heute_im_dienst">Heute im Dienst</h2><div id="u_heute"></div></div>
+        <div class="karte"><h2 data-t="gerade_gestempelt">Gerade eingestempelt</h2><div id="u_stempel"></div></div>
+        <div class="karte"><h2 data-t="naechste_termine">Nächste Termine</h2><div id="u_termine"></div></div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------ Dienstplan ---- -->
+    <div class="seite" id="s_plan">
+      <div class="leiste">
+        <button type="button" id="p_zurueck" data-t="woche_zurueck">‹ Woche</button>
+        <button type="button" id="p_heute" data-t="diese_woche">Diese Woche</button>
+        <button type="button" id="p_vor" data-t="woche_vor">Woche ›</button>
+        <div style="min-width:250px;font-weight:600;font-size:16px" id="p_titel"></div>
+        <div class="wachs"></div>
+        <button type="button" id="p_kopieren" data-t="vorwoche_uebernehmen">Vorwoche übernehmen</button>
+        <button type="button" id="p_neu" data-t="schicht_neu">+ Schicht</button>
+        <button type="button" class="gruen" id="p_freigeben" data-t="plan_freigeben">Plan freigeben</button>
+        <button type="button" id="p_drucken" data-t="drucken">Drucken</button>
+      </div>
+      <div class="wochenband" id="p_band"></div>
+      <div class="planbereich">
+        <div class="vorlagenkasten nichtdrucken">
+          <h3 data-t="vorlagen">Vorlagen</h3>
+          <div class="wozu" data-t="vorlage_ziehen">Vorlage in eine Zelle ziehen</div>
+          <div id="p_vorlagen"></div>
+          <button type="button" style="width:100%;margin-top:6px" id="p_vorlage_neu">+ Vorlage</button>
+          <hr style="border:0;border-top:1px solid var(--linie);margin:13px 0">
+          <button type="button" style="width:100%;margin-bottom:7px" id="p_leeren" data-t="woche_leeren">Woche leeren</button>
+          <button type="button" style="width:100%" id="p_sperren" data-t="plan_sperren">Freigabe zurücknehmen</button>
+        </div>
+        <div>
+          <div class="plan" id="p_raster"></div>
+          <p style="font-size:12.5px;color:var(--text-leise);margin-top:9px" data-t="plan_hinweis"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------ Wünsche ------- -->
+    <div class="seite" id="s_wuensche">
+      <div class="leiste">
+        <div class="feld" style="min-width:180px">
+          <label data-t="status">Status</label>
+          <select id="w_status">
+            <option value="offen">offen</option>
+            <option value="">alle</option>
+            <option value="genehmigt">genehmigt</option>
+            <option value="abgelehnt">abgelehnt</option>
+          </select>
+        </div>
+        <div class="wachs"></div>
+        <button type="button" class="haupt" id="w_neu" data-t="wunsch_neu">+ Eintrag für einen Mitarbeiter</button>
+      </div>
+      <div class="tabelle"><table id="w_tabelle"></table></div>
+    </div>
+
+    <!-- ------------------------------------------------ Zeiten -------- -->
+    <div class="seite" id="s_zeiten">
+      <div class="leiste">
+        <div class="feld"><label data-t="von">Von</label><input type="date" id="z_von"></div>
+        <div class="feld"><label data-t="bis">Bis</label><input type="date" id="z_bis"></div>
+        <div class="feld" style="min-width:200px"><label data-t="mitarbeiter">Mitarbeiter</label>
+          <select id="z_ma"></select></div>
+        <button type="button" id="z_anzeigen">Anzeigen</button>
+        <div class="wachs"></div>
+        <button type="button" id="z_freigeben" data-t="alle_freigeben">Alle prüfen und freigeben</button>
+        <button type="button" class="haupt" id="z_neu" data-t="zeit_neu">+ Zeit nachtragen</button>
+      </div>
+      <div class="tabelle"><table id="z_tabelle"></table></div>
+    </div>
+
+    <!-- ------------------------------------------------ Team ---------- -->
+    <div class="seite" id="s_team">
+      <div class="leiste">
+        <div class="feld" style="min-width:230px"><label data-t="suchen">Suchen</label>
+          <input id="t_suche" data-t-platz="suchen" autocomplete="off"></div>
+        <label class="haken" style="margin-bottom:0"><input type="checkbox" id="t_inaktive">
+          <span data-t="auch_inaktive">auch ausgeschiedene anzeigen</span></label>
+        <div class="wachs"></div>
+        <button type="button" id="t_einlesen" data-t="einlesen">Mitarbeiter einlesen</button>
+        <button type="button" class="haupt" id="t_neu" data-t="ma_neu">+ Mitarbeiter</button>
+      </div>
+      <div class="tabelle"><table id="t_tabelle"></table></div>
+      <div class="karte" style="margin-top:14px">
+        <h3>Mitarbeiter-App verteilen</h3>
+        <p style="font-size:14px">Jeder Mitarbeiter hat einen persönlichen Link. Wer ihn antippt,
+          ist sofort in seiner App – ohne Anmeldung – und kann sie mit
+          „Zum Startbildschirm hinzufügen“ wie eine richtige App aufs Handy legen.</p>
+        <p style="font-size:14px;color:var(--text-leise)">Allgemeine Adresse:
+          <b id="t_adresse"></b></p>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------ Einlesen ------ -->
+    <div class="seite" id="s_einlesen">
+      <div class="karte">
+        <h2 data-t="einlesen_titel">Vorhandene Mitarbeiterdaten einlesen</h2>
+        <p style="font-size:14.5px" data-t="einlesen_text"></p>
+        <div class="leiste">
+          <button type="button" class="haupt" id="e_datei" data-t="datei_waehlen">Datei auswählen</button>
+          <button type="button" id="e_vorlage" data-t="vorlage_holen">Importvorlage herunterladen</button>
+          <div class="wachs"></div>
+          <button type="button" id="e_beispiel">Beispieldaten des Herstellers einfügen</button>
+        </div>
+        <input type="file" id="e_dateifeld" accept=".csv,.txt,.tsv,text/csv,text/plain" style="display:none">
+        <div class="einlesefeld" id="e_zone">
+          <div style="font-size:34px">📋</div>
+          <div style="font-weight:600" data-t="einfuegen_hier">… oder Tabelle hier einfügen</div>
+          <div style="font-size:13px;color:var(--text-leise);margin-top:4px">
+            In Excel markieren, kopieren, hier hineinklicken und einfügen –
+            oder die Datei einfach in dieses Feld ziehen.</div>
+          <textarea id="e_text" spellcheck="false"></textarea>
+        </div>
+        <div class="leiste" style="margin-top:12px">
+          <button type="button" class="haupt" id="e_pruefen" data-t="pruefen">Prüfen</button>
+          <button type="button" id="e_leeren">Feld leeren</button>
+        </div>
+      </div>
+      <div id="e_ergebnis"></div>
+    </div>
+
+    <!-- ------------------------------------------------ Auswertung ---- -->
+    <div class="seite" id="s_auswertung">
+      <div class="leiste">
+        <div class="feld"><label data-t="monat">Monat</label><input type="month" id="a_monat"></div>
+        <button type="button" class="haupt" id="a_rechnen" data-t="berechnen">Berechnen</button>
+        <div class="wachs"></div>
+        <button type="button" id="a_csv" data-t="als_datei">Als Excel-Datei</button>
+        <button type="button" id="a_drucken" data-t="drucken">Drucken</button>
+      </div>
+      <div id="a_inhalt"></div>
+    </div>
+
+    <!-- ------------------------------------------------ Termine ------- -->
+    <div class="seite" id="s_termine">
+      <div class="mikro nichtdrucken">
+        <button type="button" id="tm_mikro">🎤</button>
+        <div class="text">
+          <b data-t="termin_sprechen">Termin einfach sprechen</b>
+          <span id="tm_status">Auf das Mikrofon tippen und zum Beispiel sagen:
+            „Morgen um 14 Uhr Termin beim Steuerberater, eine Stunde vorher erinnern.“</span>
+        </div>
+      </div>
+      <div class="leiste">
+        <div class="feld"><label data-t="von">Von</label><input type="date" id="tm_von"></div>
+        <div class="feld"><label data-t="bis">Bis</label><input type="date" id="tm_bis"></div>
+        <label class="haken" style="margin-bottom:0"><input type="checkbox" id="tm_offen" checked>
+          <span data-t="nur_offene">nur offene</span></label>
+        <button type="button" id="tm_anzeigen">Anzeigen</button>
+        <div class="wachs"></div>
+        <button type="button" class="haupt" id="tm_neu" data-t="termin_neu">+ Neuer Termin</button>
+      </div>
+      <div id="tm_liste"></div>
+    </div>
+
+    <!-- ------------------------------------------------ Versand ------- -->
+    <div class="seite" id="s_versand">
+      <div class="karte">
+        <h2 data-t="versand_titel">Dienstplan an das Team schicken</h2>
+        <div class="feldreihe">
+          <div class="feld"><label data-t="von">Von</label><input type="date" id="v_von"></div>
+          <div class="feld"><label data-t="bis">Bis</label><input type="date" id="v_bis"></div>
+          <div class="feld"><label data-t="weg">Weg</label>
+            <select id="v_weg">
+              <option value="whatsapp">WhatsApp</option>
+              <option value="email">E-Mail</option>
+            </select></div>
+        </div>
+        <div class="hinweis" id="v_hinweis"></div>
+        <label data-t="empfaenger">Wer bekommt seinen Plan?</label>
+        <div class="empfaengerliste" id="v_empfaenger"></div>
+        <div class="leiste">
+          <button type="button" id="v_alle">Alle</button>
+          <button type="button" id="v_keiner">Keinen</button>
+          <div class="wachs"></div>
+          <button type="button" id="v_vorschau" data-t="vorschau_ansehen">Vorschau ansehen</button>
+          <button type="button" class="haupt" id="v_start" data-t="jetzt_verschicken">Jetzt verschicken</button>
+        </div>
+        <div id="v_ergebnis"></div>
+      </div>
+      <div class="karte">
+        <h2 data-t="gesamtplan">Gesamtplan zum Aushängen</h2>
+        <p style="font-size:14px;color:var(--text-leise)">Der ganze Wochenplan als Text – für die
+          WhatsApp-Gruppe, für den Aushang oder zum Ausdrucken.</p>
+        <div class="leiste">
+          <button type="button" id="v_gesamt">Anzeigen</button>
+          <button type="button" id="v_kopieren" data-t="kopieren">In die Zwischenablage</button>
+        </div>
+        <pre class="plantext" id="v_gesamttext" style="display:none"></pre>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------ Einstellungen - -->
+    <div class="seite" id="s_einstellungen">
+      <div class="karte">
+        <h2>Betrieb</h2>
+        <div class="feldreihe">
+          <div class="feld"><label data-t="betrieb">Name des Betriebs</label><input id="ei_betrieb"></div>
+          <div class="feld"><label data-t="chef_pin">Chef-PIN</label><input id="ei_chef_pin" maxlength="8"></div>
+          <div class="feld"><label data-t="positionen">Positionen (mit Komma trennen)</label>
+            <input id="ei_positionen"></div>
+          <div class="feld"><label data-t="oeffnung">Öffnungszeit</label>
+            <div style="display:flex;gap:8px">
+              <input id="ei_oeffnung_von" type="time"><input id="ei_oeffnung_bis" type="time"></div></div>
+        </div>
+      </div>
+      <div class="karte">
+        <h2 data-t="arbeitszeit">Arbeitszeit und Lohn</h2>
+        <div class="feldreihe" id="ei_regler"></div>
+        <p style="font-size:12.5px;color:var(--text-leise)">Die Zuschläge sind eine Rechenhilfe für
+          die Monatsübersicht und ersetzen keine Lohnabrechnung.</p>
+      </div>
+      <div class="karte">
+        <h2 data-t="termine">Termine</h2>
+        <div class="feldreihe">
+          <div class="feld"><label data-t="kategorie">Kategorien (mit Komma trennen)</label>
+            <input id="ei_termin_kategorien"></div>
+          <div class="feld"><label>Erinnerung standardmäßig (Minuten vorher)</label>
+            <input id="ei_termin_erinnerung_standard" type="number" min="0" max="10080" step="5"></div>
+        </div>
+      </div>
+      <div class="karte">
+        <h2 data-t="nachrichtentext">Nachrichtentext</h2>
+        <label>Deutsch</label>
+        <textarea id="ei_versand_text" rows="7"></textarea>
+        <label style="margin-top:10px">Italiano</label>
+        <textarea id="ei_versand_text_it" rows="7"></textarea>
+        <p style="font-size:12.5px;color:var(--text-leise)">Platzhalter:
+          <code>{name}</code> <code>{zeitraum}</code> <code>{plan}</code>
+          <code>{link}</code> <code>{betrieb}</code></p>
+      </div>
+      <div class="karte">
+        <h2 data-t="vorlagen">Schicht-Vorlagen</h2>
+        <div class="tabelle"><table id="ei_vorlagen"></table></div>
+        <button type="button" style="margin-top:11px" id="ei_vorlage_neu">+ Vorlage</button>
+      </div>
+      <div class="karte">
+        <h2 data-t="daten">Daten</h2>
+        <div class="leiste">
+          <button type="button" id="ei_sicherung" data-t="sicherung">Sicherungskopie anlegen</button>
+          <button type="button" id="ei_wiederherstellen" data-t="sicherung_laden">Sicherung einspielen</button>
+          <button type="button" id="ei_beispiel_weg" data-t="beispiel_weg">Beispieldaten entfernen</button>
+          <div class="wachs"></div>
+          <button type="button" class="gefahr" id="ei_alles_weg">Alle Daten löschen</button>
+        </div>
+        <input type="file" id="ei_sicherungdatei" accept=".json,application/json" style="display:none">
+        <p style="font-size:12.5px;color:var(--text-leise)" id="ei_speicherort"></p>
+      </div>
+      <button type="button" class="haupt gross" id="ei_speichern" data-t="speichern">Speichern</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  window.__ppFehler = null;
+  window.addEventListener('error', function (e) {
+    if (!window.__ppFehler) {
+      window.__ppFehler = (e.message || 'unbekannt') + '  ['
+        + String(e.filename || '').split('/').pop() + ' Zeile ' + (e.lineno || 0) + ']';
+    }
+  }, true);
+</script>
+<script src="js/kern.js?v=1"></script>
+<script src="js/sprache.js?v=1"></script>
+<script src="js/oberflaeche.js?v=1"></script>
+<script src="js/masken.js?v=1"></script>
+<script src="js/pc.js?v=1"></script>
+<script>
+  if (typeof Kern === 'undefined' || typeof PC === 'undefined') {
+    document.body.innerHTML = '<div style="font-family:system-ui;padding:20px;max-width:640px">'
+      + '<h2>PizzaPlan konnte nicht starten</h2><p>Der Browser hat einen Teil abgewiesen:</p>'
+      + '<p style="background:#fdf1f0;border:1px solid #e5b7b2;border-radius:8px;padding:10px;'
+      + 'font-family:monospace;font-size:13px;word-break:break-word">'
+      + (window.__ppFehler || 'kein Grund gemeldet') + '</p></div>';
+  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+</script>
+</body>
+</html>

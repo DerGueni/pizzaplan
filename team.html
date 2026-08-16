@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mein Dienstplan</title>
+<meta name="theme-color" content="#b5322a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dienstplan">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/basis.css?v=1">
+<link rel="stylesheet" href="css/handy.css?v=1">
+</head>
+<body>
+
+<!-- ===================================================== Anmeldung ===== -->
+<div id="anmeldung" class="anmeldung" style="display:none">
+  <div class="karte">
+    <div style="text-align:center">
+      <div style="font-size:46px">🍕</div>
+      <h1 id="anmeldung_betrieb">Mein Dienstplan</h1>
+    </div>
+    <div id="an_schritt1">
+      <label data-t="wer_bist_du">Wer bist du?</label>
+      <div class="personenliste" id="an_leute"></div>
+    </div>
+    <div id="an_schritt2" style="display:none">
+      <div style="text-align:center;margin-bottom:10px">
+        <div class="kreis" id="an_kreis" style="width:56px;height:56px;border-radius:50%;
+          display:inline-flex;align-items:center;justify-content:center;color:#fff;
+          font-weight:600;font-size:20px"></div>
+        <h2 id="an_name" style="margin-top:8px"></h2>
+      </div>
+      <label data-t="deine_pin">Deine PIN</label>
+      <input id="an_pin" class="pinfeld" type="password" inputmode="numeric" maxlength="8"
+             autocomplete="off" placeholder="••••" readonly>
+      <div class="zifferblock" id="an_ziffern"></div>
+      <button class="haupt gross" id="an_los" style="margin-top:12px" data-t="anmelden">Anmelden</button>
+      <button class="gross" id="an_zurueck" style="margin-top:8px" data-t="zurueck">Zurück</button>
+      <p id="an_fehler" class="hinweis rot" style="display:none;margin-top:12px"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================== Anwendung ====== -->
+<div id="haupt" style="display:none">
+
+  <div class="kopf">
+    <div class="zeichen">🍕</div>
+    <div class="name" id="kopf_name">Dienstplan<small id="kopf_betrieb"></small></div>
+    <div class="rechts">
+      <button type="button" id="knopf_sprache">DE</button>
+      <button type="button" id="knopf_schema" class="rund">🌙</button>
+    </div>
+  </div>
+
+  <div class="inhalt">
+
+    <!-- ------------------------------------------------ Stempeln ----- -->
+    <div class="seite an" id="s_stempeln">
+      <div class="karte">
+        <div class="stempeluhr">
+          <div class="uhrzeit" id="st_uhr">--:--</div>
+          <div class="lage" id="st_lage">…</div>
+          <div id="st_lauf"></div>
+          <button type="button" class="grossknopf" id="st_knopf">–</button>
+        </div>
+      </div>
+      <div class="abschnitt" data-t="heute_erfasst">Heute erfasst</div>
+      <div id="st_heute"></div>
+      <div class="abschnitt" data-t="naechste_schicht">Deine nächste Schicht</div>
+      <div id="st_naechste"></div>
+    </div>
+
+    <!-- ------------------------------------------------ Mein Plan ---- -->
+    <div class="seite" id="s_plan">
+      <div class="streifen">
+        <button type="button" id="pl_zurueck">‹</button>
+        <button type="button" id="pl_heute" data-t="diese_woche">Diese Woche</button>
+        <button type="button" id="pl_vor">›</button>
+      </div>
+      <div id="pl_titel" style="font-weight:600;font-size:16px;margin:2px 0 10px"></div>
+      <div class="wischhinweis">← wischen für die nächste Woche →</div>
+      <div id="pl_liste"></div>
+      <div class="karte" style="margin-top:12px">
+        <h3 data-t="summe">Summe</h3>
+        <div id="pl_summe"></div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------ Wünsche ------ -->
+    <div class="seite" id="s_wuensche">
+      <button type="button" class="haupt gross" id="wu_neu" style="margin-bottom:14px"
+        data-t="wunsch_melden">+ Frei-Wunsch oder Abwesenheit melden</button>
+      <div id="wu_liste"></div>
+    </div>
+
+    <!-- ------------------------------------------------ Stunden ------ -->
+    <div class="seite" id="s_stunden">
+      <div class="feld"><label data-t="monat">Monat</label><input type="month" id="su_monat"></div>
+      <div id="su_inhalt"></div>
+    </div>
+
+    <!-- ------------------------------------------------ Ich ---------- -->
+    <div class="seite" id="s_ich">
+      <div class="karte">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="kreis" id="ic_kreis" style="width:52px;height:52px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;
+            font-size:19px"></div>
+          <div><h3 id="ic_name" style="margin:0"></h3>
+            <div id="ic_rolle" style="font-size:14px;color:var(--text-leise)"></div></div>
+        </div>
+        <div id="ic_daten" style="font-size:14px;margin-top:12px"></div>
+      </div>
+      <div class="karte">
+        <h3 data-t="sprache">Sprache</h3>
+        <div class="streifen" id="ic_sprache">
+          <button type="button" data-s="de">Deutsch</button>
+          <button type="button" data-s="it">Italiano</button>
+        </div>
+      </div>
+      <div class="karte">
+        <h3 data-t="pin_aendern">PIN ändern</h3>
+        <div class="feld"><label>Neue PIN (4–8 Ziffern)</label>
+          <input id="ic_pin" type="password" inputmode="numeric" maxlength="8"></div>
+        <button type="button" class="haupt gross" id="ic_pin_speichern" data-t="speichern">Speichern</button>
+      </div>
+      <div class="karte">
+        <h3 data-t="app_aufs_handy">App aufs Handy legen</h3>
+        <p style="font-size:14px">Im Browser-Menü auf <b>„Zum Home-Bildschirm“</b> tippen –
+          dann startet dein Dienstplan wie eine richtige App.</p>
+        <button type="button" class="gross" id="ic_install" style="display:none">Jetzt installieren</button>
+      </div>
+      <button type="button" class="gross" id="ic_abmelden" data-t="abmelden">Abmelden</button>
+    </div>
+
+  </div>
+
+  <div class="fussleiste" id="fussleiste">
+    <button type="button" data-seite="stempeln" class="an"><span class="bild">⏱</span>
+      <span data-t="stempeln">Stempeln</span></button>
+    <button type="button" data-seite="plan"><span class="bild">📅</span>
+      <span data-t="mein_plan">Mein Plan</span></button>
+    <button type="button" data-seite="wuensche"><span class="bild">✋</span>
+      <span data-t="wuensche_kurz">Wünsche</span></button>
+    <button type="button" data-seite="stunden"><span class="bild">📊</span>
+      <span data-t="stunden">Stunden</span></button>
+    <button type="button" data-seite="ich"><span class="bild">👤</span>
+      <span data-t="ich">Ich</span></button>
+  </div>
+</div>
+
+<script>
+  window.__ppFehler = null;
+  window.addEventListener('error', function (e) {
+    if (!window.__ppFehler) {
+      window.__ppFehler = (e.message || 'unbekannt') + '  ['
+        + String(e.filename || '').split('/').pop() + ' Zeile ' + (e.lineno || 0) + ']';
+    }
+  }, true);
+</script>
+<script src="js/kern.js?v=1"></script>
+<script src="js/sprache.js?v=1"></script>
+<script src="js/oberflaeche.js?v=1"></script>
+<script src="js/masken.js?v=1"></script>
+<script src="js/team.js?v=1"></script>
+<script>
+  if (typeof Kern === 'undefined' || typeof Team === 'undefined') {
+    document.body.innerHTML = '<div style="font-family:system-ui;padding:20px">'
+      + '<h2>Der Dienstplan konnte nicht starten</h2><p style="font-family:monospace;font-size:13px">'
+      + (window.__ppFehler || 'kein Grund gemeldet') + '</p></div>';
+  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+/* PizzaPlan · nur für die Handy-Fassung (iPhone)
+   Große Flächen für den Daumen, Fußleiste unten, Fenster fahren von unten herein.
+*/
+
+body{font-size:16px;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:contain}
+.inhalt{padding:13px;padding-bottom:calc(84px + env(safe-area-inset-bottom));max-width:720px}
+h1{font-size:20px}
+h2{font-size:17.5px}
+
+/* Kopf schlanker */
+.kopf{padding:9px 13px;padding-top:calc(9px + env(safe-area-inset-top))}
+.kopf .name{font-size:16.5px}
+.kopf .zeichen{font-size:23px}
+.kopf .uhr{display:none}
+
+/* ---------------------------------------------------------------- Fußleiste */
+.fussleiste{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  background:var(--flaeche);
+  border-top:1px solid var(--linie);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -2px 14px rgba(0,0,0,.08);
+}
+.fussleiste button{
+  flex:1;border:0;border-radius:0;background:none;padding:8px 2px 7px;
+  font-size:10.5px;color:var(--text-leise);
+  display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1.15;
+  min-height:56px;justify-content:center;
+}
+.fussleiste button .bild{font-size:21px;line-height:1}
+.fussleiste button.an{color:var(--rot);font-weight:600}
+.fussleiste button .punkt{
+  position:absolute;transform:translate(13px,-13px);width:8px;height:8px;
+  border-radius:50%;background:var(--rot);
+}
+.fussleiste button:hover{background:none}
+
+/* ---------------------------------------------------------------- Tagesband */
+.tagesband{
+  display:flex;gap:7px;overflow-x:auto;padding:3px 1px 9px;margin:0 -2px 4px;
+  scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+}
+.tagesband::-webkit-scrollbar{display:none}
+.tagesband button{
+  flex:0 0 auto;min-width:56px;padding:8px 5px;border-radius:12px;scroll-snap-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;
+  color:var(--text-leise);background:var(--flaeche);border:1px solid var(--linie);
+}
+.tagesband button b{font-size:18px;font-weight:600;color:var(--text);line-height:1.1}
+.tagesband button .pkt{width:5px;height:5px;border-radius:50%;background:var(--rot);
+  margin-top:1px}
+.tagesband button.an{background:var(--rot);border-color:var(--rot);color:#fff}
+.tagesband button.an b{color:#fff}
+.tagesband button.an .pkt{background:#fff}
+.tagesband button.heute{border-color:var(--gelb);border-width:2px}
+
+/* ---------------------------------------------------------------- Zeilen */
+.zeile{padding:12px 13px}
+.zeile:active{transform:scale(.985)}
+.zeile .haupttext b{font-size:16px}
+
+/* ---------------------------------------------------------------- Stempeluhr */
+.stempeluhr{text-align:center;padding:8px 0 4px}
+.stempeluhr .uhrzeit{font-size:52px;font-weight:250;line-height:1.05;
+  font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.stempeluhr .lage{font-size:14.5px;color:var(--text-leise);margin:4px 0 16px}
+.stempeluhr .grossknopf{
+  width:100%;padding:20px;font-size:19px;font-weight:600;border-radius:16px;
+  background:var(--gruen);border-color:var(--gruen);color:#fff;
+}
+.stempeluhr .grossknopf.stop{background:var(--rot);border-color:var(--rot)}
+.stempeluhr .laufband{
+  font-size:14px;color:var(--gruen);font-weight:600;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.stempeluhr .laufband .pulspunkt{
+  width:9px;height:9px;border-radius:50%;background:var(--gruen);animation:blink 1.6s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ---------------------------------------------------------------- Fenster von unten */
+@media (max-width:760px){
+  .hintergrund{align-items:flex-end;padding:0}
+  .fenster{
+    max-width:none!important;border-radius:20px 20px 0 0;max-height:93vh;
+    animation:hochfahren .22s ease;
+  }
+  @keyframes hochfahren{from{transform:translateY(100%)}to{transform:none}}
+  .fkopf{padding:15px 17px 13px;position:relative}
+  .fkopf::before{
+    content:"";position:absolute;top:6px;left:50%;transform:translateX(-50%);
+    width:40px;height:4px;border-radius:2px;background:var(--linie-stark);
+  }
+  .ffuss{border-radius:0}
+  .ffuss button{flex:1;min-width:120px;padding:13px 14px;font-size:15.5px}
+  .ffuss .links{flex:1 0 100%;margin-right:0;order:9}
+  input,select,textarea{font-size:16px;padding:11px 12px}   /* kein Zoom auf dem iPhone */
+  button{padding:10px 15px}
+}
+
+/* ---------------------------------------------------------------- Kacheln */
+.kacheln{grid-template-columns:repeat(2,1fr);gap:9px}
+.kachel{padding:11px 12px}
+.kachel .wert{font-size:24px}
+.kachel .bez{font-size:11.5px}
+
+/* ---------------------------------------------------------------- Sonstiges */
+.abschnitt:first-child{margin-top:2px}
+
+.schnellknoepfe{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
+.schnellknoepfe button{
+  padding:15px 11px;font-size:14.5px;border-radius:var(--radius);text-align:left;
+  display:flex;flex-direction:column;gap:4px;line-height:1.25;
+}
+.schnellknoepfe button .bild{font-size:21px}
+
+.streifen{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.streifen button{flex:0 0 auto;border-radius:20px;font-size:13.5px;padding:7px 14px}
+.streifen button.an{background:var(--rot);border-color:var(--rot);color:#fff;font-weight:600}
+
+.wischhinweis{font-size:12.5px;color:var(--text-leise);text-align:center;margin:2px 0 10px}
+
+.zifferblock button{padding:19px 0;font-size:23px;border-radius:12px}
+
+/* Liste der Personen zum Antippen (Anmeldung Mitarbeiter-App) */
+.personenliste{display:flex;flex-direction:column;gap:9px}
+.personenliste button{
+  display:flex;align-items:center;gap:12px;padding:13px;font-size:16.5px;text-align:left;
+  border-radius:var(--radius);
+}
+.personenliste .kreis{
+  width:40px;height:40px;border-radius:50%;color:#fff;display:flex;align-items:center;
+  justify-content:center;font-weight:600;font-size:15px;flex:0 0 auto;
+}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PizzaPlan · Erklärvideo</title>
+<meta name="theme-color" content="#b5322a">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+:root{
+  --grund:#1a1513;--flaeche:#241d1a;--flaeche2:#2f2622;--linie:#443831;
+  --ink:#f4ede7;--leise:#b6a89e;--gold:#d8a13a;--rot:#c4553f;--gruen:#5fa877;
+  --schrift:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--grund);color:var(--ink);font-family:var(--schrift);
+  font-size:16px;line-height:1.5}
+header{background:linear-gradient(135deg,#7c231c,#3d100c);border-bottom:3px solid var(--gold);
+  padding:18px 22px;padding-top:calc(18px + env(safe-area-inset-top))}
+header .mitte{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.marke{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold);font-weight:700}
+h1{font-size:clamp(19px,3vw,27px);margin:4px 0 3px}
+.unter{font-size:14.5px;color:#e6d8ce}
+.umschalt{margin-left:auto;display:flex;gap:0;border:1px solid rgba(255,255,255,.35);
+  border-radius:24px;overflow:hidden;background:rgba(0,0,0,.2)}
+.umschalt button{background:none;border:0;color:#fff;font-family:inherit;font-size:14.5px;
+  font-weight:600;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:7px}
+.umschalt button.an{background:var(--gold);color:#231a10}
+.umschalt button:hover:not(.an){background:rgba(255,255,255,.14)}
+
+main{max-width:1240px;margin:0 auto;padding:20px 22px 60px;
+  display:grid;grid-template-columns:1fr 318px;gap:18px;align-items:start}
+@media (max-width:960px){main{grid-template-columns:1fr}}
+
+.spieler{background:#000;border:1px solid var(--linie);border-radius:10px;overflow:hidden}
+video{width:100%;display:block;background:#000;aspect-ratio:16/9}
+.bahn{height:7px;background:var(--flaeche2);cursor:pointer;position:relative}
+.bahn i{display:block;height:100%;width:0;background:var(--gold)}
+.bahn b{position:absolute;top:0;width:2px;height:100%;background:rgba(255,255,255,.35)}
+.steuer{display:flex;gap:9px;align-items:center;padding:11px 12px;background:var(--flaeche);
+  flex-wrap:wrap}
+.steuer button{background:var(--flaeche2);border:1px solid var(--linie);border-radius:7px;
+  color:var(--ink);font-family:inherit;font-weight:600;font-size:14px;padding:9px 14px;cursor:pointer}
+.steuer button:hover{border-color:var(--gold)}
+.steuer button.pri{background:var(--gold);border-color:var(--gold);color:#231a10}
+.zeit{margin-left:auto;font-size:13.5px;color:var(--leise);font-variant-numeric:tabular-nums}
+
+aside{background:var(--flaeche);border:1px solid var(--linie);border-radius:10px;padding:13px}
+aside h2{font-size:14px;margin-bottom:9px;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--gold)}
+.kap{display:block;width:100%;text-align:left;background:none;border:0;
+  border-left:3px solid transparent;color:var(--ink);font-family:inherit;font-size:14.5px;
+  padding:7px 9px;cursor:pointer;border-radius:0 6px 6px 0}
+.kap:hover{background:var(--flaeche2)}
+.kap.an{border-left-color:var(--gold);background:var(--flaeche2)}
+.kap .t{font-weight:700;font-size:11.5px;color:var(--gold);margin-right:9px;
+  font-variant-numeric:tabular-nums}
+
+.hinweis{margin-top:14px;border-left:3px solid var(--gold);background:var(--flaeche);
+  padding:11px 13px;font-size:14.5px;border-radius:0 7px 7px 0;color:#e6dbd3}
+.links{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.links a{background:var(--flaeche2);border:1px solid var(--linie);border-radius:7px;
+  color:var(--gold);font-weight:600;font-size:13.5px;padding:9px 14px;text-decoration:none}
+.links a:hover{border-color:var(--gold)}
+.fehlt{padding:26px;background:var(--flaeche);display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mitte">
+    <div>
+      <div class="marke">Pizzeria Gabriels · PizzaPlan</div>
+      <h1 id="ueberschrift">Erklärvideo: das Werkzeug in fünf Minuten</h1>
+      <div class="unter" id="unterzeile">Mit gesprochener Erklärung. Eine Datei mit Bild und Ton –
+        auch zum Weitergeben.</div>
+    </div>
+    <div class="umschalt">
+      <button type="button" data-spr="de" class="an">🇩🇪 Deutsch</button>
+      <button type="button" data-spr="it">🇮🇹 Italiano</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div>
+    <div class="spieler">
+      <video id="v" controls playsinline preload="metadata" src="Demo_PizzaPlan_DE.mp4"></video>
+      <div class="bahn" id="bahn"><i id="fortschritt"></i></div>
+      <div class="steuer">
+        <button type="button" class="pri" id="ab">▶ Abspielen</button>
+        <button type="button" id="zur10">◀ 10 s</button>
+        <button type="button" id="vor10">10 s ▶</button>
+        <button type="button" id="anfang">An den Anfang</button>
+        <span class="zeit" id="zeit">0:00 / 4:41</span>
+      </div>
+    </div>
+    <div class="hinweis" id="tonhinweis">
+      Bild und Ton stecken in einer Datei. Der Umschalter oben rechts wechselt die Sprache und
+      springt dabei an dieselbe Stelle im Ablauf.
+    </div>
+    <div class="links">
+      <a href="start.html">Übersicht</a>
+      <a href="Praesentation.html">Präsentation</a>
+      <a href="pc.html">PC-Fassung öffnen</a>
+      <a href="handy.html">Handy-Fassung öffnen</a>
+      <a href="team.html">Mitarbeiter-App öffnen</a>
+      <a href="Importvorlage_Mitarbeiter.csv" download>Importvorlage</a>
+    </div>
+  </div>
+
+  <aside>
+    <h2 id="kaptitel">Kapitel</h2>
+    <div id="kapitel"></div>
+    <div class="hinweis" style="margin-top:12px" id="kaphinweis">
+      Ein Klick auf ein Kapitel springt an die Stelle.
+    </div>
+  </aside>
+</main>
+
+<script>
+var KAPITEL = {
+ "de": [
+  {"t":1.2,"n":"Worum es geht"},
+  {"t":23.38,"n":"Die Übersicht"},
+  {"t":42.56,"n":"Der Wochenplan"},
+  {"t":62.87,"n":"Eine Schicht anlegen"},
+  {"t":81.83,"n":"Vorlagen und Verschieben"},
+  {"t":97.15,"n":"Es passt auf"},
+  {"t":115.68,"n":"Mitarbeiter einlesen"},
+  {"t":134.55,"n":"Erst zeigen, dann übernehmen"},
+  {"t":155.17,"n":"Das Team"},
+  {"t":173.22,"n":"Wünsche und Zeiten"},
+  {"t":190.31,"n":"Die Auswertung"},
+  {"t":209.56,"n":"Der Plan geht raus"},
+  {"t":225.55,"n":"Die Fassung fürs Handy"},
+  {"t":242.33,"n":"Die App der Mitarbeiter"},
+  {"t":260.84,"n":"Zum Schluss"}
+ ],
+ "it": [
+  {"t":1.2,"n":"Di cosa si tratta"},
+  {"t":20.74,"n":"La panoramica"},
+  {"t":38.19,"n":"Il piano della settimana"},
+  {"t":55.31,"n":"Creare un turno"},
+  {"t":70.46,"n":"Modelli e spostamenti"},
+  {"t":83.56,"n":"Il programma sta attento"},
+  {"t":97.37,"n":"Importare i dipendenti"},
+  {"t":112.76,"n":"Prima si vede, poi si importa"},
+  {"t":130.76,"n":"La squadra"},
+  {"t":147.04,"n":"Richieste e ore"},
+  {"t":161.39,"n":"Il riepilogo"},
+  {"t":177.24,"n":"Il piano parte"},
+  {"t":191.86,"n":"La versione per il telefono"},
+  {"t":208.28,"n":"L'app dei dipendenti"},
+  {"t":224.02,"n":"Per finire"}
+ ]
+};
+
+var WORTE = {
+  de: {
+    ueberschrift: 'Erklärvideo: das Werkzeug in fünf Minuten',
+    unterzeile: 'Mit gesprochener Erklärung. Eine Datei mit Bild und Ton – auch zum Weitergeben.',
+    kapitel: 'Kapitel',
+    kaphinweis: 'Ein Klick auf ein Kapitel springt an die Stelle.',
+    tonhinweis: 'Bild und Ton stecken in einer Datei. Der Umschalter oben rechts wechselt die '
+      + 'Sprache und springt dabei an dieselbe Stelle im Ablauf.',
+    ab: '▶ Abspielen', pause: '❚❚ Pause', anfang: 'An den Anfang', datei: 'Demo_PizzaPlan_DE.mp4'
+  },
+  it: {
+    ueberschrift: 'Video di presentazione: lo strumento in cinque minuti',
+    unterzeile: 'Con spiegazione parlata. Un unico file con immagine e audio, anche da inoltrare.',
+    kapitel: 'Capitoli',
+    kaphinweis: 'Un clic su un capitolo salta al punto giusto.',
+    tonhinweis: 'Immagine e audio sono in un unico file. Il selettore in alto a destra cambia '
+      + 'lingua e salta allo stesso punto del racconto.',
+    ab: '▶ Riproduci', pause: '❚❚ Pausa', anfang: 'Torna all\'inizio', datei: 'Demo_PizzaPlan_IT.mp4'
+  }
+};
+
+var v = document.getElementById('v');
+var ab = document.getElementById('ab');
+var zeit = document.getElementById('zeit');
+var kasten = document.getElementById('kapitel');
+var bahn = document.getElementById('bahn');
+var fortschritt = document.getElementById('fortschritt');
+var sprache = 'de';
+var laeuft = false;
+
+function mmss(s) {
+  s = Math.max(0, Math.round(s || 0));
+  return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+}
+
+function kapitelJetzt() {
+  var t = v.currentTime || 0, akt = 0;
+  KAPITEL[sprache].forEach(function (k, i) { if (t >= k.t - 0.25) akt = i; });
+  return akt;
+}
+
+function kapitelZeichnen() {
+  kasten.innerHTML = '';
+  KAPITEL[sprache].forEach(function (k, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'kap';
+    b.innerHTML = '<span class="t">' + mmss(k.t) + '</span>';
+    b.appendChild(document.createTextNode(k.n));
+    b.onclick = function () { springe(k.t); };
+    kasten.appendChild(b);
+  });
+  marken();
+}
+
+function marken() {
+  var akt = kapitelJetzt();
+  [].slice.call(kasten.children).forEach(function (b, i) { b.classList.toggle('an', i === akt); });
+  var d = v.duration || 1;
+  fortschritt.style.width = Math.min(100, (v.currentTime / d) * 100) + '%';
+  zeit.textContent = mmss(v.currentTime) + ' / ' + mmss(d);
+}
+
+function starten() { v.play(); }
+function anhalten() { v.pause(); }
+function springe(t) { v.currentTime = t; marken(); if (!laeuft) starten(); }
+
+function spracheSetzen(neu) {
+  if (neu === sprache) return;
+  var kap = kapitelJetzt();
+  var lief = laeuft;
+  sprache = neu;
+  var w = WORTE[sprache];
+  document.documentElement.lang = sprache;
+  document.getElementById('ueberschrift').textContent = w.ueberschrift;
+  document.getElementById('unterzeile').textContent = w.unterzeile;
+  document.getElementById('kaptitel').textContent = w.kapitel;
+  document.getElementById('kaphinweis').textContent = w.kaphinweis;
+  document.getElementById('tonhinweis').textContent = w.tonhinweis;
+  document.getElementById('anfang').textContent = w.anfang;
+  document.querySelectorAll('.umschalt button').forEach(function (b) {
+    b.classList.toggle('an', b.getAttribute('data-spr') === sprache);
+  });
+  v.pause();
+  v.src = w.datei;
+  v.load();
+  var ziel = KAPITEL[sprache][kap] ? KAPITEL[sprache][kap].t : 0;
+  v.addEventListener('loadedmetadata', function einmal() {
+    v.removeEventListener('loadedmetadata', einmal);
+    v.currentTime = ziel;
+    kapitelZeichnen();
+    if (lief) v.play();
+  });
+  ab.textContent = lief ? w.pause : w.ab;
+}
+
+document.querySelectorAll('.umschalt button').forEach(function (b) {
+  b.onclick = function () { spracheSetzen(b.getAttribute('data-spr')); };
+});
+ab.onclick = function () { laeuft ? anhalten() : starten(); };
+document.getElementById('zur10').onclick = function () { springe(Math.max(0, v.currentTime - 10)); };
+document.getElementById('vor10').onclick = function () { springe(v.currentTime + 10); };
+document.getElementById('anfang').onclick = function () { springe(0); };
+bahn.onclick = function (e) {
+  var k = bahn.getBoundingClientRect();
+  springe(((e.clientX - k.left) / k.width) * (v.duration || 0));
+};
+v.addEventListener('timeupdate', marken);
+v.addEventListener('durationchange', marken);
+v.addEventListener('play', function () { laeuft = true; ab.textContent = WORTE[sprache].pause; });
+v.addEventListener('pause', function () { laeuft = false; ab.textContent = WORTE[sprache].ab; });
+v.addEventListener('ended', function () { laeuft = false; ab.textContent = WORTE[sprache].ab; });
+v.addEventListener('error', function () {
+  document.querySelector('.spieler').innerHTML = '<div class="fehlt" style="display:block">'
+    + 'Die Videodatei <b>' + WORTE[sprache].datei + '</b> liegt nicht neben dieser Seite.</div>';
+});
+document.addEventListener('keydown', function (e) {
+  if (e.target.tagName === 'BUTTON') return;
+  if (e.key === ' ') { e.preventDefault(); laeuft ? anhalten() : starten(); }
+  if (e.key === 'ArrowLeft') springe(Math.max(0, v.currentTime - 10));
+  if (e.key === 'ArrowRight') springe(v.currentTime + 10);
+});
+kapitelZeichnen();
+</script>
+</body>
+</html>

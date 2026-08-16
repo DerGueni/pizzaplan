@@ -1,0 +1,21 @@
+{
+  "name": "PizzaPlan · Personal und Dienstplan",
+  "short_name": "PizzaPlan",
+  "description": "Personalverwaltung und Dienstplan für die Pizzeria – am PC und auf dem Handy.",
+  "start_url": "start.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f2ee",
+  "theme_color": "#b5322a",
+  "lang": "de",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Mein Dienstplan", "url": "team.html" },
+    { "name": "Handy-Fassung", "url": "handy.html" },
+    { "name": "PC-Fassung", "url": "pc.html" }
+  ]
+}

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PizzaPlan · Präsentation</title>
+<meta name="theme-color" content="#b5322a">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+:root{
+  --grund:#f6f2ec;--flaeche:#fff;--linie:#e0d8cd;--linie2:#c9bdae;
+  --text:#241c18;--leise:#6d635b;--rot:#b5322a;--rot-dunkel:#8a1f18;
+  --gold:#c08a2a;--gruen:#2e7d4f;--blau:#1f6f9c;
+  --schrift:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--grund);color:var(--text);font-family:var(--schrift);
+  font-size:16.5px;line-height:1.6}
+img{max-width:100%;display:block}
+
+/* ---- Navigation oben ---- */
+.balken{position:sticky;top:0;z-index:50;background:rgba(246,242,236,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--linie)}
+.balken .mitte{max-width:1080px;margin:0 auto;padding:9px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.balken .logo{font-weight:700;color:var(--rot);font-size:15.5px;white-space:nowrap}
+.balken nav{display:flex;gap:2px;overflow-x:auto;margin-left:auto}
+.balken nav a{color:var(--leise);text-decoration:none;font-size:13.5px;padding:6px 10px;
+  border-radius:16px;white-space:nowrap}
+.balken nav a:hover{background:var(--flaeche);color:var(--text)}
+
+/* ---- Titelblatt ---- */
+.titelblatt{background:linear-gradient(135deg,#b5322a,#6d1610);color:#fff;
+  padding:56px 22px 50px;padding-top:calc(56px + env(safe-area-inset-top))}
+.titelblatt .mitte{max-width:1080px;margin:0 auto}
+.titelblatt .marke{font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  font-weight:700;opacity:.85}
+.titelblatt h1{font-size:clamp(28px,5.4vw,46px);line-height:1.1;margin:10px 0 14px}
+.titelblatt p{font-size:clamp(16px,2.2vw,19px);max-width:660px;opacity:.95}
+.titelblatt .marken{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.titelblatt .marken span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+  border-radius:20px;padding:6px 14px;font-size:14px}
+
+/* ---- Abschnitte ---- */
+section{max-width:1080px;margin:0 auto;padding:44px 22px}
+section + section{border-top:1px solid var(--linie)}
+.nummer{font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:var(--rot);
+  font-weight:700;margin-bottom:8px}
+h2{font-size:clamp(22px,3.4vw,30px);line-height:1.2;margin-bottom:12px}
+h3{font-size:18px;margin-bottom:7px}
+.fuehrung{font-size:clamp(16.5px,2vw,18.5px);color:var(--text);max-width:720px;margin-bottom:20px}
+.klein{font-size:14px;color:var(--leise)}
+
+.bild{border:1px solid var(--linie);border-radius:12px;overflow:hidden;
+  box-shadow:0 3px 10px rgba(60,40,20,.09),0 14px 40px rgba(60,40,20,.07);background:#fff}
+.bild.hoch{max-width:330px}
+.bildzeile{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.bildzeile .bild{flex:1 1 260px;max-width:330px}
+.unterschrift{font-size:13.5px;color:var(--leise);margin-top:8px}
+
+.punkte{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;
+  margin-top:22px}
+.punkt{background:var(--flaeche);border:1px solid var(--linie);border-left:4px solid var(--blau);
+  border-radius:10px;padding:14px 16px}
+.punkt b{display:block;margin-bottom:4px;font-size:16px}
+.punkt span{font-size:14.5px;color:var(--leise)}
+.punkt.rot{border-left-color:var(--rot)}
+.punkt.gruen{border-left-color:var(--gruen)}
+.punkt.gold{border-left-color:var(--gold)}
+
+.hervor{background:#fff8ea;border:1px solid #e8d3a4;border-left:5px solid var(--gold);
+  border-radius:0 12px 12px 0;padding:18px 20px;margin:22px 0}
+.hervor h3{margin-bottom:6px;color:#7a5510}
+
+.schritte{counter-reset:s;display:grid;gap:12px;margin-top:20px}
+.schritt{background:var(--flaeche);border:1px solid var(--linie);border-radius:10px;
+  padding:15px 18px 15px 62px;position:relative}
+.schritt::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:14px;
+  width:32px;height:32px;border-radius:50%;background:var(--rot);color:#fff;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.schritt b{display:block;margin-bottom:3px}
+.schritt span{font-size:14.5px;color:var(--leise)}
+
+.knoepfe{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.knoepfe a{background:var(--rot);color:#fff;text-decoration:none;font-weight:600;font-size:15px;
+  padding:12px 20px;border-radius:9px;border:1px solid var(--rot)}
+.knoepfe a:hover{background:var(--rot-dunkel)}
+.knoepfe a.zweit{background:var(--flaeche);color:var(--text);border-color:var(--linie2)}
+.knoepfe a.zweit:hover{background:#efe9e1}
+
+table{border-collapse:collapse;width:100%;background:var(--flaeche);font-size:15px;
+  border:1px solid var(--linie);border-radius:10px;overflow:hidden}
+th,td{border-bottom:1px solid var(--linie);padding:10px 13px;text-align:left;vertical-align:top}
+th{background:#efe9e1;font-size:13.5px;color:var(--leise)}
+tr:last-child td{border-bottom:0}
+code{font-family:Consolas,"SF Mono",monospace;font-size:13.5px;background:#efe9e1;
+  padding:1px 6px;border-radius:5px}
+
+footer{max-width:1080px;margin:0 auto;padding:26px 22px 60px;font-size:13.5px;color:var(--leise);
+  border-top:1px solid var(--linie)}
+
+@media print{
+  .balken{display:none}
+  body{background:#fff;font-size:11pt}
+  section{page-break-inside:avoid;padding:22px 0}
+  .bild{box-shadow:none}
+  .titelblatt{background:#b5322a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="balken">
+  <div class="mitte">
+    <div class="logo">🍕 PizzaPlan</div>
+    <nav>
+      <a href="#neu">Was neu ist</a>
+      <a href="#plan">Dienstplan</a>
+      <a href="#einlesen">Einlesen</a>
+      <a href="#team">Team</a>
+      <a href="#auswertung">Auswertung</a>
+      <a href="#handy">Handy</a>
+      <a href="#mitarbeiter">Mitarbeiter-App</a>
+      <a href="#anfangen">Anfangen</a>
+      <a href="Demo_Video.html">Video</a>
+    </nav>
+  </div>
+</div>
+
+<div class="titelblatt">
+  <div class="mitte">
+    <div class="marke">Pizzeria Gabriels</div>
+    <h1>PizzaPlan – Personal&nbsp;und Dienstplan,<br>neu gebaut</h1>
+    <p>Eine Fassung für den Rechner, eine eigene fürs Handy und die App für das Team.
+      Neu dabei: die vorhandenen Mitarbeiterdaten lassen sich in einem Zug einlesen.</p>
+    <div class="marken">
+      <span>3 Apps</span><span>Deutsch &amp; Italienisch</span><span>Import aus Excel</span>
+      <span>ohne Installation</span><span>hell und dunkel</span>
+    </div>
+  </div>
+</div>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="neu">
+  <div class="nummer">01 · Der Überblick</div>
+  <h2>Drei Apps statt einer Seite für alles</h2>
+  <p class="fuehrung">Bisher war es eine Oberfläche, die am Handy nur schmaler wurde. Jetzt ist
+    jede Fassung für ihr Gerät gebaut – und alle drei arbeiten mit denselben Daten.</p>
+
+  <div class="punkte">
+    <div class="punkt rot"><b>🖥️ PC-Fassung</b><span>Die ganze Woche auf einem Bild, Schichten
+      mit der Maus verschieben, Tabellen, Tastenkürzel, Drucken.</span></div>
+    <div class="punkt"><b>📱 Handy-Fassung</b><span>Ein Tag auf einmal, Tagesband oben,
+      fünf große Bereiche unten, wischen von Tag zu Tag.</span></div>
+    <div class="punkt gruen"><b>👥 Mitarbeiter-App</b><span>Stempeluhr, eigener Plan, eigene
+      Stunden, Frei-Wünsche – deutsch oder italienisch.</span></div>
+  </div>
+
+  <div class="bild" style="margin-top:24px"><img src="Bildschirmfotos/01_uebersicht.png"
+    alt="Übersicht der PC-Fassung"></div>
+  <div class="unterschrift">Die Startseite sagt in sechs Zahlen, was heute ansteht. Jede Kachel
+    ist ein Knopf.</div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="plan">
+  <div class="nummer">02 · Der Dienstplan</div>
+  <h2>Die Woche auf einem Bild</h2>
+  <p class="fuehrung">Links die Leute, oben die sieben Tage. Neben jedem Namen steht, wie viele
+    Stunden die Woche für ihn ergibt und wie viele vereinbart sind – wird es mehr, wird die Zahl rot.</p>
+
+  <div class="bild"><img src="Bildschirmfotos/02_dienstplan.png" alt="Wochenplan"></div>
+  <div class="unterschrift">Gestrichelte Schichten sind noch Entwurf – das Team sieht sie nicht.
+    Die farbigen Kärtchen links sind Vorlagen zum Hineinziehen.</div>
+
+  <div class="punkte">
+    <div class="punkt"><b>Klicken</b><span>Leere Zelle anklicken legt eine Schicht an –
+      für genau diese Person an genau diesem Tag.</span></div>
+    <div class="punkt"><b>Ziehen</b><span>Eine Schicht in einen anderen Tag oder zu einer
+      anderen Person ziehen. Vorlagen genauso.</span></div>
+    <div class="punkt"><b>Vorwoche übernehmen</b><span>Ein Knopf kopiert die ganze Woche davor –
+      als Entwurf, nichts geht dabei verloren.</span></div>
+    <div class="punkt gruen"><b>Freigeben</b><span>Erst nach der Freigabe sehen die Mitarbeiter
+      ihren Plan. Zurücknehmen geht auch.</span></div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section>
+  <div class="nummer">03 · Eingeben</div>
+  <h2>Schieben statt tippen</h2>
+  <p class="fuehrung">Pause, Stundenlohn, Wochenstunden, Urlaubstage und Zuschläge stellt man mit
+    dem Finger ein. Wer lieber tippt, tippt in das Feld daneben – beide bleiben gleich.
+    Unter den Zeiten steht sofort, was herauskommt.</p>
+
+  <div class="bildzeile">
+    <div style="flex:1 1 420px">
+      <div class="bild"><img src="Bildschirmfotos/03_schicht_anlegen.png" alt="Schicht anlegen"></div>
+      <div class="unterschrift">„Dauer: 5,50 Stunden“ steht da, bevor gespeichert wird – und ob
+        gesetzlich eine längere Pause fällig wäre.</div>
+    </div>
+  </div>
+
+  <div class="hervor">
+    <h3>⚠️ Das Programm passt mit auf</h3>
+    <p>Zwei Schichten am selben Tag, zu wenig Ruhezeit zur Vorschicht, genehmigter Urlaub am selben
+      Tag, mehr Stunden als vereinbart, Stundenlohn unter dem Mindestlohn, Minijob-Grenze fast
+      erreicht – all das wird gesagt. <b>Verboten wird nichts</b>: der Betrieb entscheidet, das
+      Programm erinnert nur.</p>
+  </div>
+
+  <div class="hervor" style="background:#eef6f1;border-color:#b7ddc6;border-left-color:#2e7d4f">
+    <h3 style="color:#1c5a37">↩ Rückgängig statt Sicherheitsfragen</h3>
+    <p>Nach jeder Änderung erscheint unten kurz ein Streifen mit <b>Rückgängig</b>. Statt vor jedem
+      Schritt zu fragen, lässt sich jeder Schritt zurücknehmen – auch das Löschen einer ganzen Woche.</p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="einlesen">
+  <div class="nummer">04 · Neu · Der schnelle Start</div>
+  <h2>Die vorhandenen Mitarbeiter einlesen</h2>
+  <p class="fuehrung">Der lästigste Teil beim Anfangen war bisher das Abtippen. Das entfällt.
+    Wer schon eine Liste hat – aus Excel, aus dem alten Programm, aus einer Mail – kopiert sie
+    einfach hinein oder wählt die Datei aus. Wer noch keine hat, füllt die mitgelieferte
+    Importvorlage aus.</p>
+
+  <div class="bild"><img src="Bildschirmfotos/05_einlesen_vorschau.png"
+    alt="Vorschau beim Einlesen"></div>
+  <div class="unterschrift">Erst die Vorschau, dann das Übernehmen: jede Zeile ist vorher zu sehen.</div>
+
+  <div class="punkte">
+    <div class="punkt gold"><b>Spalten werden erkannt</b><span>Ob „Name“, „Nome“, „Mitarbeiter“
+      oder „Dipendente“ – die Überschriften werden verstanden, deutsch wie italienisch. Passt etwas
+      nicht, stellt man die Spalte von Hand um.</span></div>
+    <div class="punkt gold"><b>Zahlen und Datum</b><span><code>14,20</code> und <code>14.20</code>,
+      <code>01.03.2024</code> und <code>2024-03-01</code> – alles wird richtig gelesen.
+      „teilzeit“, „Vollzeit“, „minijob“ werden zugeordnet.</span></div>
+    <div class="punkt gold"><b>Niemand wird doppelt</b><span>Wer schon im Team steht, wird erkannt
+      und nur ergänzt – auch wenn in der Liste <b>Vor- und Nachname vertauscht</b> sind.</span></div>
+    <div class="punkt gold"><b>Nichts geht verloren</b><span>Ergänzt werden nur die Felder, die in
+      der Liste gefüllt sind. Was schon eingetragen war, bleibt stehen.</span></div>
+    <div class="punkt gold"><b>Zeile für Zeile</b><span>Jede Zeile lässt sich einzeln abwählen.
+      Leere Zeilen und Zeilen ohne Namen werden übersprungen und angezeigt.</span></div>
+    <div class="punkt gold"><b>Und wenn's daneben ging</b><span>Ein Klick auf „Rückgängig“ –
+      und der ganze Import ist wieder weg.</span></div>
+  </div>
+
+  <div class="hervor">
+    <h3>📄 Die Importvorlage</h3>
+    <p>Die Datei <code>Importvorlage_Mitarbeiter.csv</code> liegt bei und lässt sich in der App
+      jederzeit herunterladen. Sie öffnet sich in Excel, hat elf Spalten und ist mit vier
+      Beispielzeilen gefüllt, damit man sieht, wie es gemeint ist.</p>
+    <table style="margin-top:12px">
+      <tr><th>Spalte</th><th>Beispiel</th><th>Pflicht?</th></tr>
+      <tr><td>Name</td><td>Rossi Anna</td><td>ja</td></tr>
+      <tr><td>Rolle</td><td>Service</td><td>nein</td></tr>
+      <tr><td>Vertrag</td><td>Teilzeit · Vollzeit · Minijob · Aushilfe · Azubi</td><td>nein</td></tr>
+      <tr><td>Telefon · E-Mail</td><td>0170 1234567 · anna@…</td><td>nein, aber nötig zum Verschicken</td></tr>
+      <tr><td>Stundenlohn · Wochenstunden · Urlaubstage</td><td>13,50 · 20 · 24</td><td>nein</td></tr>
+      <tr><td>Eintritt · Sprache · Notiz</td><td>01.03.2024 · it · Pizzaiolo</td><td>nein</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="team">
+  <div class="nummer">05 · Das Team</div>
+  <h2>Alles zu jeder Person an einer Stelle</h2>
+  <p class="fuehrung">Rolle, Vertrag, Telefon, E-Mail, Stundenlohn, vereinbarte Wochenstunden,
+    Urlaubstage, Farbe im Plan und die Sprache. Dazu für jeden ein persönlicher Link: wer den
+    antippt, ist ohne Anmeldung in seiner eigenen App.</p>
+
+  <div class="bild"><img src="Bildschirmfotos/06_team.png" alt="Team-Liste"></div>
+  <div class="unterschrift">Der Knopf „WhatsApp“ schickt dem Mitarbeiter seinen persönlichen Link
+    mit einem fertigen Text.</div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section>
+  <div class="nummer">06 · Wünsche und Zeiten</div>
+  <h2>Frei-Wünsche, Urlaub, Krankmeldung</h2>
+  <p class="fuehrung">Alles läuft an einer Stelle zusammen und wird mit einem Haken genehmigt oder
+    abgelehnt. Im Dienstplan sind diese Tage danach schraffiert – man sieht beim Planen sofort,
+    wer nicht kann.</p>
+
+  <div class="bild"><img src="Bildschirmfotos/04_wuensche.png" alt="Wünsche und Abwesenheit"></div>
+  <div class="unterschrift">Grün genehmigt, gelb offen, rot abgelehnt. Die Zahl im Menü zeigt,
+    wie viel noch offen ist.</div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="auswertung">
+  <div class="nummer">07 · Auswertung</div>
+  <h2>Am Monatsende steht alles beieinander</h2>
+  <p class="fuehrung">Gearbeitete Stunden gegen geplante, Sonntags- und Nachtstunden, Urlaubs- und
+    Krankheitstage und was das ungefähr kostet. Ein Klick auf eine Zeile zeigt die einzelnen Tage.</p>
+
+  <div class="bild"><img src="Bildschirmfotos/07_auswertung.png" alt="Auswertung"></div>
+  <div class="unterschrift">Bei Minijobs zeigt ein Balken, wie nah die Grenze schon ist – wird sie
+    überschritten, wird er rot. Alles lässt sich als Excel-Datei mitnehmen.</div>
+  <p class="klein" style="margin-top:14px">Die Übersicht ist eine Rechenhilfe für den Betrieb und
+    ersetzt keine Lohnabrechnung.</p>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section>
+  <div class="nummer">08 · Verschicken</div>
+  <h2>Jeder bekommt seinen eigenen Plan</h2>
+  <p class="fuehrung">Zeitraum wählen, WhatsApp oder E-Mail, Haken bei den Leuten – und für jeden
+    öffnet sich die fertige Nachricht mit seinen eigenen Schichten, der Summe und dem Link zu seiner
+    App. Wer Italienisch hinterlegt hat, bekommt den Text auf Italienisch.</p>
+
+  <div class="bild"><img src="Bildschirmfotos/08_versand.png" alt="Plan verschicken"></div>
+  <div class="unterschrift">Abgeschickt wird erst in WhatsApp beziehungsweise im Mailprogramm –
+    von allein passiert nichts.</div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="handy">
+  <div class="nummer">09 · Auf dem Handy</div>
+  <h2>Kein zusammengeschobener Bildschirm</h2>
+  <p class="fuehrung">Die Handy-Fassung ist eine eigene App: unten fünf große Bereiche, oben das
+    Tagesband, ein Tag auf einmal. Von Tag zu Tag wischt man nach links oder rechts. Fenster fahren
+    von unten herein, wie man es vom iPhone kennt.</p>
+
+  <div class="bildzeile">
+    <div><div class="bild hoch"><img src="Bildschirmfotos/10_handy_heute.png" alt="Handy: Heute"></div>
+      <div class="unterschrift">Heute: Zahlen, Schnellknöpfe, wer im Dienst ist</div></div>
+    <div><div class="bild hoch"><img src="Bildschirmfotos/11_handy_plan.png" alt="Handy: Dienstplan"></div>
+      <div class="unterschrift">Dienstplan: ein Tag, große Zeilen zum Antippen</div></div>
+    <div><div class="bild hoch"><img src="Bildschirmfotos/12_handy_einlesen.png" alt="Handy: Einlesen"></div>
+      <div class="unterschrift">Einlesen geht auch vom Handy aus</div></div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="mitarbeiter">
+  <div class="nummer">10 · Die App der Mitarbeiter</div>
+  <h2>Für das Team so einfach wie möglich</h2>
+  <p class="fuehrung">Namen antippen, PIN, fertig. Danach bleibt man angemeldet. Groß in der Mitte
+    die Stempeluhr, darunter die eigenen Schichten, die eigenen Stunden und ein Knopf, um frei zu
+    wünschen. Wer als Sprache Italienisch hinterlegt hat, sieht alles auf Italienisch.</p>
+
+  <div class="bildzeile">
+    <div><div class="bild hoch"><img src="Bildschirmfotos/14_team_stempeln.png" alt="Stempeluhr"></div>
+      <div class="unterschrift">Stempeluhr – hier auf Italienisch</div></div>
+    <div><div class="bild hoch"><img src="Bildschirmfotos/15_team_plan.png" alt="Mein Plan"></div>
+      <div class="unterschrift">Der eigene Plan, Woche für Woche</div></div>
+    <div><div class="bild hoch"><img src="Bildschirmfotos/16_team_stunden.png" alt="Meine Stunden"></div>
+      <div class="unterschrift">Die eigenen Stunden im Monat</div></div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section>
+  <div class="nummer">11 · Kleinigkeiten</div>
+  <h2>Was den Alltag leichter macht</h2>
+
+  <div class="punkte">
+    <div class="punkt"><b>🇩🇪 🇮🇹 Zwei Sprachen</b><span>Ein Knopf oben rechts schaltet die ganze
+      Oberfläche um. Jeder Mitarbeiter hat seine eigene Sprache.</span></div>
+    <div class="punkt"><b>🌙 Hell und dunkel</b><span>Für den Abend im Lokal. Die App merkt sich
+      die Wahl.</span></div>
+    <div class="punkt"><b>🎤 Sprechen statt tippen</b><span>„Teile Anna am 5.6. um 17 Uhr ein“,
+      „Marco hat morgen frei“, „Wer arbeitet am Samstag?“ – vor dem Speichern wird gezeigt, was
+      verstanden wurde.</span></div>
+    <div class="punkt"><b>⏰ Termine mit Erinnerung</b><span>Lieferant, Steuerberater, Wartung –
+      mit Wiederholung und einer Erinnerung, die sich melden kann.</span></div>
+    <div class="punkt"><b>🖨️ Drucken und Aushängen</b><span>Der Wochenplan als Ausdruck und der
+      Gesamtplan als Text für die WhatsApp-Gruppe oder den Aushang.</span></div>
+    <div class="punkt"><b>💾 Sicherungskopie</b><span>Ein Knopf legt den ganzen Stand als Datei ab
+      – und spielt ihn woanders wieder ein.</span></div>
+  </div>
+
+  <div class="bild" style="margin-top:24px"><img src="Bildschirmfotos/09_dunkel.png"
+    alt="Dunkle Fassung"></div>
+  <div class="unterschrift">Derselbe Plan in der dunklen Fassung.</div>
+</section>
+
+<!-- ------------------------------------------------------------------ -->
+<section id="anfangen">
+  <div class="nummer">12 · So fängt man an</div>
+  <h2>In einer Viertelstunde einsatzbereit</h2>
+
+  <div class="schritte">
+    <div class="schritt"><b>Link öffnen und Chef-PIN eingeben</b>
+      <span>Beim ersten Start ist die PIN <code>1234</code>. In den Einstellungen wird sie geändert.</span></div>
+    <div class="schritt"><b>Mitarbeiter einlesen</b>
+      <span>Die vorhandene Liste hineinkopieren oder die Importvorlage ausfüllen und auswählen.
+        Vorschau prüfen, übernehmen.</span></div>
+    <div class="schritt"><b>Beispieldaten entfernen</b>
+      <span>Ein Knopf in den Einstellungen räumt das mitgelieferte Beispielteam samt Beispielplan weg.</span></div>
+    <div class="schritt"><b>Betrieb einstellen</b>
+      <span>Name, Positionen, Pausenregeln, Zuschläge und die Minijob-Grenze – alles mit
+        Schiebereglern.</span></div>
+    <div class="schritt"><b>Erste Woche planen und freigeben</b>
+      <span>Vorlagen ziehen, freigeben, verschicken. Jeder bekommt seinen Link zur Mitarbeiter-App.</span></div>
+  </div>
+
+  <div class="knoepfe">
+    <a href="pc.html">PC-Fassung öffnen</a>
+    <a href="handy.html" class="zweit">Handy-Fassung öffnen</a>
+    <a href="team.html" class="zweit">Mitarbeiter-App öffnen</a>
+    <a href="Demo_Video.html" class="zweit">Erklärvideo ansehen</a>
+    <a href="Importvorlage_Mitarbeiter.csv" class="zweit" download>Importvorlage herunterladen</a>
+  </div>
+</section>
+
+<footer>
+  <p><b>Gut zu wissen:</b> Alles läuft im Browser, es wird nichts installiert. Die Daten liegen im
+    jeweiligen Gerät und gehen nicht ins Netz. Über „Sicherungskopie“ lässt sich der Stand als Datei
+    mitnehmen und auf einem anderen Gerät wieder einspielen. Auf dem iPhone „Zum Home-Bildschirm“
+    wählen, dann startet PizzaPlan wie eine normale App.</p>
+  <p style="margin-top:12px">PizzaPlan für die Pizzeria Gabriels · zusammengestellt von
+    CONSEC Sicherheitsdienste · Stand August 2026</p>
+</footer>
+
+</body>
+</html>
