@@ -8,8 +8,8 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=1">
-<link rel="stylesheet" href="css/pc.css?v=1">
+<link rel="stylesheet" href="css/basis.css?v=2">
+<link rel="stylesheet" href="css/pc.css?v=2">
 </head>
 <body>
 
@@ -94,7 +94,7 @@
           <h3 data-t="vorlagen">Vorlagen</h3>
           <div class="wozu" data-t="vorlage_ziehen">Vorlage in eine Zelle ziehen</div>
           <div id="p_vorlagen"></div>
-          <button type="button" style="width:100%;margin-top:6px" id="p_vorlage_neu">+ Vorlage</button>
+          <button type="button" style="width:100%;margin-top:6px" id="p_vorlage_neu" data-t="vorlage_neu">+ Vorlage</button>
           <hr style="border:0;border-top:1px solid var(--linie);margin:13px 0">
           <button type="button" style="width:100%;margin-bottom:7px" id="p_leeren" data-t="woche_leeren">Woche leeren</button>
           <button type="button" style="width:100%" id="p_sperren" data-t="plan_sperren">Freigabe zurücknehmen</button>
@@ -112,10 +112,10 @@
         <div class="feld" style="min-width:180px">
           <label data-t="status">Status</label>
           <select id="w_status">
-            <option value="offen">offen</option>
-            <option value="">alle</option>
-            <option value="genehmigt">genehmigt</option>
-            <option value="abgelehnt">abgelehnt</option>
+            <option value="offen" data-t="offen">offen</option>
+            <option value="" data-t="alle">alle</option>
+            <option value="genehmigt" data-t="genehmigt">genehmigt</option>
+            <option value="abgelehnt" data-t="abgelehnt">abgelehnt</option>
           </select>
         </div>
         <div class="wachs"></div>
@@ -131,7 +131,7 @@
         <div class="feld"><label data-t="bis">Bis</label><input type="date" id="z_bis"></div>
         <div class="feld" style="min-width:200px"><label data-t="mitarbeiter">Mitarbeiter</label>
           <select id="z_ma"></select></div>
-        <button type="button" id="z_anzeigen">Anzeigen</button>
+        <button type="button" id="z_anzeigen" data-t="anzeigen">Anzeigen</button>
         <div class="wachs"></div>
         <button type="button" id="z_freigeben" data-t="alle_freigeben">Alle prüfen und freigeben</button>
         <button type="button" class="haupt" id="z_neu" data-t="zeit_neu">+ Zeit nachtragen</button>
@@ -152,11 +152,9 @@
       </div>
       <div class="tabelle"><table id="t_tabelle"></table></div>
       <div class="karte" style="margin-top:14px">
-        <h3>Mitarbeiter-App verteilen</h3>
-        <p style="font-size:14px">Jeder Mitarbeiter hat einen persönlichen Link. Wer ihn antippt,
-          ist sofort in seiner App – ohne Anmeldung – und kann sie mit
-          „Zum Startbildschirm hinzufügen“ wie eine richtige App aufs Handy legen.</p>
-        <p style="font-size:14px;color:var(--text-leise)">Allgemeine Adresse:
+        <h3 data-t="app_verteilen">Mitarbeiter-App verteilen</h3>
+        <p style="font-size:14px" data-t="app_verteilen_text"></p>
+        <p style="font-size:14px;color:var(--text-leise)"><span data-t="allgemeine_adresse"></span>:
           <b id="t_adresse"></b></p>
       </div>
     </div>
@@ -170,20 +168,18 @@
           <button type="button" class="haupt" id="e_datei" data-t="datei_waehlen">Datei auswählen</button>
           <button type="button" id="e_vorlage" data-t="vorlage_holen">Importvorlage herunterladen</button>
           <div class="wachs"></div>
-          <button type="button" id="e_beispiel">Beispieldaten des Herstellers einfügen</button>
+          <button type="button" id="e_beispiel" data-t="beispiel_einfuegen">Beispieldaten des Herstellers einfügen</button>
         </div>
         <input type="file" id="e_dateifeld" accept=".csv,.txt,.tsv,text/csv,text/plain" style="display:none">
         <div class="einlesefeld" id="e_zone">
           <div style="font-size:34px">📋</div>
           <div style="font-weight:600" data-t="einfuegen_hier">… oder Tabelle hier einfügen</div>
-          <div style="font-size:13px;color:var(--text-leise);margin-top:4px">
-            In Excel markieren, kopieren, hier hineinklicken und einfügen –
-            oder die Datei einfach in dieses Feld ziehen.</div>
+          <div style="font-size:13px;color:var(--text-leise);margin-top:4px" data-t="einfuegen_wie"></div>
           <textarea id="e_text" spellcheck="false"></textarea>
         </div>
         <div class="leiste" style="margin-top:12px">
           <button type="button" class="haupt" id="e_pruefen" data-t="pruefen">Prüfen</button>
-          <button type="button" id="e_leeren">Feld leeren</button>
+          <button type="button" id="e_leeren" data-t="feld_leeren">Feld leeren</button>
         </div>
       </div>
       <div id="e_ergebnis"></div>
@@ -216,7 +212,7 @@
         <div class="feld"><label data-t="bis">Bis</label><input type="date" id="tm_bis"></div>
         <label class="haken" style="margin-bottom:0"><input type="checkbox" id="tm_offen" checked>
           <span data-t="nur_offene">nur offene</span></label>
-        <button type="button" id="tm_anzeigen">Anzeigen</button>
+        <button type="button" id="tm_anzeigen" data-t="anzeigen">Anzeigen</button>
         <div class="wachs"></div>
         <button type="button" class="haupt" id="tm_neu" data-t="termin_neu">+ Neuer Termin</button>
       </div>
@@ -240,8 +236,8 @@
         <label data-t="empfaenger">Wer bekommt seinen Plan?</label>
         <div class="empfaengerliste" id="v_empfaenger"></div>
         <div class="leiste">
-          <button type="button" id="v_alle">Alle</button>
-          <button type="button" id="v_keiner">Keinen</button>
+          <button type="button" id="v_alle" data-t="alle">Alle</button>
+          <button type="button" id="v_keiner" data-t="keiner">Keinen</button>
           <div class="wachs"></div>
           <button type="button" id="v_vorschau" data-t="vorschau_ansehen">Vorschau ansehen</button>
           <button type="button" class="haupt" id="v_start" data-t="jetzt_verschicken">Jetzt verschicken</button>
@@ -250,10 +246,9 @@
       </div>
       <div class="karte">
         <h2 data-t="gesamtplan">Gesamtplan zum Aushängen</h2>
-        <p style="font-size:14px;color:var(--text-leise)">Der ganze Wochenplan als Text – für die
-          WhatsApp-Gruppe, für den Aushang oder zum Ausdrucken.</p>
+        <p style="font-size:14px;color:var(--text-leise)" data-t="gesamtplan_wozu"></p>
         <div class="leiste">
-          <button type="button" id="v_gesamt">Anzeigen</button>
+          <button type="button" id="v_gesamt" data-t="anzeigen">Anzeigen</button>
           <button type="button" id="v_kopieren" data-t="kopieren">In die Zwischenablage</button>
         </div>
         <pre class="plantext" id="v_gesamttext" style="display:none"></pre>
@@ -263,7 +258,7 @@
     <!-- ------------------------------------------------ Einstellungen - -->
     <div class="seite" id="s_einstellungen">
       <div class="karte">
-        <h2>Betrieb</h2>
+        <h2 data-t="betrieb_titel">Betrieb</h2>
         <div class="feldreihe">
           <div class="feld"><label data-t="betrieb">Name des Betriebs</label><input id="ei_betrieb"></div>
           <div class="feld"><label data-t="chef_pin">Chef-PIN</label><input id="ei_chef_pin" maxlength="8"></div>
@@ -277,15 +272,14 @@
       <div class="karte">
         <h2 data-t="arbeitszeit">Arbeitszeit und Lohn</h2>
         <div class="feldreihe" id="ei_regler"></div>
-        <p style="font-size:12.5px;color:var(--text-leise)">Die Zuschläge sind eine Rechenhilfe für
-          die Monatsübersicht und ersetzen keine Lohnabrechnung.</p>
+        <p style="font-size:12.5px;color:var(--text-leise)" data-t="zuschlaege_hinweis"></p>
       </div>
       <div class="karte">
         <h2 data-t="termine">Termine</h2>
         <div class="feldreihe">
           <div class="feld"><label data-t="kategorie">Kategorien (mit Komma trennen)</label>
             <input id="ei_termin_kategorien"></div>
-          <div class="feld"><label>Erinnerung standardmäßig (Minuten vorher)</label>
+          <div class="feld"><label data-t="erinnerung_standard">Erinnerung standardmäßig (Minuten vorher)</label>
             <input id="ei_termin_erinnerung_standard" type="number" min="0" max="10080" step="5"></div>
         </div>
       </div>
@@ -295,14 +289,14 @@
         <textarea id="ei_versand_text" rows="7"></textarea>
         <label style="margin-top:10px">Italiano</label>
         <textarea id="ei_versand_text_it" rows="7"></textarea>
-        <p style="font-size:12.5px;color:var(--text-leise)">Platzhalter:
+        <p style="font-size:12.5px;color:var(--text-leise)"><span data-t="platzhalter">Platzhalter</span>:
           <code>{name}</code> <code>{zeitraum}</code> <code>{plan}</code>
           <code>{link}</code> <code>{betrieb}</code></p>
       </div>
       <div class="karte">
         <h2 data-t="vorlagen">Schicht-Vorlagen</h2>
         <div class="tabelle"><table id="ei_vorlagen"></table></div>
-        <button type="button" style="margin-top:11px" id="ei_vorlage_neu">+ Vorlage</button>
+        <button type="button" style="margin-top:11px" id="ei_vorlage_neu" data-t="vorlage_neu">+ Vorlage</button>
       </div>
       <div class="karte">
         <h2 data-t="daten">Daten</h2>
@@ -311,7 +305,7 @@
           <button type="button" id="ei_wiederherstellen" data-t="sicherung_laden">Sicherung einspielen</button>
           <button type="button" id="ei_beispiel_weg" data-t="beispiel_weg">Beispieldaten entfernen</button>
           <div class="wachs"></div>
-          <button type="button" class="gefahr" id="ei_alles_weg">Alle Daten löschen</button>
+          <button type="button" class="gefahr" id="ei_alles_weg" data-t="alles_loeschen">Alle Daten löschen</button>
         </div>
         <input type="file" id="ei_sicherungdatei" accept=".json,application/json" style="display:none">
         <p style="font-size:12.5px;color:var(--text-leise)" id="ei_speicherort"></p>
@@ -331,11 +325,11 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=1"></script>
-<script src="js/sprache.js?v=1"></script>
-<script src="js/oberflaeche.js?v=1"></script>
-<script src="js/masken.js?v=1"></script>
-<script src="js/pc.js?v=1"></script>
+<script src="js/kern.js?v=2"></script>
+<script src="js/sprache.js?v=2"></script>
+<script src="js/oberflaeche.js?v=2"></script>
+<script src="js/masken.js?v=2"></script>
+<script src="js/pc.js?v=2"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof PC === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px;max-width:640px">'

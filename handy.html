@@ -12,8 +12,8 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=1">
-<link rel="stylesheet" href="css/handy.css?v=1">
+<link rel="stylesheet" href="css/basis.css?v=2">
+<link rel="stylesheet" href="css/handy.css?v=2">
 </head>
 <body>
 
@@ -79,11 +79,11 @@
         <button type="button" id="pl_heute" data-t="heute">Heute</button>
         <button type="button" id="pl_vor">›</button>
         <div style="flex:1"></div>
-        <button type="button" id="pl_woche">Woche</button>
+        <button type="button" id="pl_woche" data-t="woche_knopf">Woche</button>
       </div>
       <div class="tagesband" id="pl_band"></div>
       <div id="pl_titel" style="font-weight:600;font-size:16px;margin:2px 0 10px"></div>
-      <div class="wischhinweis">← wischen für den nächsten Tag →</div>
+      <div class="wischhinweis" data-t="wischen_tag"></div>
       <div id="pl_liste"></div>
       <button type="button" class="haupt gross" id="pl_neu" style="margin-top:12px"
         data-t="schicht_neu">+ Schicht</button>
@@ -102,9 +102,9 @@
     <!-- ------------------------------------------------ Zeiten ------- -->
     <div class="seite" id="s_zeiten">
       <div class="streifen" id="ze_streifen">
-        <button type="button" data-tage="7" class="an">7 Tage</button>
-        <button type="button" data-tage="14">14 Tage</button>
-        <button type="button" data-tage="30">30 Tage</button>
+        <button type="button" data-tage="7" class="an" data-t="tage7">7 Tage</button>
+        <button type="button" data-tage="14" data-t="tage14">14 Tage</button>
+        <button type="button" data-tage="30" data-t="tage30">30 Tage</button>
       </div>
       <div id="ze_summe" class="hinweis"></div>
       <div id="ze_liste"></div>
@@ -143,7 +143,7 @@
         <div class="mikro">
           <button type="button" id="te_mikro">🎤</button>
           <div class="text"><b data-t="termin_sprechen">Termin einfach sprechen</b>
-            <span id="te_status">Antippen und sprechen: „Morgen um 14 Uhr Steuerberater“.</span></div>
+            <span id="te_status" data-t="termin_beispiel"></span></div>
         </div>
         <div id="te_liste"></div>
         <button type="button" class="haupt gross" id="te_neu" style="margin-top:12px"
@@ -197,7 +197,7 @@
       <!-- Einstellungen -->
       <div class="teil" id="t_einstellungen">
         <div class="karte">
-          <h3>Betrieb</h3>
+          <h3 data-t="betrieb_titel">Betrieb</h3>
           <div class="feld"><label data-t="betrieb">Name des Betriebs</label><input id="es_betrieb"></div>
           <div class="feld"><label data-t="chef_pin">Chef-PIN</label><input id="es_chef_pin" maxlength="8"></div>
           <div class="feld"><label data-t="positionen">Positionen</label><input id="es_positionen"></div>
@@ -246,11 +246,11 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=1"></script>
-<script src="js/sprache.js?v=1"></script>
-<script src="js/oberflaeche.js?v=1"></script>
-<script src="js/masken.js?v=1"></script>
-<script src="js/handy.js?v=1"></script>
+<script src="js/kern.js?v=2"></script>
+<script src="js/sprache.js?v=2"></script>
+<script src="js/oberflaeche.js?v=2"></script>
+<script src="js/masken.js?v=2"></script>
+<script src="js/handy.js?v=2"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof Handy === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px">'

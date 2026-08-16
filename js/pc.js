@@ -131,6 +131,8 @@ var PC = (function () {
       T.setze(neu);
       spracheKnopf();
       T.anwenden();
+      /* Die Schieberegler tragen ihre Beschriftung im Text, deshalb neu bauen. */
+      $('ei_regler').dataset.gebaut = '';
       alleZeichnen();
     };
     $('knopf_hilfe').onclick = hilfeZeigen;
@@ -359,7 +361,8 @@ var PC = (function () {
       return '<button type="button" class="vorlagechip" draggable="true" data-vorlage="' + v.id
         + '" style="background:' + v.farbe + '">' + UI.sicher(v.name)
         + '<small>' + v.von + '–' + v.bis + ' · ' + UI.sicher(v.position) + '</small></button>';
-    }).join('') || '<div style="font-size:13px;color:var(--text-leise)">Noch keine Vorlage.</div>';
+    }).join('') || '<div style="font-size:13px;color:var(--text-leise)">' + T.t('keine_vorlage')
+      + '</div>';
     $('p_vorlagen').querySelectorAll('[data-vorlage]').forEach(function (b) {
       b.ondragstart = function (e) {
         gezogen = { art: 'vorlage', id: Number(b.getAttribute('data-vorlage')) };
@@ -425,7 +428,7 @@ var PC = (function () {
     if (offene.length) {
       t += '<tr><td class="person" style="color:var(--rot)">'
         + '<span class="punkt" style="background:var(--rot)"></span>'
-        + T.t('offen_bez') + '<small>noch niemand eingeteilt</small></td>';
+        + T.t('offen_bez') + '<small>' + T.t('niemand_eingeteilt') + '</small></td>';
       tage.forEach(function (d) {
         t += '<td class="zelle" data-tag="' + d + '" data-ma="">';
         offene.filter(function (s) { return s.datum === d; }).forEach(function (s) {
@@ -664,7 +667,7 @@ var PC = (function () {
       + '<th class="zahl">' + T.t('stundenlohn') + '</th>'
       + '<th class="zahl">' + T.t('wochenstunden') + '</th>'
       + '<th>' + T.t('persoenlicher_link') + '</th><th></th></tr></thead><tbody>';
-    if (!rows.length) t += '<tr><td colspan="9">' + UI.leer('Niemand gefunden.') + '</td></tr>';
+    if (!rows.length) t += '<tr><td colspan="9">' + UI.leer(T.t('niemand_gefunden')) + '</td></tr>';
     rows.forEach(function (m) {
       t += '<tr' + (m.aktiv ? '' : ' class="aus"') + '>'
         + '<td><div class="teamkarte"><div class="punkt" style="background:' + m.farbe + '">'
@@ -794,7 +797,7 @@ var PC = (function () {
     a.zeilen.forEach(function (z) {
       h += '<tr class="lohnzeile" data-ma="' + z.mitarbeiter_id + '">'
         + '<td><b>' + UI.sicher(z.name) + '</b>'
-        + (z.offen ? ' ' + UI.etikett(z.offen + ' ungeprüft', 'offen') : '')
+        + (z.offen ? ' ' + UI.etikett(z.offen + ' ' + T.t('ungeprueft'), 'offen') : '')
         + (z.urlaubstage ? ' ' + UI.etikett(z.urlaubstage + ' Urlaub') : '')
         + (z.kranktage ? ' ' + UI.etikett(z.kranktage + ' krank') : '') + '</td>'
         + '<td>' + UI.sicher(z.vertrag || '') + '</td>'
@@ -822,7 +825,8 @@ var PC = (function () {
           return '<tr><td>' + UI.tagKurz(d.datum) + '</td><td>' + d.start + '</td><td>' + d.ende
             + '</td><td class="zahl">' + d.pause_min + '</td><td class="zahl">'
             + UI.zahl(d.std, 2) + '</td><td>' + UI.sicher(d.quelle) + '</td><td>'
-            + (d.freigegeben ? UI.etikett('geprüft', 'genehmigt') : UI.etikett('offen', 'offen'))
+            + (d.freigegeben ? UI.etikett(T.t('geprueft'), 'genehmigt')
+              : UI.etikett(T.t('offen'), 'offen'))
             + '</td></tr>';
         }).join('') : '<tr><td colspan="7">' + UI.leer(T.t('keine_zeiten')) + '</td></tr>')
         + '</tbody></table></td></tr>';
@@ -903,17 +907,15 @@ var PC = (function () {
 
   function versandZeichnen() {
     var weg = $('v_weg').value;
-    $('v_hinweis').innerHTML = weg === 'whatsapp'
-      ? 'Für jeden Mitarbeiter öffnet sich WhatsApp mit dem fertigen Text – abgeschickt wird '
-        + 'erst dort. Voraussetzung ist eine Telefonnummer beim Mitarbeiter.'
-      : 'Für jeden Mitarbeiter öffnet sich das E-Mail-Programm mit fertigem Betreff und Text. '
-        + 'Voraussetzung ist eine E-Mail-Adresse beim Mitarbeiter.';
+    $('v_hinweis').textContent = T.t(weg === 'whatsapp'
+      ? 'versand_hinweis_whatsapp' : 'versand_hinweis_email');
     $('v_empfaenger').innerHTML = Kern.maListe(false).map(function (m) {
       var fehlt = weg === 'whatsapp' ? !m.telefon : !m.email;
       return '<label><input type="checkbox" value="' + m.id + '"' + (fehlt ? '' : ' checked')
         + (fehlt ? ' disabled' : '') + '><span>' + UI.sicher(m.name) + '</span>'
         + (fehlt ? '<span class="fehlt">'
-          + (weg === 'whatsapp' ? 'keine Nummer' : 'keine Adresse') + '</span>' : '') + '</label>';
+          + T.t(weg === 'whatsapp' ? 'keine_nummer' : 'keine_adresse') + '</span>' : '')
+        + '</label>';
     }).join('');
   }
 

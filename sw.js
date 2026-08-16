@@ -1,13 +1,13 @@
 /* PizzaPlan · Zwischenspeicher
    Damit die App auch ohne Netz startet. Die Daten selbst liegen ohnehin im Gerät.
    Bei jeder neuen Fassung die Zahl in LAGER erhöhen – dann wird alles frisch geholt. */
-const LAGER = 'pizzaplan-v1';
+const LAGER = 'pizzaplan-v2';
 
 const DATEIEN = [
   'start.html', 'pc.html', 'handy.html', 'team.html',
-  'css/basis.css?v=1', 'css/pc.css?v=1', 'css/handy.css?v=1',
-  'js/kern.js?v=1', 'js/sprache.js?v=1', 'js/oberflaeche.js?v=1',
-  'js/masken.js?v=1', 'js/pc.js?v=1', 'js/handy.js?v=1', 'js/team.js?v=1',
+  'css/basis.css?v=2', 'css/pc.css?v=2', 'css/handy.css?v=2',
+  'js/kern.js?v=2', 'js/sprache.js?v=2', 'js/oberflaeche.js?v=2',
+  'js/masken.js?v=2', 'js/pc.js?v=2', 'js/handy.js?v=2', 'js/team.js?v=2',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'
 ];
 

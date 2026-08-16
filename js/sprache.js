@@ -231,6 +231,68 @@ var T = (function () {
     keine_schicht: ['In dieser Woche ist für dich nichts eingeplant.',
       'Questa settimana non hai turni.'],
 
+    /* --- Knöpfe und Beschriftungen, die sonst nirgends stehen --- */
+    anzeigen: ['Anzeigen', 'Mostra'],
+    vorlage_neu: ['+ Vorlage', '+ Modello'],
+    feld_leeren: ['Feld leeren', 'Svuota il campo'],
+    beispiel_einfuegen: ['Beispieldaten des Herstellers einfügen', 'Inserisci i dati di esempio'],
+    einfuegen_wie: ['In Excel markieren, kopieren, hier hineinklicken und einfügen – oder die '
+      + 'Datei einfach in dieses Feld ziehen.',
+      'Seleziona in Excel, copia, clicca qui e incolla – oppure trascina il file in questo campo.'],
+    betrieb_titel: ['Betrieb', 'Il locale'],
+    app_verteilen: ['Mitarbeiter-App verteilen', 'Distribuire l\'app ai dipendenti'],
+    app_verteilen_text: ['Jeder Mitarbeiter hat einen persönlichen Link. Wer ihn antippt, ist '
+      + 'sofort in seiner App – ohne Anmeldung – und kann sie mit „Zum Home-Bildschirm“ wie eine '
+      + 'richtige App aufs Handy legen.',
+      'Ogni dipendente ha un link personale. Chi lo tocca entra subito nella sua app, senza '
+      + 'accesso, e può metterla sul telefono con „Aggiungi a Home“ come una vera app.'],
+    allgemeine_adresse: ['Allgemeine Adresse', 'Indirizzo generale'],
+    erinnerung_standard: ['Erinnerung standardmäßig (Minuten vorher)',
+      'Promemoria predefinito (minuti prima)'],
+    alles_loeschen: ['Alle Daten löschen', 'Cancella tutti i dati'],
+    gesamtplan_wozu: ['Der ganze Wochenplan als Text – für die WhatsApp-Gruppe, für den Aushang '
+      + 'oder zum Ausdrucken.',
+      'Tutto il piano della settimana come testo – per il gruppo WhatsApp, per la bacheca o da '
+      + 'stampare.'],
+    zuschlaege_hinweis: ['Die Zuschläge sind eine Rechenhilfe für die Monatsübersicht und '
+      + 'ersetzen keine Lohnabrechnung.',
+      'Le maggiorazioni servono solo al riepilogo mensile e non sostituiscono la busta paga.'],
+    platzhalter: ['Platzhalter', 'Segnaposto'],
+    tage7: ['7 Tage', '7 giorni'],
+    tage14: ['14 Tage', '14 giorni'],
+    tage30: ['30 Tage', '30 giorni'],
+    neue_pin: ['Neue PIN (4–8 Ziffern)', 'Nuovo PIN (4–8 cifre)'],
+    install_wie: ['Im Browser-Menü auf „Zum Home-Bildschirm“ tippen – dann startet dein '
+      + 'Dienstplan wie eine richtige App.',
+      'Nel menu del browser tocca „Aggiungi a Home“: il tuo piano turni parte come una vera app.'],
+    install_jetzt: ['Jetzt installieren', 'Installa adesso'],
+    pin_vergessen: ['PIN vergessen? Dann kurz beim Chef melden.',
+      'PIN dimenticato? Chiedi al titolare.'],
+
+    wischen_tag: ['← wischen für den nächsten Tag →', '← scorri per il giorno successivo →'],
+    wischen_woche: ['← wischen für die nächste Woche →', '← scorri per la settimana successiva →'],
+    woche_knopf: ['Woche', 'Settimana'],
+    termin_beispiel: ['Antippen und sprechen: „Morgen um 14 Uhr Steuerberater“.',
+      'Tocca e parla: „Domani alle 14 dal commercialista“.'],
+
+    versand_hinweis_whatsapp: ['Für jeden Mitarbeiter öffnet sich WhatsApp mit dem fertigen '
+      + 'Text – abgeschickt wird erst dort. Voraussetzung ist eine Telefonnummer beim Mitarbeiter.',
+      'Per ogni dipendente si apre WhatsApp con il testo già pronto: l\'invio avviene solo lì. '
+      + 'Serve un numero di telefono nel dipendente.'],
+    versand_hinweis_email: ['Für jeden Mitarbeiter öffnet sich das E-Mail-Programm mit fertigem '
+      + 'Betreff und Text. Voraussetzung ist eine E-Mail-Adresse beim Mitarbeiter.',
+      'Per ogni dipendente si apre il programma di posta con oggetto e testo già pronti. '
+      + 'Serve un indirizzo e-mail nel dipendente.'],
+    keine_nummer: ['keine Nummer', 'nessun numero'],
+    keine_adresse: ['keine Adresse', 'nessun indirizzo'],
+    niemand_gefunden: ['Niemand gefunden.', 'Nessuno trovato.'],
+    niemand_eingeteilt: ['noch niemand eingeteilt', 'ancora nessuno assegnato'],
+    kein_plan_tag: ['An diesem Tag ist noch niemand eingeteilt.',
+      'Per questo giorno non è ancora in turno nessuno.'],
+    keine_vorlage: ['Noch keine Vorlage.', 'Ancora nessun modello.'],
+    geprueft: ['geprüft', 'controllato'],
+    ungeprueft: ['ungeprüft', 'da controllare'],
+
     /* --- Meldungen --- */
     gespeichert: ['Gespeichert.', 'Salvato.'],
     geloescht: ['Gelöscht.', 'Eliminato.'],

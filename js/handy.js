@@ -146,6 +146,8 @@ var Handy = (function () {
       T.setze(neu);
       spracheKnopf();
       T.anwenden();
+      /* Die Schieberegler tragen ihre Beschriftung im Text, deshalb neu bauen. */
+      $('es_regler').dataset.gebaut = '';
       alleZeichnen();
     };
     $('knopf_mikro').onclick = function () { Masken.befehl($('knopf_mikro'), alleZeichnen); };
@@ -385,7 +387,7 @@ var Handy = (function () {
 
     var rows = Kern.schichten(plTag, plTag, false, null);
     if (!rows.length) {
-      $('pl_liste').innerHTML = UI.leer('An diesem Tag ist noch niemand eingeteilt.');
+      $('pl_liste').innerHTML = UI.leer(T.t('kein_plan_tag'));
     } else {
       $('pl_liste').innerHTML = rows.map(function (s) {
         var warn = Kern.konflikte(s, s.id);
@@ -473,7 +475,7 @@ var Handy = (function () {
         + UI.sicher(m.rolle || '') + (m.vertrag ? ' · ' + UI.sicher(m.vertrag) : '')
         + (m.telefon ? ' · ' + UI.sicher(m.telefon) : '') + '</span></div>'
         + '<div class="rechts">' + (m.stundenlohn ? UI.euro(m.stundenlohn) : '') + '</div></div>';
-    }).join('') : UI.leer('Niemand gefunden.');
+    }).join('') : UI.leer(T.t('niemand_gefunden'));
     $('tm_liste').querySelectorAll('[data-ma]').forEach(function (z) {
       z.onclick = function () {
         UI.tippen(z);
@@ -492,7 +494,7 @@ var Handy = (function () {
     var summe = rows.reduce(function (a, z) { return a + z.dauer_std; }, 0);
     var offen = rows.filter(function (z) { return z.ende && !z.freigegeben; }).length;
     $('ze_summe').innerHTML = '<b>' + UI.zahl(summe, 2) + ' ' + T.t('stunden') + '</b> in '
-      + zeitTage + ' Tagen' + (offen ? ' · <b>' + offen + '</b> noch ungeprüft' : ' · alles geprüft');
+      + zeitTage + ' Tagen' + (offen ? ' · <b>' + offen + '</b> ' + T.t('ungeprueft') : ' · ✓');
 
     $('ze_liste').innerHTML = rows.length ? rows.map(function (z) {
       return '<div class="zeile" data-zeit="' + z.id + '" style="border-left-color:'
@@ -502,7 +504,7 @@ var Handy = (function () {
         + (z.pause_min ? ' · ' + z.pause_min + ' min' : '') + '</span></div>'
         + '<div class="rechts"><b style="color:var(--text)">'
         + (z.ende ? UI.zahl(z.dauer_std, 2) + ' h' : '–') + '</b><br>'
-        + (z.ende ? (z.freigegeben ? '✓ geprüft' : 'offen') : T.t('laeuft')) + '</div></div>';
+        + (z.ende ? (z.freigegeben ? '✓ ' + T.t('geprueft') : T.t('offen')) : T.t('laeuft')) + '</div></div>';
     }).join('') : UI.leer(T.t('keine_zeiten'));
     $('ze_liste').querySelectorAll('[data-zeit]').forEach(function (z) {
       z.onclick = function () {
@@ -598,7 +600,7 @@ var Handy = (function () {
       return '<div class="zeile" style="border-left-color:' + (z.farbe || 'var(--blau)') + '">'
         + '<div class="haupttext"><b>' + UI.sicher(z.name) + '</b><span>'
         + UI.zahl(z.stunden, 2) + ' h · ' + T.t('geplant') + ' ' + UI.zahl(z.geplant_std, 2) + ' h'
-        + (z.offen ? ' · ' + z.offen + ' ungeprüft' : '') + '</span>'
+        + (z.offen ? ' · ' + z.offen + ' ' + T.t('ungeprueft') : '') + '</span>'
         + (z.vertrag === 'Minijob' && a.minijob_grenze
           ? UI.balken(z.anteil_grenze,
             z.ueber_grenze ? 'rot' : (z.anteil_grenze > 0.85 ? 'warn' : '')) : '')
@@ -621,7 +623,7 @@ var Handy = (function () {
         + '<input type="checkbox" value="' + m.id + '"' + (fehlt ? ' disabled' : ' checked')
         + '><span>' + UI.sicher(m.name)
         + (fehlt ? ' <small style="color:var(--rot)">'
-          + (weg === 'whatsapp' ? 'keine Nummer' : 'keine Adresse') + '</small>' : '')
+          + T.t(weg === 'whatsapp' ? 'keine_nummer' : 'keine_adresse') + '</small>' : '')
         + '</span></label>';
     }).join('');
   }

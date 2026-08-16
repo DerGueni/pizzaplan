@@ -337,7 +337,10 @@ var UI = (function () {
   }
 
   function dateiSpeichern(name, inhalt, art) {
-    var b = new Blob(['﻿' + inhalt], { type: (art || 'text/plain') + ';charset=utf-8' });
+    /* Excel braucht die Byte-Kennung am Anfang, sonst zerlegt es die Umlaute.
+       In JSON hat sie nichts verloren – dort würde sie das Einlesen stören. */
+    var kennung = (art || '').indexOf('csv') >= 0 ? '﻿' : '';
+    var b = new Blob([kennung + inhalt], { type: (art || 'text/plain') + ';charset=utf-8' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(b);
     a.download = name;

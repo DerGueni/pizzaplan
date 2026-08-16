@@ -1459,7 +1459,9 @@ var Kern = (function () {
 
   function sicherungEinlesen(text) {
     var neu;
-    try { neu = JSON.parse(text); } catch (e) { throw Fehler('Das ist keine PizzaPlan-Sicherung.'); }
+    try {
+      neu = JSON.parse(String(text).replace(/^﻿/, '').trim());
+    } catch (e) { throw Fehler('Das ist keine PizzaPlan-Sicherung.'); }
     if (!neu || !Array.isArray(neu.mitarbeiter)) throw Fehler('In der Datei fehlt das Team.');
     merken('Sicherung eingespielt');
     D = neu;
