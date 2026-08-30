@@ -12,8 +12,8 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=3">
-<link rel="stylesheet" href="css/handy.css?v=3">
+<link rel="stylesheet" href="css/basis.css?v=4">
+<link rel="stylesheet" href="css/handy.css?v=4">
 </head>
 <body>
 
@@ -131,17 +131,32 @@
 
     <!-- ------------------------------------------------ Zeiten ------- -->
     <div class="seite" id="s_zeiten">
-      <div class="streifen" id="ze_streifen">
-        <button type="button" data-tage="7" class="an" data-t="tage7">7 Tage</button>
-        <button type="button" data-tage="14" data-t="tage14">14 Tage</button>
-        <button type="button" data-tage="30" data-t="tage30">30 Tage</button>
+
+      <div class="streifen tagwahl">
+        <button type="button" id="zt_zurueck">‹</button>
+        <button type="button" id="zt_heute" data-t="heute">Heute</button>
+        <button type="button" id="zt_vor">›</button>
+        <div class="tagtitel" id="zt_datum"></div>
       </div>
-      <div id="ze_summe" class="hinweis"></div>
+
+      <div id="zt_strahl" class="strahlkarte"></div>
+      <div id="zt_tagsumme" class="tagsumme"></div>
+
+      <div class="reihenkopf">
+        <div class="abschnitt" data-t="stunden_je_ma">Stunden je Mitarbeiter</div>
+        <div class="umschalter" id="ze_streifen">
+          <button type="button" data-tage="7" class="an" data-t="tage7">7 Tage</button>
+          <button type="button" data-tage="14" data-t="tage14">14 Tage</button>
+          <button type="button" data-tage="30" data-t="tage30">30 Tage</button>
+        </div>
+      </div>
+      <div id="ze_summe" class="wochenlage"></div>
       <div id="ze_liste"></div>
-      <button type="button" class="gross" id="ze_freigeben" style="margin-top:12px"
-        data-t="alle_freigeben">Alle prüfen und freigeben</button>
-      <button type="button" class="gross" id="ze_neu" style="margin-top:9px"
-        data-t="zeit_neu">+ Zeit nachtragen</button>
+
+      <div class="knopfreihe">
+        <button type="button" id="ze_freigeben" data-t="alle_freigeben">Alle prüfen und freigeben</button>
+        <button type="button" class="haupt" id="ze_neu" data-t="zeit_neu">+ Zeit nachtragen</button>
+      </div>
     </div>
 
     <!-- ------------------------------------------------ Mehr --------- -->
@@ -209,18 +224,35 @@
 
       <!-- Einlesen -->
       <div class="teil" id="t_einlesen">
-        <p style="font-size:14.5px" data-t="einlesen_text"></p>
-        <button type="button" class="haupt gross" id="ei_datei" data-t="datei_waehlen">Datei auswählen</button>
-        <input type="file" id="ei_dateifeld" accept=".csv,.txt,.tsv,text/csv,text/plain"
-               style="display:none">
-        <div class="feld" style="margin-top:12px">
-          <label data-t="einfuegen_hier">… oder Tabelle hier einfügen</label>
-          <textarea id="ei_text" rows="7" spellcheck="false"
-            style="font-family:Consolas,monospace;font-size:13px"></textarea>
+        <div class="karte schritt">
+          <div class="nr">1</div>
+          <div class="inhalt2"><b data-t="ein_s1">Vorlage holen</b>
+            <p data-t="ein_s1_text"></p>
+            <button type="button" class="gross" id="ei_vorlage"
+              data-t="vorlage_holen">Importvorlage herunterladen</button></div>
         </div>
-        <button type="button" class="haupt gross" id="ei_pruefen" data-t="pruefen">Prüfen</button>
-        <button type="button" class="gross" id="ei_vorlage" style="margin-top:9px"
-          data-t="vorlage_holen">Importvorlage herunterladen</button>
+        <div class="karte schritt">
+          <div class="nr">2</div>
+          <div class="inhalt2"><b data-t="ein_s2">In Excel ausfüllen</b>
+            <p data-t="ein_s2_text"></p>
+            <div class="spaltenliste" id="ei_spalten"></div></div>
+        </div>
+        <div class="karte schritt">
+          <div class="nr">3</div>
+          <div class="inhalt2"><b data-t="ein_s3">Datei einlesen</b>
+            <p data-t="ein_s3_text"></p>
+            <button type="button" class="haupt gross" id="ei_datei"
+              data-t="datei_waehlen">Datei auswählen</button>
+            <input type="file" id="ei_dateifeld"
+                   accept=".csv,.txt,.tsv,.xls,.xlsx,text/csv,text/plain" style="display:none">
+            <div class="feld" style="margin-top:10px">
+              <label data-t="einfuegen_hier">… oder Tabelle hier einfügen</label>
+              <textarea id="ei_text" rows="5" spellcheck="false"
+                style="font-family:Consolas,monospace;font-size:13px"></textarea>
+            </div>
+            <button type="button" class="haupt gross" id="ei_pruefen"
+              data-t="pruefen">Prüfen</button></div>
+        </div>
         <div id="ei_ergebnis"></div>
       </div>
 
@@ -284,11 +316,11 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=3"></script>
-<script src="js/sprache.js?v=3"></script>
-<script src="js/oberflaeche.js?v=3"></script>
-<script src="js/masken.js?v=3"></script>
-<script src="js/handy.js?v=3"></script>
+<script src="js/kern.js?v=4"></script>
+<script src="js/sprache.js?v=4"></script>
+<script src="js/oberflaeche.js?v=4"></script>
+<script src="js/masken.js?v=4"></script>
+<script src="js/handy.js?v=4"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof Handy === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px">'

@@ -412,6 +412,51 @@ var UI = (function () {
     }, { passive: true });
   }
 
+  /* =========================================================================
+     Zeitstrahl
+     Ein Tag als Balkenbild: links wer, rechts wann. Geplante Schichten liegen
+     als heller Umriss dahinter, die erfassten Zeiten als voller Balken.
+     ========================================================================= */
+
+  function zwei(n) { return (n < 10 ? '0' : '') + n; }
+
+  function zeitstrahl(o) {
+    var von = Math.max(0, Math.min(o.von, 1439));
+    var bis = Math.min(1440, Math.max(o.bis, von + 60));
+    var spanne = bis - von;
+    var schritt = spanne > 14 * 60 ? 180 : (spanne > 8 * 60 ? 120 : 60);
+
+    function pos(m) { return ((Math.max(von, Math.min(bis, m)) - von) / spanne) * 100; }
+
+    var ticks = '';
+    for (var m = Math.ceil(von / schritt) * schritt; m <= bis; m += schritt) {
+      ticks += '<span class="tick" style="left:' + pos(m).toFixed(2) + '%">'
+        + zwei(Math.floor(m / 60) % 24) + '</span>';
+    }
+    var jetzt = (o.jetzt !== null && o.jetzt !== undefined && o.jetzt >= von && o.jetzt <= bis)
+      ? '<i class="jetzt" style="left:' + pos(o.jetzt).toFixed(2) + '%"></i>' : '';
+
+    var h = '<div class="strahl"><div class="strahlkopf"><div class="wer"></div>'
+      + '<div class="spur">' + ticks + '</div></div>';
+
+    o.zeilen.forEach(function (z) {
+      h += '<div class="strahlzeile" data-strahl="' + z.id + '">'
+        + '<div class="wer"><i class="punkt" style="background:' + (z.farbe || '#7f8c8d') + '"></i>'
+        + '<span>' + sicher(z.name) + '</span></div><div class="spur">' + jetzt;
+      (z.stuecke || []).forEach(function (s) {
+        var links = pos(s.von), breite = Math.max(1.5, pos(s.bis) - pos(s.von));
+        h += '<div class="stueck ' + s.art + '" style="left:' + links.toFixed(2)
+          + '%;width:' + breite.toFixed(2) + '%'
+          + (s.art === 'erfasst' || s.art === 'laeuft'
+            ? ';background:' + (z.farbe || '#7f8c8d') : '')
+          + '" title="' + sicher(s.text || '') + '">'
+          + (breite > 24 ? '<span>' + sicher(s.text || '') + '</span>' : '') + '</div>';
+      });
+      h += '</div><div class="strahlsumme">' + sicher(z.summe || '') + '</div></div>';
+    });
+    return h + '</div>';
+  }
+
   return {
     sicher: sicher, std: std, euro: euro, zahl: zahl, tagLang: tagLang, tagKurz: tagKurz,
     monatName: monatName, anfangGross: anfangGross,
@@ -421,7 +466,8 @@ var UI = (function () {
     farbwahl: farbwahl,
     schemaSetzen: schemaSetzen, schemaLesen: schemaLesen, kopieren: kopieren,
     dateiSpeichern: dateiSpeichern, dateiLesen: dateiLesen,
-    leer: leer, etikett: etikett, balken: balken, tippen: tippen, wischen: wischen
+    leer: leer, etikett: etikett, balken: balken, tippen: tippen, wischen: wischen,
+    zeitstrahl: zeitstrahl
   };
 })();
 

@@ -282,3 +282,153 @@ h2{font-size:17.5px}
 .menueliste button.abmelde{
   color:var(--text-leise);border-top:1px solid var(--linie);border-radius:0;margin-top:6px;
 }
+
+/* ================================================================ Zeitstrahl
+   Ein Tag, alle Mitarbeiter untereinander. Heller Umriss = geplante Schicht,
+   voller Balken = erfasste Zeit.
+*/
+.strahlkarte{
+  background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
+  padding:8px 10px 6px;margin-bottom:8px;box-shadow:var(--schatten);overflow:hidden;
+}
+.strahl{font-size:11.5px}
+.strahlkopf{display:flex;align-items:center;height:16px;margin-bottom:3px}
+.strahlkopf .spur{position:relative;height:16px;border:0;background:none}
+.strahlkopf .tick{
+  position:absolute;top:0;transform:translateX(-50%);color:var(--text-leise);
+  font-variant-numeric:tabular-nums;
+}
+.strahlzeile{
+  display:flex;align-items:center;gap:7px;width:100%;text-align:left;padding:2px 0;
+  background:none;border:0;
+}
+.strahlzeile + .strahlzeile{border-top:1px solid var(--linie)}
+.strahl .wer{
+  flex:0 0 auto;width:76px;display:flex;align-items:center;gap:5px;
+  font-size:12.5px;overflow:hidden;
+}
+.strahl .wer span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.strahl .wer .punkt{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.strahl .spur{
+  position:relative;flex:1;min-width:0;height:24px;border-radius:5px;
+  background:var(--flaeche2);border:1px solid var(--linie);
+}
+.strahl .stueck{
+  position:absolute;top:2px;bottom:2px;border-radius:4px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.strahl .stueck.geplant{
+  top:1px;bottom:1px;background:transparent;border:1px dashed var(--linie-stark);
+}
+.strahl .stueck.erfasst span,.strahl .stueck.laeuft span{
+  color:#fff;font-size:10.5px;font-weight:600;white-space:nowrap;
+  text-shadow:0 1px 2px rgba(0,0,0,.35);
+}
+.strahl .stueck.laeuft{
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.25) 0 5px,
+    transparent 5px 10px);
+}
+.strahl .jetzt{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--rot);z-index:2}
+.strahl .strahlsumme{
+  flex:0 0 auto;width:42px;text-align:right;font-size:11.5px;color:var(--text-leise);
+  font-variant-numeric:tabular-nums;
+}
+
+.tagwahl{align-items:center;gap:6px;margin-bottom:8px}
+.tagwahl .tagtitel{
+  margin-left:auto;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;
+}
+.tagsumme{
+  font-size:12.5px;color:var(--text-leise);margin:0 2px 12px;
+  display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;
+}
+.tagsumme b{color:var(--text);font-size:13.5px}
+.warnzahl{color:var(--gelb);font-weight:700}
+.detailkopf{
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0 0 10px;
+  font-size:12.5px;color:var(--text-leise);
+}
+.detailkopf b{font-size:17px;color:var(--text);font-variant-numeric:tabular-nums}
+.knopfreihe{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.knopfreihe button{padding:12px 10px;font-size:14.5px;font-weight:600}
+
+/* ================================================================ Kompakter
+   Weniger Luft, gleiche Lesbarkeit: es soll mehr auf einen Blick passen.
+   Tippflächen bleiben bei mindestens 44 px.
+*/
+.inhalt{padding:11px;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+.karte{padding:11px 12px;margin-bottom:10px}
+.abschnitt{font-size:11.5px;margin:12px 0 6px}
+.zeile{padding:8px 10px;margin-bottom:6px;gap:9px}
+.zeile .haupttext b{font-size:15px}
+.zeile .haupttext span{font-size:12.5px;margin-top:0}
+.zeile .rechts{font-size:12.5px;line-height:1.3}
+.zeile .rechts .wertgross{font-size:15px;color:var(--text);display:block;
+  font-variant-numeric:tabular-nums}
+.zeile .rechts span{display:block;font-size:11.5px}
+.zeile.eng{padding:7px 10px;margin-bottom:5px}
+.zeile .kreis{display:none}
+
+.tageskopf{margin:0 0 10px}
+.tageskopf .datum{font-size:19px}
+.tageskopf .lage{font-size:13.5px}
+
+.kacheln{gap:7px;margin-bottom:12px}
+.kachel{padding:8px 10px;border-left-width:3px}
+.kachel .wert{font-size:20px}
+.kachel .bez{font-size:11px;margin-top:1px}
+
+.schnellknoepfe{gap:7px;margin-bottom:10px}
+.schnellknoepfe button{padding:11px 9px;font-size:13.5px;gap:2px}
+.schnellknoepfe button .bild{font-size:18px}
+
+.karte.todo{padding:4px 0 2px;margin-bottom:12px}
+.karte.todo .todokopf{padding:5px 12px 6px;font-size:11.5px}
+.todozeile{min-height:46px;padding:8px 12px;font-size:15px;gap:10px}
+.todozeile .zahl{min-width:28px;height:28px;font-size:14.5px;border-radius:8px}
+.karte.fertig{padding:10px 12px;margin-bottom:12px;font-size:14px}
+
+.wtag{padding:7px 10px;margin-bottom:5px;gap:9px;min-height:0}
+.wtag.heute{padding:6px 9px}
+.wtag .wdatum{width:36px}
+.wtag .wdatum b{font-size:14px}
+.wchip{font-size:12px;padding:2px 8px 2px 6px}
+.wperson{padding:8px 10px;margin-bottom:5px;gap:9px}
+.wperson .kreis{display:none}
+.wperson .wpinhalt b{font-size:15px}
+.wperson .wchips{margin-top:5px;gap:4px}
+
+.streifen{margin-bottom:8px;gap:6px}
+.streifen button{padding:6px 12px;font-size:13px}
+.wochenlage{margin-bottom:7px}
+.wochenlage .wpfeil{width:34px;height:34px;font-size:17px}
+.leer{padding:18px 10px;font-size:13.5px}
+.hinweis{padding:9px 11px;font-size:13.5px;margin-bottom:10px}
+.mikro{padding:10px;margin-bottom:10px}
+.feld{margin-bottom:9px}
+button.gross{padding:12px 16px;font-size:15.5px}
+
+/* ---- Einlesen in drei Schritten ---- */
+.karte.schritt{display:flex;gap:11px;align-items:flex-start;padding:11px 12px}
+.karte.schritt .nr{
+  flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--rot);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;
+}
+.karte.schritt .inhalt2{flex:1;min-width:0}
+.karte.schritt .inhalt2 > b{display:block;font-size:15.5px;margin-bottom:3px}
+.karte.schritt .inhalt2 p{font-size:13.5px;color:var(--text-leise);margin:0 0 9px}
+.spaltenliste{display:flex;flex-wrap:wrap;gap:5px}
+.spaltenliste label{margin-bottom:4px;width:100%}
+.legende{
+  display:flex;align-items:center;gap:5px;justify-content:flex-end;
+  font-size:11px;color:var(--text-leise);padding:5px 2px 0;
+}
+.legende .l{width:16px;height:9px;border-radius:3px;display:inline-block;margin-left:8px}
+.legende .l.geplant{border:1px dashed var(--linie-stark)}
+.legende .l.erfasst{background:var(--text-leise)}
+
+/* Sieben Tage passen ohne Schieben nebeneinander */
+.tagesband{gap:4px;padding:2px 1px 6px;margin-bottom:2px}
+.tagesband button{min-width:0;flex:1 1 0;padding:6px 2px;border-radius:10px;font-size:11px}
+.tagesband button b{font-size:16px}
+.wischhinweis{font-size:11.5px;margin:0 0 7px}

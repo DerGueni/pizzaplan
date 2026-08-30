@@ -133,6 +133,16 @@ var T = (function () {
     keine_wuensche: ['Hier ist gerade nichts eingetragen.', 'Al momento non c\'è nulla.'],
 
     /* --- Zeiten --- */
+    stunden_je_ma: ['Je Mitarbeiter', 'Per dipendente'],
+    tag_ohne_zeiten: ['An diesem Tag ist nichts erfasst und nichts geplant.',
+      'Per questo giorno non c’è né orario registrato né turno.'],
+    erfasst: ['erfasst', 'registrate'],
+    tage_wort: ['Tage', 'giorni'],
+    eintraege: ['Einträge', 'voci'],
+    pause_wort: ['Pause', 'pausa'],
+    person_freigeben: ['Alle freigeben', 'Approva tutto'],
+    zeiten_freigegeben: ['Zeiten freigegeben', 'ore approvate'],
+    nichts_offen: ['Es war nichts offen.', 'Non c’era nulla in sospeso.'],
     zeit_neu: ['+ Zeit nachtragen', '+ Aggiungi ore'],
     alle_freigeben: ['Alle prüfen und freigeben', 'Controlla e approva tutto'],
     beginn: ['Beginn', 'Inizio'],
@@ -163,6 +173,24 @@ var T = (function () {
 
     /* --- Einlesen --- */
     einlesen_titel: ['Vorhandene Mitarbeiterdaten einlesen', 'Importa i dati dei dipendenti'],
+    ein_s1: ['Vorlage holen', 'Scarica il modello'],
+    ein_s1_text: ['Die Datei öffnet sich in Excel. Sie enthält schon die richtigen Überschriften '
+      + 'und zwei Beispielzeilen zum Ersetzen.',
+      'Il file si apre in Excel. Contiene già le intestazioni giuste e due righe di esempio da '
+      + 'sostituire.'],
+    ein_s2: ['In Excel ausfüllen', 'Compila in Excel'],
+    ein_s2_text: ['Eine Zeile je Mitarbeiter. Nur der Name ist Pflicht, alles andere darf leer '
+      + 'bleiben. Danach in Excel speichern als CSV (Trennzeichen-getrennt).',
+      'Una riga per dipendente. Solo il nome è obbligatorio, il resto può restare vuoto. Poi in '
+      + 'Excel salva come CSV (separato da punto e virgola).'],
+    ein_s3: ['Datei einlesen', 'Importa il file'],
+    ein_s3_text: ['PizzaPlan zeigt erst eine Vorschau. Bekannte Namen werden ergänzt, neue Namen '
+      + 'angelegt – einzeln anlegen muss niemand.',
+      'PizzaPlan mostra prima un’anteprima. I nomi già presenti vengono completati, i nuovi '
+      + 'creati – non serve inserirli a mano.'],
+    spalten_verstanden: ['Diese Spalten werden verstanden', 'Colonne riconosciute'],
+    nur_csv: ['Diese Datei kann ich nicht lesen. Bitte in Excel als CSV speichern.',
+      'Non riesco a leggere questo file. Salvalo in Excel come CSV.'],
     einlesen_text: ['Datei auswählen oder die Tabelle einfach hier hineinkopieren – aus Excel, '
       + 'aus einer Liste, aus dem alten Programm. PizzaPlan erkennt die Spalten selbst und zeigt '
       + 'vorher, was passieren wird.',

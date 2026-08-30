@@ -8,6 +8,7 @@ var Handy = (function () {
 
   var plTag = Kern.heute();
   var zeitTage = 7;
+  var ztTag = Kern.heute();
   var wunschStatus = 'offen';
   var wochenAnsicht = 'tag';
   var wochenVersatz = 0;
@@ -70,11 +71,46 @@ var Handy = (function () {
     var c = Kern.chef();
     if (c) Kern.anmelden(c.id);
     verdrahten();
+    zurueckEinrichten();
     T.anwenden();
     spracheKnopf();
     alleZeichnen();
     setInterval(function () { Masken.erinnerungen(alleZeichnen); }, 40000);
     setTimeout(function () { Masken.erinnerungen(alleZeichnen); }, 3000);
+  }
+
+  /* =========================================================================
+     Zurück-Taste des Handys
+     Erst das oberste offene Fenster schließen, dann eine Seite zurück,
+     auf der Startseite bleibt die App stehen.
+     ========================================================================= */
+
+  function zurueckPuffer() {
+    try { history.pushState({ pp: 1 }, ''); } catch (e) { /* egal */ }
+  }
+
+  function zurueckSchritt() {
+    var fenster = document.querySelectorAll('.hintergrund');
+    if (fenster.length) {
+      var oben = fenster[fenster.length - 1];
+      var x = oben.querySelector('[data-x]');
+      if (x) x.click(); else oben.remove();
+      return;
+    }
+    if ($('menueblende') && $('menueblende').style.display !== 'none') {
+      menueZeigen(false);
+      return;
+    }
+    var an = document.querySelector('.seite.an');
+    if (an && an.id !== 's_heute') seiteZeigen('heute');
+  }
+
+  function zurueckEinrichten() {
+    zurueckPuffer();
+    window.addEventListener('popstate', function () {
+      zurueckPuffer();
+      zurueckSchritt();
+    });
   }
 
   function alleZeichnen() {
@@ -86,6 +122,7 @@ var Handy = (function () {
     termineZeichnen();
     versandZeichnen();
     einstellungenFuellen();
+    spaltenlisteZeichnen();
     punkteZeichnen();
   }
 
@@ -200,6 +237,13 @@ var Handy = (function () {
         zeitenZeichnen();
       };
     });
+    $('zt_zurueck').onclick = function () { ztTag = Kern.plusTage(ztTag, -1); zeitstrahlZeichnen(); };
+    $('zt_vor').onclick = function () { ztTag = Kern.plusTage(ztTag, 1); zeitstrahlZeichnen(); };
+    $('zt_heute').onclick = function () { ztTag = Kern.heute(); zeitstrahlZeichnen(); };
+    UI.wischen($('s_zeiten'),
+      function () { ztTag = Kern.plusTage(ztTag, 1); zeitstrahlZeichnen(); },
+      function () { ztTag = Kern.plusTage(ztTag, -1); zeitstrahlZeichnen(); });
+
     $('ze_freigeben').onclick = function () {
       var n = Kern.zeitenFreigeben(Kern.plusTage(Kern.heute(), -zeitTage + 1), Kern.heute(), null);
       UI.melde(n ? n + ' Zeiten freigegeben.' : 'Es war nichts offen.', n ? 'gut' : 'warn');
@@ -267,6 +311,11 @@ var Handy = (function () {
     $('ei_dateifeld').onchange = function () {
       var d = $('ei_dateifeld').files[0];
       if (!d) return;
+      if (/\.(xlsx?|ods|numbers)$/i.test(d.name)) {
+        UI.melde(T.t('nur_csv'), 'warn');
+        $('ei_dateifeld').value = '';
+        return;
+      }
       UI.dateiLesen(d).then(function (text) {
         $('ei_text').value = text;
         einlesenPruefen();
@@ -431,7 +480,7 @@ var Handy = (function () {
     var h = '';
     var offen = rows.filter(function (r) { return !r.mitarbeiter_id; });
     if (offen.length) {
-      h += '<div class="wperson"><div class="kreis" style="background:var(--linie-stark)">?</div>'
+      h += '<div class="wperson">'
         + '<div class="wpinhalt"><b>' + UI.sicher(T.t('offen_bez')) + '</b>'
         + '<span>' + offen.length + ' ' + UI.sicher(T.t('schichten_wort')) + '</span>'
         + '<div class="wchips">' + offen.map(function (r) {
@@ -454,9 +503,8 @@ var Handy = (function () {
       var m = e.m;
       var meine = e.meine;
       var std = e.std;
-      h += '<div class="wperson' + (meine.length ? '' : ' ruht') + '" data-ma="' + m.id + '">'
-        + '<div class="kreis" style="background:' + (m.farbe || '#7f8c8d') + '">'
-        + UI.sicher(Masken.kuerzel(m.name)) + '</div>'
+      h += '<div class="wperson' + (meine.length ? '' : ' ruht') + '" data-ma="' + m.id
+        + '" style="border-left:4px solid ' + (m.farbe || '#7f8c8d') + '">'
         + '<div class="wpinhalt"><b>' + UI.sicher(m.name) + '</b>'
         + '<span>' + UI.sicher(m.rolle || '')
         + (meine.length ? ' · ' + UI.zahl(std, 1) + ' ' + UI.sicher(T.t('stunden')) : '')
@@ -523,8 +571,7 @@ var Handy = (function () {
         + UI.sicher(s.mitarbeiter_id ? s.ma_name : T.t('offen_bez')) + '</b>'
         + '<span>' + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 1) + ' '
         + UI.sicher(T.t('stunden')) + '</span></div>'
-        + (s.mitarbeiter_id ? '<div class="kreis" style="background:' + s.farbe + '">'
-          + UI.sicher(Masken.kuerzel(s.ma_name)) + '</div>' : '') + '</div>';
+        + '</div>';
     }).join('') : UI.leer(T.t('heute_niemand'));
     $('h_heute').querySelectorAll('[data-schicht]').forEach(function (z) {
       z.onclick = function () {
@@ -654,10 +701,8 @@ var Handy = (function () {
         return '<div class="zeile' + (s.veroeffentlicht ? '' : ' entwurf')
           + '" data-schicht="' + s.id + '" style="border-left-color:'
           + Masken.farbeFuerPosition(s.position, s.farbe) + '">'
-          + '<div class="kreis" style="background:' + s.farbe + '">'
-          + UI.sicher(Masken.kuerzel(s.ma_name || '?')) + '</div>'
           + '<div class="haupttext"><b>' + UI.sicher(s.ma_name || T.t('offen_bez')) + '</b>'
-          + '<span>' + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 2) + ' h'
+          + '<span>' + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 1) + ' h'
           + (s.pause_min ? ' · ' + s.pause_min + ' min Pause' : '')
           + (s.veroeffentlicht ? '' : ' · Entwurf')
           + (warn.length ? ' · ⚠' : '') + '</span></div>'
@@ -729,8 +774,6 @@ var Handy = (function () {
     });
     $('tm_liste').innerHTML = rows.length ? rows.map(function (m) {
       return '<div class="zeile" data-ma="' + m.id + '" style="border-left-color:' + m.farbe + '">'
-        + '<div class="kreis" style="background:' + m.farbe + '">'
-        + UI.sicher(Masken.kuerzel(m.name)) + '</div>'
         + '<div class="haupttext"><b>' + UI.sicher(m.name) + '</b><span>'
         + UI.sicher(m.rolle || '') + (m.vertrag ? ' · ' + UI.sicher(m.vertrag) : '')
         + (m.telefon ? ' · ' + UI.sicher(m.telefon) : '') + '</span></div>'
@@ -748,29 +791,188 @@ var Handy = (function () {
      Zeiten
      ========================================================================= */
 
+  /* --- Ein Tag als Zeitstrahl: alle Mitarbeiter untereinander -------------- */
+  function zeitstrahlZeichnen() {
+    var tag = ztTag;
+    var zeiten = Kern.zeiten(tag, tag, null);
+    var schichten = Kern.schichten(tag, tag, false, null);
+    var heute = Kern.heute();
+
+    $('zt_datum').textContent = Kern.WT_KURZ[T.aktuell()][Kern.wochentag(tag)] + ' '
+      + Kern.dmy(tag);
+
+    var leute = {};
+    function hol(id, name, farbe) {
+      if (!leute[id]) {
+        leute[id] = { id: id, name: kurzName(name), farbe: farbe, stuecke: [], std: 0, offen: 0 };
+      }
+      return leute[id];
+    }
+
+    schichten.forEach(function (s) {
+      if (!s.mitarbeiter_id) return;
+      var e = hol(s.mitarbeiter_id, s.ma_name, s.farbe);
+      var a = Kern.minuten(s.von), b = Kern.minuten(s.bis);
+      if (b <= a) b = 1440;
+      e.stuecke.push({ von: a, bis: b, art: 'geplant', text: s.von + '–' + s.bis });
+    });
+
+    zeiten.forEach(function (z) {
+      var m = Kern.ma(z.mitarbeiter_id) || {};
+      var e = hol(z.mitarbeiter_id, z.ma_name, m.farbe);
+      var a = Kern.minuten(z.start);
+      var b = z.ende ? Kern.minuten(z.ende) : Kern.minuten(Kern.jetztZeit());
+      if (b <= a) b = 1440;
+      e.stuecke.push({
+        von: a, bis: b, art: z.ende ? 'erfasst' : 'laeuft',
+        text: z.start + (z.ende ? '–' + z.ende : ' …')
+      });
+      e.std += z.dauer_std;
+      if (z.ende && !z.freigegeben) e.offen++;
+    });
+
+    var zeilen = Object.keys(leute).map(function (k) { return leute[k]; })
+      .sort(function (a, b) { return b.std - a.std || a.name.localeCompare(b.name); });
+
+    if (!zeilen.length) {
+      $('zt_strahl').innerHTML = UI.leer(T.t('tag_ohne_zeiten'));
+      $('zt_tagsumme').innerHTML = '';
+      return;
+    }
+
+    var von = 24 * 60, bis = 0;
+    zeilen.forEach(function (z) {
+      z.stuecke.forEach(function (s) {
+        von = Math.min(von, s.von);
+        bis = Math.max(bis, s.bis);
+      });
+      z.summe = z.std ? UI.zahl(z.std, 1) + ' h' : '';
+    });
+    von = Math.max(0, Math.floor(von / 60) * 60 - 30);
+    bis = Math.min(1440, Math.ceil(bis / 60) * 60 + 30);
+    if (bis - von < 300) bis = Math.min(1440, von + 300);
+
+    $('zt_strahl').innerHTML = UI.zeitstrahl({
+      von: von, bis: bis, zeilen: zeilen,
+      jetzt: tag === heute ? Kern.minuten(Kern.jetztZeit()) : null
+    }) + '<div class="legende"><span class="l geplant"></span>' + UI.sicher(T.t('geplant'))
+      + '<span class="l erfasst"></span>' + UI.sicher(T.t('erfasst')) + '</div>';
+    $('zt_strahl').querySelectorAll('[data-strahl]').forEach(function (z) {
+      z.onclick = function () {
+        UI.tippen(z);
+        maZeitenFenster(Number(z.getAttribute('data-strahl')));
+      };
+    });
+
+    var summeStd = zeilen.reduce(function (a, z) { return a + z.std; }, 0);
+    var summeOffen = zeilen.reduce(function (a, z) { return a + z.offen; }, 0);
+    var geplant = schichten.reduce(function (a, s) { return a + (s.dauer_std || 0); }, 0);
+    $('zt_tagsumme').innerHTML = '<b>' + UI.zahl(summeStd, 1) + ' h</b> '
+      + UI.sicher(T.t('erfasst')) + ' · ' + UI.zahl(geplant, 1) + ' h '
+      + UI.sicher(T.t('geplant')) + (summeOffen
+        ? ' · <b class="warnzahl">' + summeOffen + '</b> ' + UI.sicher(T.t('ungeprueft'))
+        : ' · ✓');
+  }
+
+  /* --- Summen je Mitarbeiter über den gewählten Zeitraum ------------------- */
   function zeitenZeichnen() {
+    zeitstrahlZeichnen();
+
     var von = Kern.plusTage(Kern.heute(), -zeitTage + 1);
     var rows = Kern.zeiten(von, Kern.heute(), null);
     var summe = rows.reduce(function (a, z) { return a + z.dauer_std; }, 0);
     var offen = rows.filter(function (z) { return z.ende && !z.freigegeben; }).length;
-    $('ze_summe').innerHTML = '<b>' + UI.zahl(summe, 2) + ' ' + T.t('stunden') + '</b> in '
-      + zeitTage + ' Tagen' + (offen ? ' · <b>' + offen + '</b> ' + T.t('ungeprueft') : ' · ✓');
+    $('ze_summe').innerHTML = '<b>' + UI.zahl(summe, 1) + ' ' + UI.sicher(T.t('stunden'))
+      + '</b><span>' + zeitTage + ' ' + UI.sicher(T.t('tage_wort'))
+      + (offen ? ' · ' + offen + ' ' + UI.sicher(T.t('ungeprueft')) : ' · ✓') + '</span>';
 
-    $('ze_liste').innerHTML = rows.length ? rows.map(function (z) {
-      return '<div class="zeile" data-zeit="' + z.id + '" style="border-left-color:'
-        + (z.ende ? (z.freigegeben ? 'var(--gruen)' : 'var(--gelb)') : 'var(--blau)') + '">'
-        + '<div class="haupttext"><b>' + UI.sicher(z.ma_name) + '</b><span>'
-        + UI.tagKurz(z.datum) + ' · ' + z.start + (z.ende ? '–' + z.ende : ' · läuft')
-        + (z.pause_min ? ' · ' + z.pause_min + ' min' : '') + '</span></div>'
-        + '<div class="rechts"><b style="color:var(--text)">'
-        + (z.ende ? UI.zahl(z.dauer_std, 2) + ' h' : '–') + '</b><br>'
-        + (z.ende ? (z.freigegeben ? '✓ ' + T.t('geprueft') : T.t('offen')) : T.t('laeuft')) + '</div></div>';
+    var proMa = {};
+    rows.forEach(function (z) {
+      var k = String(z.mitarbeiter_id);
+      if (!proMa[k]) proMa[k] = { id: z.mitarbeiter_id, name: z.ma_name, std: 0, n: 0, offen: 0, laeuft: 0 };
+      proMa[k].std += z.dauer_std;
+      proMa[k].n++;
+      if (!z.ende) proMa[k].laeuft++;
+      else if (!z.freigegeben) proMa[k].offen++;
+    });
+    var liste = Object.keys(proMa).map(function (k) { return proMa[k]; })
+      .sort(function (a, b) { return b.std - a.std; });
+
+    $('ze_liste').innerHTML = liste.length ? liste.map(function (e) {
+      var m = Kern.ma(e.id) || {};
+      return '<div class="zeile eng" data-maz="' + e.id + '" style="border-left-color:'
+        + (m.farbe || 'var(--linie-stark)') + '">'
+        + '<div class="haupttext"><b>' + UI.sicher(e.name) + '</b><span>'
+        + UI.sicher(m.rolle || '') + ' · ' + e.n + ' ' + UI.sicher(T.t('eintraege'))
+        + (e.laeuft ? ' · ' + UI.sicher(T.t('laeuft')) : '') + '</span></div>'
+        + '<div class="rechts"><b class="wertgross">' + UI.zahl(e.std, 1) + ' h</b>'
+        + (e.offen ? '<span class="warnzahl">' + e.offen + ' '
+          + UI.sicher(T.t('offen')) + '</span>' : '<span>✓</span>') + '</div></div>';
     }).join('') : UI.leer(T.t('keine_zeiten'));
-    $('ze_liste').querySelectorAll('[data-zeit]').forEach(function (z) {
+
+    $('ze_liste').querySelectorAll('[data-maz]').forEach(function (z) {
       z.onclick = function () {
         UI.tippen(z);
-        Masken.zeit(Number(z.getAttribute('data-zeit')), alleZeichnen);
+        maZeitenFenster(Number(z.getAttribute('data-maz')));
       };
+    });
+  }
+
+  /* --- Detailansicht: alle Zeiten einer Person im Zeitraum ----------------- */
+  function maZeitenFenster(maId) {
+    var m = Kern.ma(maId);
+    if (!m) return;
+    var von = Kern.plusTage(Kern.heute(), -zeitTage + 1);
+    var rows = Kern.zeiten(von, Kern.heute(), maId);
+    var std = rows.reduce(function (a, z) { return a + z.dauer_std; }, 0);
+    var offen = rows.filter(function (z) { return z.ende && !z.freigegeben; }).length;
+
+    var h = '<div class="detailkopf"><b>' + UI.zahl(std, 1) + ' ' + UI.sicher(T.t('stunden'))
+      + '</b><span>' + zeitTage + ' ' + UI.sicher(T.t('tage_wort')) + ' · '
+      + rows.length + ' ' + UI.sicher(T.t('eintraege'))
+      + (offen ? ' · ' + offen + ' ' + UI.sicher(T.t('ungeprueft')) : '') + '</span></div>';
+
+    h += rows.length ? rows.map(function (z) {
+      return '<div class="zeile eng" data-zeit="' + z.id + '" style="border-left-color:'
+        + (z.ende ? (z.freigegeben ? 'var(--gruen)' : 'var(--gelb)') : 'var(--blau)') + '">'
+        + '<div class="haupttext"><b>' + UI.tagKurz(z.datum) + ' · ' + z.start
+        + (z.ende ? '–' + z.ende : ' …') + '</b><span>'
+        + (z.pause_min ? z.pause_min + ' min ' + UI.sicher(T.t('pause_wort')) + ' · ' : '')
+        + (z.ende ? (z.freigegeben ? '✓ ' + UI.sicher(T.t('geprueft'))
+          : UI.sicher(T.t('offen'))) : UI.sicher(T.t('laeuft'))) + '</span></div>'
+        + '<div class="rechts"><b class="wertgross">'
+        + (z.ende ? UI.zahl(z.dauer_std, 1) + ' h' : '–') + '</b></div></div>';
+    }).join('') : UI.leer(T.t('keine_zeiten'));
+
+    UI.fenster({
+      titel: m.name,
+      inhalt: h,
+      knoepfe: [
+        { text: T.t('schliessen'), wert: null },
+        { text: T.t('zeit_neu'), wert: 'neu' },
+        { text: T.t('person_freigeben'), art: 'haupt', wert: 'frei' }
+      ],
+      beimOeffnen: function (hg) {
+        hg.querySelectorAll('[data-zeit]').forEach(function (z) {
+          z.onclick = function () {
+            hg.querySelector('[data-x]').click();
+            Masken.zeit(Number(z.getAttribute('data-zeit')), function () {
+              alleZeichnen();
+              maZeitenFenster(maId);
+            });
+          };
+        });
+      }
+    }).then(function (w) {
+      if (w === 'neu') {
+        Masken.zeit(null, function () { alleZeichnen(); maZeitenFenster(maId); });
+      }
+      if (w === 'frei') {
+        var n = Kern.zeitenFreigeben(von, Kern.heute(), maId);
+        UI.melde(n ? n + ' ' + T.t('zeiten_freigegeben') : T.t('nichts_offen'), n ? 'gut' : 'warn');
+        if (n) UI.rueckStreifen(n + ' ' + T.t('zeiten_freigegeben'), alleZeichnen);
+        alleZeichnen();
+      }
     });
   }
 
@@ -891,6 +1093,15 @@ var Handy = (function () {
   /* =========================================================================
      Einlesen
      ========================================================================= */
+
+  function spaltenlisteZeichnen() {
+    var kopf = String(Kern.importVorlage()).split(/[\r\n]+/)[0]
+      .replace(/^\ufeff/, '');
+    $('ei_spalten').innerHTML = '<label>' + UI.sicher(T.t('spalten_verstanden')) + '</label>'
+      + kopf.split(';').map(function (w) {
+        return '<span class="wchip">' + UI.sicher(w) + '</span>';
+      }).join('');
+  }
 
   function einlesenPruefen() {
     var text = $('ei_text').value;
