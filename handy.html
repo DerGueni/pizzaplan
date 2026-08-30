@@ -12,8 +12,8 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=2">
-<link rel="stylesheet" href="css/handy.css?v=2">
+<link rel="stylesheet" href="css/basis.css?v=3">
+<link rel="stylesheet" href="css/handy.css?v=3">
 </head>
 <body>
 
@@ -46,6 +46,7 @@
       <button type="button" id="knopf_mikro" class="rund" title="Sprachbefehl">🎤</button>
       <button type="button" id="knopf_sprache">DE</button>
       <button type="button" id="knopf_schema" class="rund">🌙</button>
+      <button type="button" id="knopf_menue" class="rund" title="Menü">☰</button>
     </div>
   </div>
 
@@ -53,7 +54,42 @@
 
     <!-- ------------------------------------------------ Heute -------- -->
     <div class="seite an" id="s_heute">
+
+      <div class="tageskopf">
+        <div class="datum" id="h_datum"></div>
+        <div class="lage" id="h_lage"></div>
+      </div>
+
+      <div id="h_todo"></div>
+
+      <div id="h_jetzt_block" style="display:none">
+        <div class="abschnitt" data-t="jetzt_im_dienst">Gerade im Dienst</div>
+        <div id="h_stempel"></div>
+      </div>
+
+      <div class="abschnitt" data-t="heute_im_dienst">Heute im Dienst</div>
+      <div id="h_heute"></div>
+
+      <div class="reihenkopf">
+        <div class="abschnitt" id="h_wochentitel" data-t="diese_woche">Diese Woche</div>
+        <div class="umschalter" id="h_ansicht">
+          <button type="button" data-ansicht="tag" class="an" data-t="nach_tag">nach Tag</button>
+          <button type="button" data-ansicht="person" data-t="nach_person">nach Person</button>
+        </div>
+      </div>
+      <div class="wochenlage">
+        <button type="button" class="wpfeil" id="h_wo_zurueck">‹</button>
+        <div id="h_wochenkopf" class="womitte"></div>
+        <button type="button" class="wpfeil" id="h_wo_vor">›</button>
+      </div>
+      <div id="h_woche"></div>
+
       <div class="kacheln" id="h_kacheln"></div>
+
+      <div class="abschnitt" data-t="naechste_termine">Nächste Termine</div>
+      <div id="h_termine"></div>
+
+      <div class="abschnitt" data-t="schnellstart">Schnell erledigt</div>
       <div class="schnellknoepfe">
         <button type="button" id="h_schicht"><span class="bild">➕</span>
           <span data-t="schicht_neu">+ Schicht</span></button>
@@ -64,12 +100,6 @@
         <button type="button" id="h_versand"><span class="bild">📤</span>
           <span data-t="versand_kurz">Verschicken</span></button>
       </div>
-      <div class="abschnitt" data-t="heute_im_dienst">Heute im Dienst</div>
-      <div id="h_heute"></div>
-      <div class="abschnitt" data-t="gerade_gestempelt">Gerade eingestempelt</div>
-      <div id="h_stempel"></div>
-      <div class="abschnitt" data-t="naechste_termine">Nächste Termine</div>
-      <div id="h_termine"></div>
     </div>
 
     <!-- ------------------------------------------------ Plan --------- -->
@@ -223,6 +253,14 @@
     </div>
   </div>
 
+  <div class="menueblende" id="menueblende" style="display:none">
+    <div class="menuetafel" id="menuetafel">
+      <div class="griff"></div>
+      <div class="menuekopf" data-t="menue_titel">Menü</div>
+      <div class="menueliste" id="menueliste"></div>
+    </div>
+  </div>
+
   <div class="fussleiste" id="fussleiste">
     <button type="button" data-seite="heute" class="an"><span class="bild">🏠</span>
       <span data-t="heute">Heute</span></button>
@@ -246,11 +284,11 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=2"></script>
-<script src="js/sprache.js?v=2"></script>
-<script src="js/oberflaeche.js?v=2"></script>
-<script src="js/masken.js?v=2"></script>
-<script src="js/handy.js?v=2"></script>
+<script src="js/kern.js?v=3"></script>
+<script src="js/sprache.js?v=3"></script>
+<script src="js/oberflaeche.js?v=3"></script>
+<script src="js/masken.js?v=3"></script>
+<script src="js/handy.js?v=3"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof Handy === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px">'

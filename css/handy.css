@@ -133,3 +133,152 @@ h2{font-size:17.5px}
   width:40px;height:40px;border-radius:50%;color:#fff;display:flex;align-items:center;
   justify-content:center;font-weight:600;font-size:15px;flex:0 0 auto;
 }
+
+/* ================================================================ Startbild
+   Tageskopf, Zu-erledigen-Karte, Wochenübersicht und Menü.
+   Aufbau nach dem Muster großer Dienstplan-Apps: erst was zu tun ist,
+   dann wer heute arbeitet, dann die ganze Woche.
+*/
+
+.tageskopf{margin:2px 0 14px}
+.tageskopf .datum{font-size:21px;font-weight:600;line-height:1.2}
+.tageskopf .lage{font-size:14.5px;color:var(--text-leise);margin-top:2px}
+
+/* ---- Zu erledigen ---- */
+.karte.todo{padding:6px 0 4px;margin-bottom:16px}
+.karte.todo .todokopf{
+  font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;
+  color:var(--text-leise);padding:6px 14px 8px;
+}
+.todozeile{
+  display:flex;align-items:center;gap:12px;width:100%;min-height:52px;
+  background:none;border:0;border-top:1px solid var(--linie);border-radius:0;
+  padding:10px 14px;text-align:left;font-size:16px;color:var(--text);
+}
+.todozeile:hover{background:var(--flaeche2)}
+.todozeile .zahl{
+  min-width:32px;height:32px;border-radius:9px;flex:0 0 auto;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:15.5px;font-variant-numeric:tabular-nums;
+  background:var(--gelb-hell);color:var(--gelb);border:1px solid var(--gelb);
+}
+.todozeile .zahl.rot{background:var(--rot-hell);color:var(--rot);border-color:var(--rot)}
+.todozeile .txt{flex:1;min-width:0}
+.todozeile .pfeil{color:var(--text-leise);font-size:20px;flex:0 0 auto}
+
+.karte.fertig{
+  background:var(--gruen-hell);border-color:var(--gruen);color:var(--gruen);
+  font-weight:600;font-size:15px;padding:13px 14px;margin-bottom:16px;
+}
+
+/* ---- Heutige Schichten mit Uhrzeit links ---- */
+.zeile.schichtzeile .uhrzeit{
+  flex:0 0 auto;width:58px;line-height:1.15;font-variant-numeric:tabular-nums;
+}
+.zeile.schichtzeile .uhrzeit b{display:block;font-size:16.5px;font-weight:700}
+.zeile.schichtzeile .uhrzeit span{display:block;font-size:13.5px;color:var(--text-leise)}
+.zeile.schichtzeile.entwurf{border-left-style:dashed}
+.zeile.schichtzeile .kreis{width:36px;height:36px;font-size:13px}
+
+/* ---- Kopfzeile mit Umschalter ---- */
+.reihenkopf{display:flex;align-items:center;gap:10px}
+.reihenkopf .abschnitt{flex:1;margin-bottom:6px}
+.umschalter{display:flex;gap:0;flex:0 0 auto;margin-bottom:2px}
+.umschalter button{
+  font-size:12.5px;padding:6px 11px;border-radius:0;color:var(--text-leise);
+  border:1px solid var(--linie-stark);background:var(--flaeche);
+}
+.umschalter button:first-child{border-radius:16px 0 0 16px}
+.umschalter button:last-child{border-radius:0 16px 16px 0;border-left:0}
+.umschalter button.an{background:var(--rot);border-color:var(--rot);color:#fff;font-weight:600}
+
+.wochenlage{display:flex;align-items:center;gap:6px;margin:0 0 9px}
+.wochenlage .womitte{
+  flex:1;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;justify-content:center;
+  font-size:13.5px;color:var(--text-leise);text-align:center;
+}
+.wochenlage .womitte b{font-size:15px;color:var(--text);font-variant-numeric:tabular-nums}
+.wochenlage .wpfeil{
+  flex:0 0 auto;width:38px;height:38px;padding:0;border-radius:50%;font-size:19px;
+  line-height:1;color:var(--text-leise);
+}
+
+/* ---- Woche nach Tag ---- */
+.wtag{
+  display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
+  background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
+  padding:10px 12px;margin-bottom:7px;min-height:56px;box-shadow:var(--schatten);
+}
+.wtag.heute{border-color:var(--rot);border-width:2px;padding:9px 11px}
+.wtag .wdatum{flex:0 0 auto;width:40px;line-height:1.15;text-align:center}
+.wtag .wdatum b{display:block;font-size:15px;font-weight:700}
+.wtag .wdatum span{display:block;font-size:12px;color:var(--text-leise);
+  font-variant-numeric:tabular-nums}
+.wtag .wschichten{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:5px}
+.wtag .wsum{flex:0 0 auto;font-size:12.5px;color:var(--text-leise);
+  font-variant-numeric:tabular-nums;padding-top:2px}
+
+.wchip{
+  display:inline-flex;align-items:center;gap:5px;max-width:100%;
+  background:var(--flaeche2);border:1px solid var(--linie);border-radius:14px;
+  padding:3px 9px 3px 6px;font-size:12.5px;color:var(--text);line-height:1.35;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.wchip b{font-weight:700;font-variant-numeric:tabular-nums}
+.wchip i{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.wchip.offen{border-style:dashed;color:var(--text-leise)}
+.wchip.entwurf{opacity:.72}
+.wfrei{font-size:12.5px;color:var(--text-leise);padding-top:3px}
+
+/* ---- Woche nach Person ---- */
+.wperson{
+  display:flex;align-items:flex-start;gap:11px;
+  background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
+  padding:11px 12px;margin-bottom:7px;box-shadow:var(--schatten);
+}
+.wperson.ruht{opacity:.62}
+.wperson .kreis{
+  width:38px;height:38px;border-radius:50%;color:#fff;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;
+}
+.wperson .wpinhalt{flex:1;min-width:0}
+.wperson .wpinhalt b{display:block;font-size:15.5px;line-height:1.3}
+.wperson .wpinhalt > span{display:block;font-size:13px;color:var(--text-leise);margin-top:1px}
+.wperson .wchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+
+/* ---- Menü hinter dem Symbol oben rechts ---- */
+.menueblende{
+  position:fixed;inset:0;background:rgba(20,15,12,.58);z-index:8500;
+  display:flex;align-items:flex-end;animation:einblenden .15s ease;
+}
+.menuetafel{
+  background:var(--flaeche);width:100%;border-radius:20px 20px 0 0;
+  padding:8px 12px calc(14px + env(safe-area-inset-bottom));
+  max-height:88vh;overflow:auto;animation:hochfahren .22s ease;
+  box-shadow:0 -10px 40px rgba(0,0,0,.35);
+}
+.menuetafel .griff{
+  width:40px;height:4px;border-radius:2px;background:var(--linie-stark);margin:2px auto 10px;
+}
+.menuetafel .menuekopf{
+  font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;
+  color:var(--text-leise);padding:0 4px 8px;
+}
+.menueliste{display:flex;flex-direction:column}
+.menueliste button{
+  display:flex;align-items:center;gap:13px;width:100%;min-height:54px;
+  background:none;border:0;border-radius:10px;padding:11px 8px;
+  text-align:left;font-size:16.5px;color:var(--text);
+}
+.menueliste button:hover{background:var(--flaeche2)}
+.menueliste button .bild{font-size:21px;width:28px;text-align:center;flex:0 0 auto}
+.menueliste button .txt{flex:1;min-width:0}
+.menueliste button .pfeil{color:var(--text-leise);font-size:20px}
+.menueliste button .zahl{
+  background:var(--rot);color:#fff;font-size:12px;font-weight:700;
+  min-width:22px;height:22px;border-radius:11px;display:inline-flex;
+  align-items:center;justify-content:center;padding:0 6px;
+}
+.menueliste button.abmelde{
+  color:var(--text-leise);border-top:1px solid var(--linie);border-radius:0;margin-top:6px;
+}

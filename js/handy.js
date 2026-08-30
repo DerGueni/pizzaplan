@@ -9,6 +9,8 @@ var Handy = (function () {
   var plTag = Kern.heute();
   var zeitTage = 7;
   var wunschStatus = 'offen';
+  var wochenAnsicht = 'tag';
+  var wochenVersatz = 0;
 
   function $(id) { return document.getElementById(id); }
 
@@ -152,6 +154,23 @@ var Handy = (function () {
     };
     $('knopf_mikro').onclick = function () { Masken.befehl($('knopf_mikro'), alleZeichnen); };
 
+    $('knopf_menue').onclick = function () { menueZeigen(true); };
+    $('menueblende').onclick = function (e) { if (e.target === $('menueblende')) menueZeigen(false); };
+
+    $('h_wo_zurueck').onclick = function () { wochenVersatz -= 1; wocheZeichnen(); };
+    $('h_wo_vor').onclick = function () { wochenVersatz += 1; wocheZeichnen(); };
+
+    /* Woche: nach Tag oder nach Person */
+    $('h_ansicht').querySelectorAll('button').forEach(function (b) {
+      b.onclick = function () {
+        wochenAnsicht = b.getAttribute('data-ansicht');
+        $('h_ansicht').querySelectorAll('button').forEach(function (x) {
+          x.classList.toggle('an', x === b);
+        });
+        heuteZeichnen();
+      };
+    });
+
     /* Heute */
     $('h_schicht').onclick = function () { Masken.schicht(null, Kern.heute(), null, alleZeichnen); };
     $('h_frei').onclick = function () { seiteZeigen('mehr'); teilZeigen('wuensche'); };
@@ -289,29 +308,223 @@ var Handy = (function () {
      Heute
      ========================================================================= */
 
-  function heuteZeichnen() {
-    var u = Kern.uebersicht();
+  function kurzName(name) {
+    var teile = String(name || '').trim().split(/\s+/);
+    if (teile.length < 2) return teile[0] || '?';
+    return teile[0] + ' ' + teile[teile.length - 1].charAt(0) + '.';
+  }
+
+  function wochenSchichten(u) {
+    return Kern.schichten(u.woche_von, u.woche_bis, false, null);
+  }
+
+  /* Welche Woche wird gerade gezeigt? 0 = die laufende. */
+  function gezeigteWoche() {
+    var mo = Kern.plusTage(Kern.wochenstart(Kern.heute()), 7 * wochenVersatz);
+    return { von: mo, bis: Kern.plusTage(mo, 6) };
+  }
+
+  function lohnSumme(rows) {
+    var summe = 0;
+    rows.forEach(function (s) {
+      if (!s.mitarbeiter_id) return;
+      var m = Kern.ma(s.mitarbeiter_id);
+      summe += (s.dauer_std || 0) * Number((m && m.stundenlohn) || 0);
+    });
+    return Math.round(summe * 100) / 100;
+  }
+
+  /* --- Kopfzeile: welcher Tag ist heute, was steht an? --------------------- */
+  function tageskopfZeichnen(u) {
+    var h = Kern.heute();
+    var std = u.heute.reduce(function (s, r) { return s + (r.dauer_std || 0); }, 0);
+    $('h_datum').textContent = Kern.WT_LANG[T.aktuell()][Kern.wochentag(h)] + ', ' + Kern.dmy(h);
+    $('h_lage').textContent = u.heute.length
+      ? u.heute.length + ' ' + T.t(u.heute.length === 1 ? 'schicht_wort' : 'schichten_wort')
+        + ' · ' + UI.zahl(std, 1) + ' ' + T.t('stunden')
+      : T.t('heute_nichts');
+  }
+
+  /* --- Ganz oben steht, was der Chef entscheiden muss ---------------------- */
+  function todoZeichnen(u) {
+    var punkte = [];
+    if (u.unbesetzt) punkte.push(['unbesetzt', u.unbesetzt, T.t('todo_unbesetzt'), 'rot']);
+    if (u.nicht_freigegeben) punkte.push(['entwurf', u.nicht_freigegeben, T.t('todo_entwurf'), 'warn']);
+    if (u.offene_wuensche) punkte.push(['wuensche', u.offene_wuensche, T.t('todo_wuensche'), 'warn']);
+    if (u.offene_zeiten) punkte.push(['zeiten', u.offene_zeiten, T.t('todo_zeiten'), 'warn']);
+
+    if (!punkte.length) {
+      $('h_todo').innerHTML = '<div class="karte fertig">✓ '
+        + UI.sicher(T.t('alles_erledigt')) + '</div>';
+      return;
+    }
+    $('h_todo').innerHTML = '<div class="karte todo">'
+      + '<div class="todokopf">' + UI.sicher(T.t('zu_erledigen')) + '</div>'
+      + punkte.map(function (p) {
+        return '<button type="button" class="todozeile" data-tun="' + p[0] + '">'
+          + '<span class="zahl ' + p[3] + '">' + p[1] + '</span>'
+          + '<span class="txt">' + UI.sicher(p[2]) + '</span>'
+          + '<span class="pfeil">›</span></button>';
+      }).join('') + '</div>';
+
+    $('h_todo').querySelectorAll('[data-tun]').forEach(function (b) {
+      b.onclick = function () {
+        UI.tippen(b);
+        var was = b.getAttribute('data-tun');
+        if (was === 'unbesetzt') { seiteZeigen('plan'); planZeichnen(); }
+        if (was === 'entwurf') wocheFreigeben();
+        if (was === 'wuensche') { seiteZeigen('mehr'); teilZeigen('wuensche'); }
+        if (was === 'zeiten') seiteZeigen('zeiten');
+      };
+    });
+  }
+
+  /* --- Diese Woche: wer hat wann Dienst? ---------------------------------- */
+  function wocheZeichnen() {
+    var w = gezeigteWoche();
+    var rows = Kern.schichten(w.von, w.bis, false, null);
+    var std = rows.reduce(function (s, r) { return s + (r.dauer_std || 0); }, 0);
+
+    $('h_wochentitel').textContent = wochenVersatz === 0 ? T.t('diese_woche')
+      : (wochenVersatz === 1 ? T.t('naechste_woche')
+        : (wochenVersatz === -1 ? T.t('vorwoche') : Kern.dm(w.von) + '–' + Kern.dm(w.bis)));
+    $('h_wochenkopf').innerHTML = '<b>' + Kern.dm(w.von) + '–' + Kern.dm(w.bis)
+      + '</b><span>' + rows.length + ' ' + UI.sicher(T.t('schichten_wort'))
+      + ' · ' + UI.zahl(std, 1) + ' ' + UI.sicher(T.t('stunden')) + '</span>';
+
+    if (!rows.length) { $('h_woche').innerHTML = UI.leer(T.t('woche_nichts')); return; }
+    if (wochenAnsicht === 'person') wochePersonen(w, rows); else wocheTage(w, rows);
+  }
+
+  function wocheTage(w, rows) {
+    var h = Kern.heute();
+    $('h_woche').innerHTML = Kern.tageZwischen(w.von, w.bis).map(function (d) {
+      var tag = rows.filter(function (r) { return r.datum === d; });
+      var std = tag.reduce(function (s, r) { return s + (r.dauer_std || 0); }, 0);
+      var chips = tag.length ? tag.map(function (r) {
+        return '<span class="wchip' + (r.mitarbeiter_id ? '' : ' offen')
+          + (r.veroeffentlicht ? '' : ' entwurf') + '">'
+          + '<i style="background:' + (r.mitarbeiter_id ? r.farbe : 'var(--linie-stark)') + '"></i>'
+          + '<b>' + r.von + '–' + r.bis + '</b> '
+          + UI.sicher(r.mitarbeiter_id ? kurzName(r.ma_name) : T.t('offen_bez')) + '</span>';
+      }).join('') : '<span class="wfrei">' + UI.sicher(T.t('tag_frei')) + '</span>';
+
+      return '<button type="button" class="wtag' + (d === h ? ' heute' : '')
+        + '" data-tag="' + d + '">'
+        + '<div class="wdatum"><b>' + UI.sicher(Kern.WT_KURZ[T.aktuell()][Kern.wochentag(d)])
+        + '</b><span>' + Kern.dm(d) + '</span></div>'
+        + '<div class="wschichten">' + chips + '</div>'
+        + '<div class="wsum">' + (tag.length ? UI.zahl(std, 1) + ' h' : '') + '</div></button>';
+    }).join('');
+
+    $('h_woche').querySelectorAll('[data-tag]').forEach(function (b) {
+      b.onclick = function () {
+        UI.tippen(b);
+        plTag = b.getAttribute('data-tag');
+        seiteZeigen('plan');
+        planZeichnen();
+      };
+    });
+  }
+
+  function wochePersonen(w, rows) {
+    var h = '';
+    var offen = rows.filter(function (r) { return !r.mitarbeiter_id; });
+    if (offen.length) {
+      h += '<div class="wperson"><div class="kreis" style="background:var(--linie-stark)">?</div>'
+        + '<div class="wpinhalt"><b>' + UI.sicher(T.t('offen_bez')) + '</b>'
+        + '<span>' + offen.length + ' ' + UI.sicher(T.t('schichten_wort')) + '</span>'
+        + '<div class="wchips">' + offen.map(function (r) {
+          return '<span class="wchip offen"><b>'
+            + UI.sicher(Kern.WT_KURZ[T.aktuell()][Kern.wochentag(r.datum)]) + '</b> '
+            + r.von + '–' + r.bis + '</span>';
+        }).join('') + '</div></div></div>';
+    }
+
+    /* Wer arbeitet, steht oben – die meisten Stunden zuerst. */
+    var leute = Kern.maListe(false).map(function (m) {
+      var meine = rows.filter(function (r) { return Number(r.mitarbeiter_id) === Number(m.id); });
+      return {
+        m: m, meine: meine,
+        std: meine.reduce(function (s, r) { return s + (r.dauer_std || 0); }, 0)
+      };
+    }).sort(function (a, b) { return b.std - a.std; });
+
+    leute.forEach(function (e) {
+      var m = e.m;
+      var meine = e.meine;
+      var std = e.std;
+      h += '<div class="wperson' + (meine.length ? '' : ' ruht') + '" data-ma="' + m.id + '">'
+        + '<div class="kreis" style="background:' + (m.farbe || '#7f8c8d') + '">'
+        + UI.sicher(Masken.kuerzel(m.name)) + '</div>'
+        + '<div class="wpinhalt"><b>' + UI.sicher(m.name) + '</b>'
+        + '<span>' + UI.sicher(m.rolle || '')
+        + (meine.length ? ' · ' + UI.zahl(std, 1) + ' ' + UI.sicher(T.t('stunden')) : '')
+        + '</span>'
+        + (meine.length
+          ? '<div class="wchips">' + meine.map(function (r) {
+            return '<span class="wchip' + (r.veroeffentlicht ? '' : ' entwurf') + '"><b>'
+              + UI.sicher(Kern.WT_KURZ[T.aktuell()][Kern.wochentag(r.datum)]) + '</b> '
+              + r.von + '–' + r.bis + '</span>';
+          }).join('') + '</div>'
+          : '<div class="wchips"><span class="wfrei">' + UI.sicher(T.t('woche_frei'))
+            + '</span></div>')
+        + '</div></div>';
+    });
+    $('h_woche').innerHTML = h;
+    $('h_woche').querySelectorAll('[data-ma]').forEach(function (z) {
+      z.onclick = function () {
+        Masken.mitarbeiter(Number(z.getAttribute('data-ma')), alleZeichnen);
+      };
+    });
+  }
+
+  /* --- Vier Zahlen, die der Chef wirklich braucht -------------------------- */
+  function kachelnZeichnen(u) {
+    var rows = wochenSchichten(u);
     $('h_kacheln').innerHTML = [
-      [T.t('kachel_team'), u.team_aktiv, '', 'team'],
       [T.t('kachel_woche'), UI.zahl(u.wochenstunden, 1), 'gut', 'plan'],
-      [T.t('kachel_offen'), u.offene_wuensche, u.offene_wuensche ? 'warn' : 'gut', 'mehr'],
-      [T.t('kachel_entwurf'), u.nicht_freigegeben, u.nicht_freigegeben ? 'warn' : 'gut', 'plan']
+      [T.t('kachel_unbesetzt'), u.unbesetzt, u.unbesetzt ? 'rot' : 'gut', 'plan'],
+      [T.t('kachel_kosten'), UI.euro(lohnSumme(rows)), '', 'mehr'],
+      [T.t('kachel_team'), u.team_aktiv, '', 'team']
     ].map(function (k) {
       return '<div class="kachel ' + k[2] + '" data-ziel="' + k[3] + '">'
         + '<div class="wert">' + UI.sicher(k[1]) + '</div>'
         + '<div class="bez">' + UI.sicher(k[0]) + '</div></div>';
     }).join('');
     $('h_kacheln').querySelectorAll('.kachel').forEach(function (k) {
-      k.onclick = function () { seiteZeigen(k.getAttribute('data-ziel')); };
+      k.onclick = function () {
+        var ziel = k.getAttribute('data-ziel');
+        seiteZeigen(ziel);
+        if (ziel === 'mehr') teilZeigen('auswertung');
+      };
     });
+  }
+
+  function heuteZeichnen() {
+    var u = Kern.uebersicht();
+    tageskopfZeichnen(u);
+    todoZeichnen(u);
+
+    $('h_jetzt_block').style.display = u.eingestempelt.length ? '' : 'none';
+    $('h_stempel').innerHTML = u.eingestempelt.map(function (z) {
+      return '<div class="zeile" style="border-left-color:var(--gruen)">'
+        + '<div class="haupttext"><b>' + UI.sicher(z.ma_name) + '</b>'
+        + '<span>seit ' + UI.sicher(z.start) + ' Uhr</span></div>'
+        + '<div class="rechts">' + UI.etikett(T.t('laeuft'), 'laeuft') + '</div></div>';
+    }).join('');
 
     $('h_heute').innerHTML = u.heute.length ? u.heute.map(function (s) {
-      return '<div class="zeile" data-schicht="' + s.id + '" style="border-left-color:'
-        + s.farbe + '"><div class="kreis" style="background:' + s.farbe + '">'
-        + UI.sicher(Masken.kuerzel(s.ma_name || '?')) + '</div>'
-        + '<div class="haupttext"><b>' + UI.sicher(s.ma_name || T.t('offen_bez')) + '</b>'
-        + '<span>' + UI.sicher(s.position) + '</span></div>'
-        + '<div class="rechts">' + s.von + '<br>' + s.bis + '</div></div>';
+      return '<div class="zeile schichtzeile' + (s.veroeffentlicht ? '' : ' entwurf')
+        + '" data-schicht="' + s.id + '" style="border-left-color:'
+        + (s.mitarbeiter_id ? s.farbe : 'var(--linie-stark)') + '">'
+        + '<div class="uhrzeit"><b>' + s.von + '</b><span>' + s.bis + '</span></div>'
+        + '<div class="haupttext"><b>'
+        + UI.sicher(s.mitarbeiter_id ? s.ma_name : T.t('offen_bez')) + '</b>'
+        + '<span>' + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 1) + ' '
+        + UI.sicher(T.t('stunden')) + '</span></div>'
+        + (s.mitarbeiter_id ? '<div class="kreis" style="background:' + s.farbe + '">'
+          + UI.sicher(Masken.kuerzel(s.ma_name)) + '</div>' : '') + '</div>';
     }).join('') : UI.leer(T.t('heute_niemand'));
     $('h_heute').querySelectorAll('[data-schicht]').forEach(function (z) {
       z.onclick = function () {
@@ -319,14 +532,10 @@ var Handy = (function () {
       };
     });
 
-    $('h_stempel').innerHTML = u.eingestempelt.length ? u.eingestempelt.map(function (z) {
-      return '<div class="zeile" style="border-left-color:var(--gruen)">'
-        + '<div class="haupttext"><b>' + UI.sicher(z.ma_name) + '</b>'
-        + '<span>seit ' + UI.sicher(z.start) + ' Uhr</span></div>'
-        + '<div class="rechts">' + UI.etikett(T.t('laeuft'), 'laeuft') + '</div></div>';
-    }).join('') : UI.leer(T.t('niemand_gestempelt'));
+    wocheZeichnen();
+    kachelnZeichnen(u);
 
-    $('h_termine').innerHTML = u.termine.length ? u.termine.slice(0, 5).map(function (t) {
+    $('h_termine').innerHTML = u.termine.length ? u.termine.slice(0, 4).map(function (t) {
       return '<div class="zeile" data-termin="' + t.id + '" style="border-left-color:var(--gelb)">'
         + '<div class="haupttext"><b>' + UI.sicher(t.titel) + '</b><span>'
         + UI.tagKurz(t.datum) + (t.von_zeit ? ' · ' + t.von_zeit + ' Uhr' : '')
@@ -337,6 +546,57 @@ var Handy = (function () {
         Masken.termin(Number(z.getAttribute('data-termin')), null, alleZeichnen);
       };
     });
+  }
+
+  /* =========================================================================
+     Menü hinter dem Symbol oben rechts
+     ========================================================================= */
+
+  var MENUE = [
+    ['plan', '📅', 'dienstplan'],
+    ['team', '👥', 'team'],
+    ['zeiten', '⏱', 'zeiten'],
+    ['wuensche', '✋', 'wuensche'],
+    ['termine', '📌', 'termine'],
+    ['auswertung', '📊', 'auswertung'],
+    ['versand', '📤', 'versand'],
+    ['einlesen', '📥', 'einlesen'],
+    ['einstellungen', '⚙', 'einstellungen']
+  ];
+
+  function menueZeigen(an) {
+    var blende = $('menueblende');
+    if (!an) { blende.style.display = 'none'; return; }
+
+    var u = Kern.uebersicht();
+    var zahlen = { wuensche: u.offene_wuensche, zeiten: u.offene_zeiten, plan: u.unbesetzt };
+    $('menueliste').innerHTML = MENUE.map(function (m) {
+      var n = zahlen[m[0]] || 0;
+      return '<button type="button" data-menue="' + m[0] + '">'
+        + '<span class="bild">' + m[1] + '</span>'
+        + '<span class="txt">' + UI.sicher(T.t(m[2])) + '</span>'
+        + (n ? '<span class="zahl">' + n + '</span>' : '')
+        + '<span class="pfeil">›</span></button>';
+    }).join('')
+      + '<button type="button" class="abmelde" data-menue="abmelden">'
+      + '<span class="bild">🚪</span><span class="txt">'
+      + UI.sicher(T.t('abmelden')) + '</span></button>';
+
+    $('menueliste').querySelectorAll('[data-menue]').forEach(function (b) {
+      b.onclick = function () {
+        var was = b.getAttribute('data-menue');
+        menueZeigen(false);
+        if (was === 'abmelden') {
+          try { sessionStorage.removeItem('pp_chef'); } catch (e) { /* egal */ }
+          location.reload();
+          return;
+        }
+        if (was === 'plan' || was === 'team' || was === 'zeiten') { seiteZeigen(was); return; }
+        seiteZeigen('mehr');
+        teilZeigen(was);
+      };
+    });
+    blende.style.display = '';
   }
 
   function wocheFreigeben() {
