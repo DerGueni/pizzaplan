@@ -407,6 +407,22 @@ h2{font-size:17.5px}
 .mikro{padding:10px;margin-bottom:10px}
 .feld{margin-bottom:9px}
 button.gross{padding:12px 16px;font-size:15.5px}
+a.knopf.gross{padding:12px 16px;font-size:15.5px}
+.karte.schritt .alslink{display:block;margin-top:6px;min-height:32px}
+
+/* „+ N weitere ›“ unter „Heute im Dienst“ */
+.weiterezeile{display:block;width:100%;text-align:left;background:transparent;border:0;
+  color:var(--blau);font-size:13.5px;font-weight:600;min-height:34px;padding:4px 12px;
+  border-radius:10px}
+.weiterezeile:hover{background:var(--flaeche2)}
+
+/* Team: Suche und „Alle einladen“ in einer Reihe, Einladeknopf je Zeile */
+.suchreihe{display:flex;gap:7px;align-items:center}
+.suchreihe input{flex:1 1 auto;min-width:0}
+.suchreihe button{flex:0 0 auto;white-space:nowrap;min-height:40px}
+.einladeknopf{flex:0 0 auto;white-space:nowrap;font-size:13px;padding:5px 9px;min-height:36px}
+.zeile .rechts .eingeladen{display:block;margin-top:2px}
+.zeile .rechts .eingeladen .etikett{display:inline-block}
 
 /* ---- Einlesen in drei Schritten ---- */
 .karte.schritt{display:flex;gap:11px;align-items:flex-start;padding:11px 12px}
@@ -432,3 +448,424 @@ button.gross{padding:12px 16px;font-size:15.5px}
 .tagesband button{min-width:0;flex:1 1 0;padding:6px 2px;border-radius:10px;font-size:11px}
 .tagesband button b{font-size:16px}
 .wischhinweis{font-size:11.5px;margin:0 0 7px}
+
+
+/* ================================================================ iPhone-Feinschliff
+   Stand 24.10.2026. Alles mit .chefhandy gilt nur für die Chef-Fassung
+   (handy.html); team.html benutzt diese Datei mit und bleibt unberührt.
+*/
+
+/* Kein Zoom-Sprung: auf Touch-Geräten (auch Tablet) Felder mit 16 px */
+@media (pointer:coarse){
+  input,select,textarea{font-size:16px}
+}
+@media (pointer:coarse){
+  .chefhandy input:not([type=checkbox]):not([type=radio]):not([type=range]),
+  .chefhandy select,.chefhandy .ffuss button,.chefhandy .frumpf button{min-height:44px}
+}
+.chefhandy .tabellentext{font-family:Consolas,"SF Mono",monospace;font-size:13px}
+@media (pointer:coarse),(max-width:760px){ .chefhandy .tabellentext{font-size:16px} }
+
+/* ---- Zeitstrahl: Achse genau über den Spuren, Beschriftung über dem Jetzt-Strich */
+.strahl .strahlkopf{gap:7px}
+.strahl .strahlkopf .spur{border:0;background:none;height:16px}
+.strahl .stueck span{position:relative;z-index:3}
+.strahl .stueck.geplant span{
+  font-size:10px;color:var(--text);white-space:nowrap;
+  background:var(--flaeche2);border-radius:3px;padding:0 2px;
+}
+.strahl .jetzt{z-index:2;opacity:.85}
+/* Passt die Uhrzeit nicht in den Kasten, lieber weglassen als abschneiden */
+.strahl .stueck{container-type:inline-size}
+@container (max-width:57px){ .strahl .stueck span{display:none} }
+
+/* ---- Tippflächen mindestens 44 px, ohne die Knöpfe sichtbar aufzublähen.
+   Eine unsichtbare Fläche um den Knopf fängt den Daumen mit auf. */
+.chefhandy .kopf button.rund,.chefhandy #knopf_sprache,
+.chefhandy .wochenlage .wpfeil,.chefhandy .umschalter button,
+.chefhandy .streifen button{position:relative}
+.chefhandy .kopf button.rund::after,.chefhandy #knopf_sprache::after,
+.chefhandy .wochenlage .wpfeil::after{content:"";position:absolute;inset:-4px}
+.chefhandy #knopf_sprache{min-width:44px;height:36px}
+.chefhandy .wochenlage .wpfeil{width:36px;height:36px}
+.chefhandy .umschalter button{min-height:36px}
+.chefhandy .umschalter button::after{content:"";position:absolute;left:0;right:0;top:-4px;bottom:-4px}
+.chefhandy .streifen{padding:2px 1px 4px}
+.chefhandy .streifen button{min-height:40px}
+.chefhandy .streifen button::after{content:"";position:absolute;left:0;right:0;top:-2px;bottom:-2px}
+.chefhandy #me_streifen{flex-wrap:wrap;overflow:visible}
+.chefhandy #pl_zurueck,.chefhandy #pl_vor,.chefhandy #zt_zurueck,.chefhandy #zt_vor{min-width:44px}
+.chefhandy p > a{display:inline-block;padding:13px 4px}
+.chefhandy .fkopf .still[data-x]{width:44px;height:44px;padding:0;font-size:17px;margin:-6px -8px -6px 0}
+.chefhandy .zeile .rechts button{min-width:44px;min-height:44px}
+.chefhandy .haken{min-height:44px;margin-bottom:4px}
+.chefhandy .haken input{width:22px;height:22px}
+.chefhandy .schieber input[type=range]{height:44px}
+
+/* ---- Meldungen oben, Rückgängig-Streifen über der Fußleiste:
+   so verdecken sie weder die Reiter noch die Knöpfe der Fenster. */
+@media (max-width:1099px){
+  .chefhandy .melder{
+    top:calc(62px + env(safe-area-inset-top));bottom:auto;left:12px;right:12px;
+    max-width:none;padding-bottom:0;align-items:center;
+  }
+  .chefhandy .melder .meldung{width:100%;max-width:520px}
+  .chefhandy .rueckstreifen{bottom:68px}
+}
+
+/* ---- Fenster am Handy: richten sich nach dem sichtbaren Ausschnitt
+   (Tastatur), Knöpfe kompakter, damit mehr vom Formular zu sehen ist. */
+@media (max-width:760px){
+  .chefhandy .hintergrund{top:var(--sicht-oben,0);bottom:auto;height:var(--sicht-hoehe,100%)}
+  .chefhandy .fenster{max-height:min(93vh, calc(var(--sicht-hoehe, 100vh) - 10px))}
+  .chefhandy .ffuss{padding:9px 13px;padding-bottom:calc(9px + env(safe-area-inset-bottom));gap:7px}
+  .chefhandy .ffuss button{min-width:0;flex:1 1 30%;padding:11px 8px;font-size:15px;min-height:46px}
+  .chefhandy .ffuss .links{flex:1 0 100%}
+  .chefhandy .frumpf{padding:13px 15px;overscroll-behavior:contain}
+  /* Zwei Felder nebeneinander (Datum/Mitarbeiter, Von/Bis …) auch am kleinen iPhone */
+  .chefhandy .frumpf .feldreihe{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .chefhandy .frumpf .feldreihe select{text-overflow:ellipsis}
+}
+
+/* ---- Bessere Lesbarkeit: Gelb als Schrift ist auf hellem Grund zu blass */
+.chefhandy{--gelb-schrift:#8a5d00}
+:root[data-schema="dunkel"] .chefhandy{--gelb-schrift:var(--gelb)}
+.chefhandy .warnzahl,.chefhandy .todozeile .zahl,.chefhandy .etikett.offen{color:var(--gelb-schrift)}
+/* Dunkel: weiße Schrift auf hellem Rot/Grün war zu schwach – Flächen etwas satter */
+:root[data-schema="dunkel"] .chefhandy button.haupt,
+:root[data-schema="dunkel"] .chefhandy .streifen button.an,
+:root[data-schema="dunkel"] .chefhandy .umschalter button.an,
+:root[data-schema="dunkel"] .chefhandy .tagesband button.an,
+:root[data-schema="dunkel"] .chefhandy .karte.schritt .nr,
+:root[data-schema="dunkel"] .chefhandy .menueliste button .zahl{
+  background:var(--rot-dunkel);border-color:var(--rot-dunkel);
+}
+:root[data-schema="dunkel"] .chefhandy button.haupt:hover{background:#a83f36;border-color:#a83f36}
+:root[data-schema="dunkel"] .chefhandy button.gruen{background:#2e7d4f;border-color:#2e7d4f}
+
+/* ================================================================ Startseite kompakt
+   Zahlen als schmale Leiste, schnelle Knöpfe als kleine Reihe – mehr auf einen Blick.
+*/
+.chefhandy .tageskopf{margin-bottom:8px}
+.chefhandy .zahlenleiste{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 4px;
+}
+.chefhandy .zahlenleiste .kachel{
+  padding:6px 7px 5px;min-height:48px;border-left-width:3px;border-radius:10px;
+  display:flex;flex-direction:column;justify-content:center;min-width:0;
+}
+.chefhandy .zahlenleiste .kachel:hover{transform:none}
+.chefhandy .zahlenleiste .kachel:active{transform:scale(.97)}
+.chefhandy .zahlenleiste .wert{font-size:16.5px;font-weight:700;line-height:1.15;white-space:nowrap}
+.chefhandy .zahlenleiste .bez{
+  font-size:10.5px;line-height:1.2;margin-top:1px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.chefhandy .schnellknoepfe{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px}
+.chefhandy .schnellknoepfe button{
+  min-height:52px;padding:6px 3px 5px;font-size:11.5px;font-weight:600;line-height:1.2;
+  align-items:center;justify-content:center;text-align:center;gap:3px;border-radius:10px;
+}
+.chefhandy .schnellknoepfe button .bild{font-size:17px;line-height:1}
+.chefhandy .schnellknoepfe button:active{transform:scale(.96)}
+
+/* Woche nach Tag: Tagessumme unter das Datum, damit zwei Schichten nebeneinander passen */
+.chefhandy .wtag{
+  display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:9px;align-items:start;
+}
+.chefhandy .wtag .wdatum{grid-column:1;grid-row:1;width:auto}
+.chefhandy .wtag .wsum{grid-column:1;grid-row:2;text-align:center;font-size:11px;padding-top:1px}
+.chefhandy .wtag .wschichten{grid-column:2;grid-row:1 / span 2;gap:4px;align-self:center}
+.chefhandy .wchip{font-size:11.5px;padding:2px 7px 2px 5px;gap:4px}
+
+/* Zeiten: Knöpfe gleich unter der Summe, nicht erst nach der Liste */
+.chefhandy .knopfreihe.oben{margin:0 0 10px}
+.chefhandy .knopfreihe button{min-height:46px}
+
+/* ================================================================ Tablet und PC
+   Ab 760 px zwei Spalten statt einer schmalen Mitte, Listen mehrspaltig.
+   Ab 1100 px wandern die Reiter als Leiste an den linken Rand.
+*/
+@media (min-width:760px){
+  .chefhandy .inhalt{max-width:1180px;padding:14px 16px;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+
+  /* Fußleiste: Reiter zusammen in der Mitte statt über die ganze Breite verteilt */
+  .chefhandy .fussleiste{justify-content:center}
+  .chefhandy .fussleiste button{flex:0 1 132px;font-size:12px}
+
+  /* Startseite zweispaltig: links Überblick + heute + Termine, rechts die Woche */
+  .chefhandy #s_heute.an{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+    grid-template-rows:auto 1fr;column-gap:18px;align-items:start;
+  }
+  .chefhandy .h_oben{grid-column:1;grid-row:1}
+  .chefhandy .h_unten{grid-column:1;grid-row:2}
+  .chefhandy .h_rechts{grid-column:2;grid-row:1 / span 2}
+
+  /* Listen in Spalten */
+  .chefhandy #pl_liste,.chefhandy #tm_liste,.chefhandy #ze_liste,.chefhandy #wu_liste,
+  .chefhandy #te_liste,.chefhandy #au_inhalt,.chefhandy #vs_empfaenger{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));column-gap:10px;
+    align-items:start;
+  }
+  .chefhandy #pl_liste > .hinweis,.chefhandy #pl_liste > .leer,.chefhandy #au_inhalt > .hinweis,
+  .chefhandy #au_inhalt > .leer,.chefhandy #tm_liste > .leer,.chefhandy #ze_liste > .leer,
+  .chefhandy #wu_liste > .leer,.chefhandy #te_liste > .leer,
+  .chefhandy #vs_empfaenger > .hinweis{grid-column:1 / -1}
+
+  /* Große Knöpfe nicht über die volle Breite ziehen */
+  .chefhandy .seite > button.gross,.chefhandy .teil > button.gross{
+    width:auto;min-width:280px;max-width:100%;margin-right:8px;
+  }
+  .chefhandy .knopfreihe{max-width:640px}
+
+  /* Mehr-Bereich: Einlesen und Einstellungen nebeneinander */
+  .chefhandy #t_einlesen{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));column-gap:12px;align-items:start}
+  .chefhandy #t_einlesen > #ei_ergebnis{grid-column:1 / -1}
+  .chefhandy #t_einstellungen{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:14px;align-items:start}
+  .chefhandy #t_einstellungen > .karte:nth-of-type(1){grid-column:1;grid-row:1}
+  .chefhandy #t_einstellungen > .karte:nth-of-type(2){grid-column:2;grid-row:1 / span 3}
+  .chefhandy #t_einstellungen > #es_speichern{grid-column:1;grid-row:2;width:100%;min-width:0}
+  .chefhandy #t_einstellungen > .karte:nth-of-type(3){grid-column:1;grid-row:3}
+  .chefhandy #t_einstellungen > #es_abmelden,
+  .chefhandy #t_einstellungen > p{grid-column:1 / -1}
+  .chefhandy #t_einstellungen > #es_abmelden{justify-self:start}
+
+  /* Versand-Felder nicht über die volle Breite */
+  .chefhandy #t_versand > .feldreihe{max-width:640px}
+
+  /* Menü als Tafel in der Mitte statt über die volle Breite */
+  .chefhandy .menueblende{justify-content:center}
+  .chefhandy .menuetafel{max-width:520px}
+}
+
+@media (min-width:1100px){
+  .chefhandy .fussleiste{
+    top:0;bottom:0;right:auto;width:96px;flex-direction:column;justify-content:flex-start;
+    padding:72px 6px 12px;border-top:0;border-right:1px solid var(--linie);
+    box-shadow:2px 0 14px rgba(0,0,0,.06);z-index:55;gap:4px;
+  }
+  .chefhandy .fussleiste button{flex:0 0 auto;min-height:66px;width:100%;border-radius:12px;font-size:12px}
+  .chefhandy .fussleiste button:hover{background:var(--flaeche2)}
+  .chefhandy .fussleiste button.an{background:var(--rot-hell)}
+  .chefhandy .inhalt{
+    padding:16px 20px 28px;
+    margin-left:calc(96px + max(0px, (100vw - 96px - 1180px) / 2));margin-right:auto;
+  }
+}
+
+/* ================================================================ Handy platzsparend
+   Stand 24.10.2026, nach dem Vorbild der CBF-App: kleine Kacheln, Zeilen ein-
+   bis höchstens zweizeilig, schmale Köpfe. Gilt nur für die Chef-Fassung am
+   Handy (unter 760 px); Tablet und PC bleiben wie abgenommen. Sichtbar kleinere
+   Knöpfe behalten über eine unsichtbare Fläche mindestens 40 px Trefferfläche.
+*/
+@media (max-width:759.98px){
+  .chefhandy{font-size:14.5px}
+  .chefhandy .inhalt{padding:8px 11px;padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+  .chefhandy h3{font-size:15px;margin-bottom:8px}
+
+  /* ---- Kopfleiste ~48 px */
+  .chefhandy .kopf{gap:8px;padding:6px 11px;padding-top:calc(6px + env(safe-area-inset-top))}
+  .chefhandy .kopf .zeichen{font-size:22px;width:30px;text-align:center;flex:0 0 auto}
+  .chefhandy .kopf .name{flex:1 1 auto;min-width:0;font-size:15.5px;line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .kopf .name small{font-size:11.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .kopf .rechts{gap:6px;flex:0 0 auto}
+  .chefhandy .kopf button{position:relative}
+  .chefhandy .kopf button.rund{width:36px;height:36px;font-size:15px}
+  .chefhandy #knopf_sprache{min-width:40px;height:36px;padding:0 8px;font-size:13px}
+  .chefhandy .kopf button::after{content:"";position:absolute;inset:-3px -2px}
+
+  /* ---- Fußleiste: 52 px, Symbol 22 px, Pille um das Symbol des offenen Reiters */
+  .chefhandy .fussleiste button{min-height:52px;min-width:0;padding:4px 2px;gap:2px;
+    font-size:12.5px;font-weight:600;line-height:1.15}
+  .chefhandy .fussleiste button > span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chefhandy .fussleiste button .bild{font-size:20px;line-height:24px;height:26px;padding:1px 14px;
+    border-radius:999px;box-sizing:border-box;overflow:visible}
+  .chefhandy .fussleiste button.an .bild{background:var(--rot-hell)}
+  .chefhandy .fussleiste button .punkt{transform:translate(15px,-14px)}
+  .chefhandy .melder{top:calc(54px + env(safe-area-inset-top))}
+  .chefhandy .rueckstreifen{bottom:calc(60px + env(safe-area-inset-bottom))}
+
+  /* ---- Abschnitte, Hinweise, Leer-Texte */
+  .chefhandy .abschnitt{font-size:12px;margin:12px 0 6px;line-height:1.3}
+  .chefhandy .karte{padding:10px 11px;margin-bottom:8px;box-shadow:none}
+  .chefhandy .hinweis{padding:8px 10px;font-size:13px;margin-bottom:8px;line-height:1.4}
+  .chefhandy .leer{padding:12px 10px;font-size:13px}
+  .chefhandy .etikett{font-size:11px;padding:1px 7px}
+
+  /* ---- Tageskopf in einer Zeile */
+  .chefhandy .tageskopf{display:flex;align-items:baseline;gap:8px;margin:0 0 6px;min-width:0}
+  .chefhandy .tageskopf .datum{font-size:16px;flex:0 0 auto;white-space:nowrap}
+  .chefhandy .tageskopf .lage{font-size:12.5px;margin:0;min-width:0;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+
+  /* ---- Zahlen: vier kleine Kacheln, Beschriftung einzeilig */
+  .chefhandy .zahlenleiste{gap:5px;margin:0 0 4px}
+  .chefhandy .zahlenleiste .kachel{min-height:50px;padding:5px 6px 5px 7px;border-radius:10px;
+    box-shadow:none;border-left-width:3px}
+  .chefhandy .zahlenleiste .wert{font-size:18px;line-height:1.15;letter-spacing:-.2px;
+    overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .zahlenleiste .bez{display:block;font-size:12px;font-weight:600;line-height:1.25;
+    margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:none}
+
+  /* ---- Schnell erledigt: eine Reihe, Symbol neben dem Wort */
+  .chefhandy .schnellknoepfe{display:flex;gap:5px;margin-bottom:6px}
+  .chefhandy .schnellknoepfe button{flex:1 1 auto;min-width:0;min-height:36px;height:36px;
+    flex-direction:row;align-items:center;justify-content:center;gap:4px;padding:0 6px;
+    font-size:12.5px;line-height:1.2;border-radius:9px;white-space:nowrap;position:relative}
+  .chefhandy .schnellknoepfe button .bild{font-size:14px;flex:0 0 auto}
+  .chefhandy .schnellknoepfe button > span:not(.bild){min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .schnellknoepfe button::after{content:"";position:absolute;left:0;right:0;top:-3px;bottom:-3px}
+  /* Unter 420 px reicht die Breite nicht für Symbol und ganzes Wort: dann nur das Wort */
+  @media (max-width:419.98px){
+    .chefhandy .schnellknoepfe{gap:4px}
+    .chefhandy .schnellknoepfe button{padding:0 5px}
+    .chefhandy .schnellknoepfe button .bild{display:none}
+  }
+
+  /* ---- Zu erledigen: eine Zeile je Punkt, 40 px */
+  .chefhandy .karte.todo{padding:0;margin:8px 0 6px;overflow:hidden}
+  .chefhandy .karte.todo .todokopf{font-size:12px;padding:6px 11px 5px;line-height:1.3}
+  .chefhandy .todozeile{min-height:40px;padding:4px 11px;gap:9px;font-size:14.5px}
+  .chefhandy .todozeile .txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .todozeile .zahl{min-width:26px;height:24px;font-size:13.5px;border-radius:7px;padding:0 5px}
+  .chefhandy .todozeile .pfeil{font-size:18px;line-height:1}
+  .chefhandy .karte.fertig{display:flex;align-items:center;min-height:40px;padding:6px 11px;
+    margin:8px 0 6px;font-size:13.5px}
+
+  /* ---- Listen: kompakte Karten, Zeile 1 Titel, Zeile 2 Details, je einzeilig */
+  .chefhandy .zeile{padding:7px 10px 7px 12px;margin:0 0 6px;border-radius:10px;
+    border-left-width:4px;box-shadow:none;gap:8px}
+  .chefhandy .zeile.eng{padding:6px 10px 6px 12px;margin-bottom:6px}
+  .chefhandy .zeile .haupttext > b{font-size:15px;line-height:1.3;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .zeile .haupttext > span{font-size:13px;line-height:1.3;margin-top:1px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .zeile .rechts{font-size:13px;line-height:1.3}
+  .chefhandy .zeile .rechts .wertgross{font-size:14px}
+  .chefhandy .zeile .rechts span{font-size:11.5px}
+  .chefhandy .zeile .rechts button{min-width:40px;min-height:36px;padding:4px 8px;position:relative}
+  .chefhandy .zeile .rechts button::after{content:"";position:absolute;inset:-3px 0}
+
+  /* ---- Heute im Dienst: eine Zeile „11:00–15:00  Anna Rossi · Service · 4,0 h“ */
+  .chefhandy .zeile.schichtzeile{min-height:38px;padding:4px 10px 4px 10px;margin-bottom:4px;gap:9px}
+  .chefhandy .zeile.schichtzeile .uhrzeit{width:auto;display:flex;align-items:baseline;
+    flex:0 0 auto;font-size:13.5px;line-height:1.2}
+  .chefhandy .zeile.schichtzeile .uhrzeit b{display:inline;font-size:13.5px;font-weight:700}
+  .chefhandy .zeile.schichtzeile .uhrzeit b::after{content:"–";font-weight:400;color:var(--text-leise)}
+  .chefhandy .zeile.schichtzeile .uhrzeit span{display:inline;font-size:13.5px;color:var(--text-leise)}
+  .chefhandy .zeile.schichtzeile .haupttext{display:flex;align-items:baseline;gap:6px;min-width:0}
+  .chefhandy .zeile.schichtzeile .haupttext > b{flex:0 1 auto;font-size:14.5px;min-width:0}
+  .chefhandy .zeile.schichtzeile .haupttext > span{flex:1 1 0;margin:0;font-size:12.5px;min-width:0}
+
+  /* ---- Diese Woche */
+  .chefhandy .reihenkopf{gap:8px;margin-top:12px;margin-bottom:6px;align-items:center}
+  .chefhandy .reihenkopf .abschnitt{margin:0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .umschalter{margin:0}
+  .chefhandy .umschalter button{min-height:30px;height:30px;padding:0 10px;font-size:12.5px;white-space:nowrap}
+  .chefhandy .umschalter button::after{top:-5px;bottom:-5px}
+  .chefhandy .wochenlage{margin:0 0 6px;gap:4px}
+  .chefhandy .wochenlage .wpfeil{width:32px;height:32px;font-size:17px}
+  .chefhandy .wochenlage .wpfeil::after{inset:-4px}
+  .chefhandy .wochenlage .womitte{flex-wrap:nowrap;gap:6px;min-width:0;font-size:12.5px;white-space:nowrap}
+  .chefhandy .wochenlage .womitte b{font-size:14px;flex:0 0 auto}
+  .chefhandy .wochenlage .womitte span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .wtag{grid-template-columns:34px minmax(0,1fr);column-gap:8px;row-gap:0;
+    padding:5px 8px;margin-bottom:4px;border-radius:10px;box-shadow:none;align-items:center}
+  .chefhandy .wtag.heute{padding:4px 7px}
+  .chefhandy .wtag .wdatum{line-height:1.1;align-self:start}
+  .chefhandy .wtag .wdatum b{font-size:13px}
+  .chefhandy .wtag .wdatum span{font-size:11px}
+  .chefhandy .wtag .wsum{font-size:10.5px;line-height:1.2;padding:0;align-self:start}
+  .chefhandy .wtag .wschichten{gap:3px 4px}
+  .chefhandy .wchip{font-size:11.5px;line-height:1.2;height:22px;padding:0 6px 0 5px;gap:4px}
+  .chefhandy .wchip b{font-weight:600}
+  .chefhandy .wfrei{font-size:12px;padding:0}
+  .chefhandy .wperson{padding:6px 10px;margin-bottom:4px;border-radius:10px;box-shadow:none}
+  .chefhandy .wperson .wpinhalt b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .wperson .wpinhalt > span{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .wperson .wchips{margin-top:4px;gap:3px 4px}
+
+  /* ---- Dienstplan: Tagesreihe und Kopf schmaler */
+  .chefhandy .streifen{gap:5px;margin-bottom:6px;padding:3px 1px 3px}
+  .chefhandy .streifen button{min-height:34px;padding:0 12px;font-size:13px}
+  .chefhandy .streifen button::after{top:-3px;bottom:-3px}
+  .chefhandy #pl_zurueck,.chefhandy #pl_vor,.chefhandy #zt_zurueck,.chefhandy #zt_vor{min-width:40px;padding:0}
+  .chefhandy #me_streifen{gap:5px}
+  .chefhandy #me_streifen button{min-height:32px;padding:0 10px;font-size:12.5px}
+  .chefhandy .tagesband{gap:4px;padding:1px 1px 4px;margin-bottom:2px}
+  .chefhandy .tagesband button{padding:3px 2px 2px;border-radius:9px;font-size:10.5px;gap:0;line-height:1.15}
+  .chefhandy .tagesband button b{font-size:15px;line-height:1.15}
+  .chefhandy .tagesband button .pkt{width:4px;height:4px;margin-top:1px}
+  .chefhandy .tagesband button > span[style]{height:4px!important;margin-top:1px}
+  .chefhandy #pl_titel{font-size:14.5px!important;margin:2px 0 2px!important}
+  .chefhandy .wischhinweis{font-size:11px;margin:0 0 5px;line-height:1.3}
+  .chefhandy #pl_liste .rechts{display:flex;align-items:baseline;white-space:nowrap}
+  .chefhandy #pl_liste .rechts b{font-size:13.5px!important}
+  .chefhandy #pl_liste .rechts br{display:none}
+  .chefhandy #pl_liste .rechts b::after{content:"–";font-weight:400;color:var(--text-leise)}
+
+  /* ---- Große Knöpfe am Seitenende */
+  .chefhandy button.gross{padding:8px 14px;min-height:42px;font-size:15px}
+  .chefhandy a.knopf.gross{padding:8px 14px;min-height:42px;font-size:15px}
+  .chefhandy .weiterezeile{min-height:32px;padding:3px 10px;font-size:13px;margin:0 0 4px}
+  .chefhandy .einladeknopf{min-height:36px;padding:4px 8px;font-size:12.5px;position:relative}
+  .chefhandy .einladeknopf::after{content:"";position:absolute;inset:-3px 0}
+  .chefhandy .seite > button.gross,.chefhandy .teil > button.gross{margin-top:8px!important}
+  .chefhandy .knopfreihe{gap:6px;margin-top:8px}
+  .chefhandy .knopfreihe button{min-height:40px;padding:6px 8px;font-size:13.5px}
+  .chefhandy .knopfreihe.oben{margin:0 0 8px}
+
+  /* ---- Zeiten */
+  .chefhandy .tagwahl{margin-bottom:6px}
+  .chefhandy .tagwahl .tagtitel{font-size:13.5px;white-space:nowrap}
+  .chefhandy .strahlkarte{padding:6px 8px 4px;margin-bottom:6px;box-shadow:none;border-radius:10px}
+  .chefhandy .tagsumme{margin:0 2px 8px}
+  .chefhandy .detailkopf{margin-bottom:8px}
+
+  /* ---- Mehr: Termine, Einlesen, Einstellungen */
+  .chefhandy .mikro{padding:8px 10px;gap:10px;margin-bottom:8px}
+  .chefhandy .mikro button{width:44px;height:44px;font-size:19px}
+  .chefhandy .mikro .text b{font-size:14px}
+  .chefhandy .mikro .text span{font-size:12.5px}
+  .chefhandy .karte.schritt{padding:9px 10px;gap:9px}
+  .chefhandy .karte.schritt .nr{width:24px;height:24px;font-size:13px}
+  .chefhandy .karte.schritt .inhalt2 > b{font-size:14.5px;margin-bottom:2px}
+  .chefhandy .karte.schritt .inhalt2 p{font-size:13px;margin:0 0 7px}
+  .chefhandy .feld{margin-bottom:8px}
+  .chefhandy label{font-size:12.5px;margin-bottom:2px}
+  .chefhandy .haken{min-height:40px;margin-bottom:2px;font-size:14px}
+  .chefhandy .schieber input[type=range]{height:40px}
+
+  /* ---- Felder ~40 px hoch, Schrift bleibt 16 px (kein Zoom am iPhone) */
+  .chefhandy input:not([type=checkbox]):not([type=radio]):not([type=range]):not(.pinfeld),
+  .chefhandy select{min-height:40px;height:40px;padding:6px 10px;font-size:16px;line-height:1.3}
+  .chefhandy .pinfeld{font-size:24px;padding:6px 10px}
+  .chefhandy textarea{padding:7px 10px;font-size:16px}
+  .chefhandy .tabellentext{font-size:16px}
+
+  /* ---- Fenster von unten: schmaler Kopf und Fuß */
+  .chefhandy .fkopf{padding:12px 13px 8px}
+  .chefhandy .fkopf h2{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .chefhandy .fkopf .still[data-x]{width:40px;height:40px;font-size:16px;margin:-6px -6px -6px 0;position:relative}
+  .chefhandy .fkopf .still[data-x]::after{content:"";position:absolute;inset:-2px}
+  .chefhandy .frumpf{padding:10px 13px}
+  .chefhandy .frumpf .feldreihe{gap:8px}
+  .chefhandy .ffuss{padding:8px 11px;padding-bottom:calc(8px + env(safe-area-inset-bottom));gap:6px}
+  .chefhandy .ffuss button{min-height:42px;padding:6px 8px;font-size:14.5px}
+
+  /* ---- Menü ☰ */
+  .chefhandy .menuetafel{padding:6px 10px calc(10px + env(safe-area-inset-bottom))}
+  .chefhandy .menuetafel .griff{margin:2px auto 8px}
+  .chefhandy .menuetafel .menuekopf{font-size:12px;padding:0 4px 4px}
+  .chefhandy .menueliste button{min-height:44px;padding:6px 8px;gap:11px;font-size:15px}
+  .chefhandy .menueliste button .bild{font-size:18px;width:24px}
+  .chefhandy .menueliste button .txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chefhandy .menueliste button .pfeil{font-size:18px}
+  .chefhandy .menueliste button.abmelde{margin-top:4px}
+
+  /* ---- Anmeldung des Chefs */
+  .chefhandy .anmeldung .zifferblock button{padding:0;min-height:48px;font-size:21px}
+}

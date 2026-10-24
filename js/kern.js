@@ -11,7 +11,12 @@
 var Kern = (function () {
   'use strict';
 
-  var ABLAGE = 'pizzaplan_gabriels';
+  /* Läuft die Seite auf dem gemeinsamen Server (…/api/pizzaplan/app/)? Dann bekommt die
+     Mitarbeiter-App einen eigenen Speicherplatz – ihr verkleinerter Stand darf nie den
+     vollen Stand eines Chef-Geräts überschreiben, auch nicht im selben Browser. */
+  var SERVER_APP = /\/api\/pizzaplan\/app\//.test(location.pathname);
+  var TEAM_SEITE = /team\.html$/i.test(location.pathname);
+  var ABLAGE = SERVER_APP && TEAM_SEITE ? 'pizzaplan_gabriels_team' : 'pizzaplan_gabriels';
   var FASSUNG = 3;
 
   /* =========================================================================
@@ -69,7 +74,7 @@ var Kern = (function () {
   /* Arbeitszeit in Minuten; über Mitternacht wird mitgerechnet. */
   function dauerMinuten(von, bis, pause) {
     var a = minuten(von), b = minuten(bis);
-    if (b <= a) b += 1440;
+    if (b < a) b += 1440;
     return Math.max(0, b - a - Number(pause || 0));
   }
 
@@ -78,14 +83,37 @@ var Kern = (function () {
   /* Minuten, die in der Nachtzeit liegen (ab Nachtbeginn bis 6 Uhr früh). */
   function nachtMinuten(von, bis, nachtAb) {
     var a = minuten(von), b = minuten(bis);
-    if (b <= a) b += 1440;
+    if (b < a) b += 1440;
     var grenze = minuten(nachtAb || '22:00');
     var treffer = 0;
     for (var m = a; m < b; m++) {
       var t = ((m % 1440) + 1440) % 1440;
-      if (t >= grenze || t < 360) treffer++;
+      /* Nachtbeginn nach Mitternacht (z. B. 00:00): nur bis 6 Uhr zählen. */
+      if (grenze < 360 ? (t >= grenze && t < 360) : (t >= grenze || t < 360)) treffer++;
     }
     return treffer;
+  }
+
+  /* Minuten, die auf einen Sonntag fallen – auch der Teil einer Samstagsschicht
+     nach Mitternacht und bei Beginn am Sonntag Montag 0 bis 4 Uhr (§ 3b EStG). */
+  function sonntagMinuten(datum, von, bis) {
+    var a = minuten(von), b = minuten(bis);
+    if (b < a) b += 1440;
+    var so = istSonntag(datum), sa = wochentag(datum) === 5, n = 0;
+    for (var m = a; m < b; m++) {
+      if (m < 1440 ? so : (sa || (so && m < 1440 + 240))) n++;
+    }
+    return n;
+  }
+
+  /* Wie dauerMinuten, aber mit echter Uhr: in der Nacht der Zeitumstellung
+     ist eine Schicht eine Stunde länger oder kürzer. */
+  function echteMinuten(datum, von, bis, pause) {
+    var p = ausIso(datum), a = minuten(von), b = minuten(bis);
+    if (b < a) b += 1440;
+    var start = new Date(p.getFullYear(), p.getMonth(), p.getDate(), 0, a);
+    var ende = new Date(p.getFullYear(), p.getMonth(), p.getDate(), 0, b);
+    return Math.max(0, Math.round((ende - start) / 60000) - Number(pause || 0));
   }
 
   function dm(datum) {
@@ -112,6 +140,22 @@ var Kern = (function () {
     return e;
   }
 
+  /* Texte aus dem Wörterbuch. sprache.js wird erst nach kern.js geladen – darum
+     wird T erst beim Aufruf gesucht; fehlt es, gilt der deutsche Text.
+     Platzhalter wie {zeit} füllt diese Hilfe selbst (T.t tut das nicht). */
+  function tx(schluessel, deutsch, werte) {
+    var w = window.T;
+    var s = w && w.W && w.W[schluessel] ? w.t(schluessel) : deutsch;
+    Object.keys(werte || {}).forEach(function (k) { s = s.split('{' + k + '}').join(werte[k]); });
+    return s;
+  }
+
+  /* Gespeicherten Wert (Wunschart, Vertrag, Position …) für die Anzeige übersetzen. */
+  function anzeige(wert, sprache) {
+    var w = window.T;
+    return w && w.wert ? w.wert(wert, sprache) : wert;
+  }
+
   /* =========================================================================
      3 · Grundeinstellungen und Beispieldaten
      ========================================================================= */
@@ -121,7 +165,7 @@ var Kern = (function () {
     chef_pin: '1234',
     sprache: 'de',
     farbschema: 'hell',
-    positionen: 'Küche,Pizzaofen,Service,Theke,Lieferung,Spüle',
+    positionen: 'Leitung,Service,Küche,Pizzaofen,Vorbereitung,stellv. Abendleitung',
     oeffnung_von: '11:00',
     oeffnung_bis: '23:00',
     pause_ab_6h: '30',
@@ -130,10 +174,11 @@ var Kern = (function () {
     zuschlag_sonntag: '0',
     zuschlag_nacht: '0',
     nacht_ab: '22:00',
-    minijob_grenze: '556',
-    mindestlohn: '12.82',
+    minijob_grenze: '603',
+    mindestlohn: '13.90',
     termin_kategorien: 'Allgemein,Lieferant,Behörde,Steuerberater,Wartung,Personal,Privat',
     termin_erinnerung_standard: '60',
+    team_pin_verlangen: '0',
     versand_text: 'Hallo {name},\n\nhier ist dein Dienstplan für {zeitraum}:\n\n{plan}\n\n'
       + 'Deinen Plan immer aktuell – und zum Ein- und Ausstempeln – findest du hier:\n{link}\n\n'
       + 'Viele Grüße\n{betrieb}',
@@ -147,18 +192,76 @@ var Kern = (function () {
     ['Abend Service', '17:00', '23:00', 30, 'Service', '#2e86c1'],
     ['Abend Küche', '16:30', '23:30', 30, 'Küche', '#e67e22'],
     ['Pizzaofen Abend', '16:00', '23:00', 30, 'Pizzaofen', '#d35400'],
-    ['Lieferung Abend', '17:30', '22:30', 0, 'Lieferung', '#16a085'],
+    ['Vorbereitung', '15:00', '18:30', 0, 'Vorbereitung', '#16a085'],
+    ['Abendleitung (stellv.)', '17:00', '23:00', 30, 'stellv. Abendleitung', '#1f618d'],
     ['Ganztag', '11:00', '22:00', 60, 'Service', '#8e44ad']
   ];
 
   /* Kleines Beispiel-Team, damit nichts leer aussieht. Wird beim ersten
      eigenen Eintrag nie wieder angefasst und lässt sich in einem Zug löschen. */
+  /* Name, Rolle, Farbe, Vertrag, Chef, Stundenlohn, Sprache, Handy, E-Mail, Wochenstunden, Notiz */
   var TEAM_START = [
-    ['Gabriele Esposito', 'Leitung', '#c0392b', 'Vollzeit', 1, 0, 'it'],
-    ['Anna Rossi', 'Service', '#3d8bfd', 'Teilzeit', 0, 13.5, 'it'],
-    ['Marco Bianchi', 'Küche', '#e67e22', 'Vollzeit', 0, 16, 'it'],
-    ['Luca Greco', 'Lieferung', '#16a085', 'Minijob', 0, 13, 'it'],
-    ['Sara Meier', 'Theke', '#8e44ad', 'Minijob', 0, 13, 'de']
+    ['Genarino', 'Leitung', '#c0392b', 'Vollzeit', 1, 0, 'it',
+      '0151 2345601', 'genarino@example.de', 40, ''],
+    ['Annik', 'Service', '#3d8bfd', 'Teilzeit', 0, 14.5, 'de',
+      '0151 2345602', 'annik@example.de', 22, ''],
+    ['Bettina', 'Service', '#8e44ad', 'Minijob', 0, 14, 'de',
+      '0151 2345603', 'bettina@example.de', 9, ''],
+    ['Valeria', 'Service', '#16a085', 'Teilzeit', 0, 14.5, 'it',
+      '0151 2345604', 'valeria@example.de', 25, ''],
+    ['Filippo', 'Küche', '#e67e22', 'Vollzeit', 0, 16.5, 'it',
+      '0151 2345605', 'filippo@example.de', 40, ''],
+    ['Marisa', 'Küche', '#27ae60', 'Teilzeit', 0, 14.5, 'it',
+      '0151 2345606', 'marisa@example.de', 20, ''],
+    ['Adice', 'Küche', '#af601a', 'Minijob', 0, 14, 'it',
+      '0151 2345607', 'adice@example.de', 9, ''],
+    ['Franco', 'Vorbereitung', '#1f618d', 'Vollzeit', 0, 16.5, 'it',
+      '0151 2345608', 'franco@example.de', 40, 'stellv. Abendleitung']
+  ];
+
+  /* Wochenmuster des Beispielplans: Wochentag (0 = Montag, Ruhetag), Person (Nummer in
+     TEAM_START, null = noch offen), von, bis, Pause, Position. Mittags 1 Service (Di–Fr
+     Genarino selbst), abends 2 Service (Di und Mi einer), Küche (Di und Mi 1, ab
+     Donnerstag 2) und Franco: Vorbereitung am Nachmittag, an Genarinos freien Abenden
+     (Di, Do) die stellvertretende Abendleitung. Sonntagabend bleibt eine Service-Schicht
+     offen. Die Wochenstunden aus TEAM_START werden damit nirgends überschritten. */
+  var PLAN_MUSTER = [
+    [1, 0, '11:00', '15:00', 0, 'Service'],
+    [1, 1, '17:00', '23:00', 30, 'Service'],
+    [1, 4, '16:30', '23:30', 30, 'Küche'],
+    [1, 7, '17:00', '23:00', 30, 'stellv. Abendleitung'],
+    [2, 0, '11:00', '15:00', 0, 'Service'],
+    [2, 3, '17:00', '23:00', 30, 'Service'],
+    [2, 4, '16:30', '23:30', 30, 'Küche'],
+    [2, 0, '17:00', '23:00', 30, 'Leitung'],
+    [2, 7, '15:00', '18:30', 0, 'Vorbereitung'],
+    [3, 0, '11:00', '15:00', 0, 'Service'],
+    [3, 1, '17:00', '23:00', 30, 'Service'],
+    [3, 3, '18:00', '22:00', 0, 'Service'],
+    [3, 4, '16:30', '23:30', 30, 'Küche'],
+    [3, 5, '16:30', '23:30', 30, 'Küche'],
+    [3, 7, '17:00', '23:00', 30, 'stellv. Abendleitung'],
+    [4, 0, '11:00', '15:00', 0, 'Service'],
+    [4, 3, '17:00', '23:00', 30, 'Service'],
+    [4, 2, '18:00', '22:00', 0, 'Service'],
+    [4, 4, '16:30', '23:30', 30, 'Küche'],
+    [4, 6, '16:30', '23:30', 30, 'Küche'],
+    [4, 0, '17:00', '23:00', 30, 'Leitung'],
+    [4, 7, '15:00', '18:30', 0, 'Vorbereitung'],
+    [5, 1, '11:00', '15:00', 0, 'Service'],
+    [5, 3, '17:00', '23:00', 30, 'Service'],
+    [5, 2, '18:00', '22:00', 0, 'Service'],
+    [5, 4, '16:30', '23:30', 30, 'Küche'],
+    [5, 5, '16:30', '23:30', 30, 'Küche'],
+    [5, 0, '17:00', '23:00', 30, 'Leitung'],
+    [5, 7, '15:00', '18:30', 0, 'Vorbereitung'],
+    [6, 3, '11:00', '15:00', 0, 'Service'],
+    [6, 1, '17:00', '23:00', 30, 'Service'],
+    [6, null, '18:00', '22:00', 0, 'Service'],
+    [6, 4, '16:30', '23:30', 30, 'Küche'],
+    [6, 5, '16:30', '23:30', 30, 'Pizzaofen'],
+    [6, 0, '17:00', '23:00', 30, 'Leitung'],
+    [6, 7, '15:00', '18:30', 0, 'Vorbereitung']
   ];
 
   /* =========================================================================
@@ -167,7 +270,7 @@ var Kern = (function () {
 
   var D = null;
   var ablage = null;
-  var speicherArt = 'Arbeitsspeicher';
+  var speicherArt = 'ram';           // 'gross' | 'klein' | 'ram'
 
   function ablageOeffnen() {
     return new Promise(function (fertig) {
@@ -212,22 +315,77 @@ var Kern = (function () {
   }
 
   var horcher = [];
+  var nachSichernListe = [];
   function sichern(still) {
     try { ablageSchreiben(JSON.stringify(D)); } catch (e) { /* egal */ }
     if (!still) horcher.forEach(function (f) { try { f(); } catch (e) { /* egal */ } });
+    nachSichernListe.forEach(function (f) { try { f(); } catch (e) { /* egal */ } });
   }
 
+  /* Rückruf bei Änderungen. Kommt ein neuer Stand vom Server, wird er mit 'server' aufgerufen. */
   function beiAenderung(f) { horcher.push(f); }
+
+  /* Für den Abgleich mit dem Server (verbindung.js): nach jedem Speichern, auch dem stillen. */
+  function nachSichern(f) { nachSichernListe.push(f); }
+
+  /* Stand vom gemeinsamen Server übernehmen. Der Rückgängig-Stapel wird geleert,
+     sonst würde ein alter Schnappschuss fremde Änderungen wieder zurückdrehen. */
+  function uebernehmen(neu) {
+    if (!neu || !Array.isArray(neu.mitarbeiter)) return false;
+    D = neu;
+    nachziehen();
+    stapel = [];
+    try { ablageSchreiben(JSON.stringify(D)); } catch (e) { /* egal */ }
+    horcher.forEach(function (f) { try { f('server'); } catch (e) { /* egal */ } });
+    return true;
+  }
+
+  /* Gespeicherten Stand dieses Geräts entfernen (Gerät vom Server abmelden). */
+  function ablageLoeschen() {
+    clearTimeout(schreibZeit);
+    try { window.localStorage.removeItem(ABLAGE); } catch (e) { /* egal */ }
+    return new Promise(function (fertig) {
+      if (!ablage) return fertig();
+      try {
+        var t = ablage.transaction('kv', 'readwrite');
+        t.objectStore('kv').delete(ABLAGE);
+        t.oncomplete = function () { fertig(); };
+        t.onerror = function () { fertig(); };
+      } catch (e) { fertig(); }
+    });
+  }
 
   function neueId(tabelle) {
     D.zaehler[tabelle] = (D.zaehler[tabelle] || 0) + 1;
     return D.zaehler[tabelle];
   }
 
+  /* Persönlicher Zugangscode: 20 Zeichen aus dem Zufallsgenerator des Browsers.
+     32 Zeichen im Vorrat – 256 lässt sich glatt durch 32 teilen, kein Zeichen kommt öfter vor. */
+  var CODE_LAENGE = 20;
   function zugangscode() {
     var z = 'abcdefghijkmnpqrstuvwxyz23456789', s = '';
-    for (var i = 0; i < 12; i++) s += z[Math.floor(Math.random() * z.length)];
+    var zufall = new Uint8Array(CODE_LAENGE);
+    try { window.crypto.getRandomValues(zufall); } catch (e) {
+      for (var j = 0; j < CODE_LAENGE; j++) zufall[j] = Math.floor(Math.random() * 256);
+    }
+    for (var i = 0; i < CODE_LAENGE; i++) s += z[zufall[i] % z.length];
     return s;
+  }
+
+  /* Ältere, kürzere Codes einmalig gegen lange tauschen. Der alte Einladungslink gilt dann
+     nicht mehr – deshalb wird der Vermerk „eingeladen“ zurückgesetzt. */
+  function codesVerlaengern() {
+    var n = 0;
+    D.mitarbeiter.forEach(function (m) {
+      if (String(m.zugangscode || '').length >= 16) return;
+      m.zugangscode = zugangscode();
+      m.eingeladen_am = '';
+      m.eingeladen_ueber = '';
+      n++;
+    });
+    if (n) sichern(true);
+    return n;
   }
 
   function leerBau() {
@@ -240,9 +398,13 @@ var Kern = (function () {
   }
 
   function nachziehen() {
+    if (!D.einstellung || typeof D.einstellung !== 'object') D.einstellung = {};
     Object.keys(STANDARD).forEach(function (k) {
       if (D.einstellung[k] === undefined || D.einstellung[k] === null) D.einstellung[k] = STANDARD[k];
     });
+    /* Alte Grundwerte von 2025 auf den Stand 2026 heben, eigene Werte bleiben. */
+    if (D.einstellung.minijob_grenze === '556') D.einstellung.minijob_grenze = '603';
+    if (D.einstellung.mindestlohn === '12.82') D.einstellung.mindestlohn = '13.90';
     ['mitarbeiter', 'schicht', 'wunsch', 'zeit', 'termin', 'vorlage'].forEach(function (t) {
       if (!Array.isArray(D[t])) D[t] = [];
     });
@@ -256,6 +418,7 @@ var Kern = (function () {
       if (!m.zugangscode) m.zugangscode = zugangscode();
       if (!m.sprache) m.sprache = 'de';
       if (m.aktiv === undefined) m.aktiv = 1;
+      KONTAKT_FELDER.forEach(function (f) { if (m[f] === undefined || m[f] === null) m[f] = ''; });
     });
     D.fassung = FASSUNG;
   }
@@ -265,8 +428,9 @@ var Kern = (function () {
       D.mitarbeiter.push({
         id: neueId('mitarbeiter'), name: r[0], rolle: r[1], farbe: r[2], vertrag: r[3],
         ist_chef: r[4], stundenlohn: r[5], sprache: r[6],
-        pin: '1234', telefon: '', email: '', wochenstunden: 0, urlaubstage: 0,
-        eintritt: '', notiz: '', aktiv: 1, beispiel: 1, zugangscode: zugangscode()
+        pin: '1234', telefon: r[7] || '', email: r[8] || '', wochenstunden: r[9] || 0,
+        urlaubstage: 0, eintritt: '', notiz: r[10] || '', aktiv: 1, beispiel: 1,
+        zugangscode: zugangscode()
       });
     });
     VORLAGEN_START.forEach(function (r) {
@@ -275,23 +439,17 @@ var Kern = (function () {
         pause_min: r[3], position: r[4], farbe: r[5]
       });
     });
-    /* Zwei Wochen Beispielplan rund um heute. */
+    /* Beispielplan rund um heute: Vorwoche, laufende und nächste Woche. */
     var start = plusTage(wochenstart(heute()), -7);
-    var muster = [
-      [1, '11:00', '15:00', 0, 'Service'],
-      [2, '16:30', '23:30', 30, 'Küche'],
-      [3, '17:30', '22:30', 0, 'Lieferung'],
-      [4, '17:00', '23:00', 30, 'Theke']
-    ];
     for (var t = 0; t < 21; t++) {
       var datum = plusTage(start, t);
-      muster.forEach(function (r, i) {
-        if ((t + i) % 4 === 3) return;                 // nicht jeder arbeitet jeden Tag
-        var m = D.mitarbeiter[r[0]];
-        if (!m) return;
+      PLAN_MUSTER.forEach(function (r) {
+        if (r[0] !== wochentag(datum)) return;
+        var m = r[1] === null ? null : D.mitarbeiter[r[1]];
+        if (r[1] !== null && !m) return;
         D.schicht.push({
-          id: neueId('schicht'), datum: datum, von: r[1], bis: r[2], pause_min: r[3],
-          mitarbeiter_id: m.id, position: r[4], notiz: '',
+          id: neueId('schicht'), datum: datum, von: r[2], bis: r[3], pause_min: r[4],
+          mitarbeiter_id: m ? m.id : null, position: r[5], notiz: '',
           veroeffentlicht: datum <= plusTage(heute(), 6) ? 1 : 0, beispiel: 1
         });
       });
@@ -306,14 +464,18 @@ var Kern = (function () {
         });
       });
     /* Ein paar Wünsche und Termine, damit die Bereiche nicht leer wirken. */
-    [[1, 4, 5, 'Frei-Wunsch', 'offen', 'Hochzeit einer Freundin'],
-      [3, 9, 13, 'Urlaub', 'genehmigt', ''],
-      [4, -2, -2, 'Krank', 'genehmigt', '']].forEach(function (r) {
+    /* Tage ab dem Montag der nächsten Woche: Bettina möchte Urlaub (noch offen),
+       Marisa hat am Dienstag frei (genehmigt, an dem Tag hat sie keine Schicht),
+       Valeria hat später im Monat genehmigten Urlaub. */
+    var naechsterMontag = plusTage(wochenstart(heute()), 7);
+    [[2, 4, 6, 'Urlaub', 'offen', ''],
+      [5, 1, 1, 'Frei-Wunsch', 'genehmigt', 'Hochzeit einer Freundin'],
+      [3, 15, 19, 'Urlaub', 'genehmigt', '']].forEach(function (r) {
       var m = D.mitarbeiter[r[0]];
       if (!m) return;
       D.wunsch.push({
         id: neueId('wunsch'), mitarbeiter_id: m.id,
-        von_datum: plusTage(heute(), r[1]), bis_datum: plusTage(heute(), r[2]),
+        von_datum: plusTage(naechsterMontag, r[1]), bis_datum: plusTage(naechsterMontag, r[2]),
         typ: r[3], status: r[4], bemerkung: r[5],
         erstellt: new Date().toISOString().slice(0, 19), beispiel: 1
       });
@@ -335,15 +497,16 @@ var Kern = (function () {
     ablage = await ablageOeffnen();
     var roh = null;
     try { roh = JSON.parse((await ablageLesen()) || ersatzLesen() || 'null'); } catch (e) { roh = null; }
-    speicherArt = ablage ? 'Browserspeicher (groß)' : (ersatzLesen() !== null || window.localStorage
-      ? 'Browserspeicher (klein)' : 'Arbeitsspeicher');
-    if (roh && Array.isArray(roh.mitarbeiter) && roh.mitarbeiter.length) {
+    speicherArt = ablage ? 'gross' : (ersatzLesen() !== null || window.localStorage
+      ? 'klein' : 'ram');
+    if (roh && Array.isArray(roh.mitarbeiter)) {
       D = roh;
       nachziehen();
       return;
     }
     D = leerBau();
-    beispielFuellen();
+    /* Mitarbeiter-App am Server: kein Beispielteam, der eigene Stand kommt vom Server. */
+    if (!(SERVER_APP && TEAM_SEITE)) beispielFuellen();
     sichern(true);
   }
 
@@ -364,7 +527,7 @@ var Kern = (function () {
 
   function rueckgaengig() {
     var e = stapel.pop();
-    if (!e) throw Fehler('Es gibt nichts zum Rückgängigmachen.');
+    if (!e) throw Fehler(tx('k_nichts_rueck', 'Es gibt nichts zum Rückgängigmachen.'));
     D = JSON.parse(e.stand);
     sichern();
     return e.was;
@@ -384,7 +547,7 @@ var Kern = (function () {
   function einstZahl(schluessel) { return Number(String(einst(schluessel)).replace(',', '.')) || 0; }
 
   function einstSetzen(werte) {
-    merken('Einstellungen geändert');
+    merken(tx('r_einst_geaendert', 'Einstellungen geändert'));
     Object.keys(werte).forEach(function (k) { D.einstellung[k] = String(werte[k]); });
     sichern();
   }
@@ -434,21 +597,42 @@ var Kern = (function () {
       .map(function (m) { return Object.assign({}, m); });
   }
 
+  /* Kontakt und Adresse – alles Text, das Geburtsdatum als JJJJ-MM-TT. */
+  var KONTAKT_FELDER = ['telegram', 'strasse', 'plz', 'ort', 'geburtsdatum', 'notfallkontakt'];
+
   var MA_FELDER = ['name', 'rolle', 'farbe', 'pin', 'telefon', 'email', 'wochenstunden',
-    'stundenlohn', 'vertrag', 'urlaubstage', 'eintritt', 'aktiv', 'ist_chef', 'notiz', 'sprache'];
+    'stundenlohn', 'vertrag', 'urlaubstage', 'eintritt', 'aktiv', 'ist_chef', 'notiz', 'sprache']
+    .concat(KONTAKT_FELDER);
+
+  /* Telegram-Name ohne führendes @ und ohne „t.me/“ davor speichern. */
+  function telegramNormieren(w) {
+    return String(w || '').trim()
+      .replace(/^(https?:\/\/)?(www\.)?(t\.me|telegram\.me)\//i, '')
+      .replace(/^@+/, '')
+      .replace(/\s+/g, '');
+  }
+
+  function plzOk(plz) { return !plz || /^\d{5}$/.test(String(plz).trim()); }
+
+  /* Hinweise, die nicht am Speichern hindern. */
+  function maHinweise(d) {
+    var aus = [];
+    if (!plzOk(d.plz)) aus.push(tx('k_plz_komisch', 'Die PLZ hat nicht 5 Ziffern – bitte kurz prüfen.'));
+    return aus;
+  }
 
   function maSpeichern(d) {
     var name = String(d.name || '').trim();
-    if (!name) throw Fehler('Bitte einen Namen eintragen.');
+    if (!name) throw Fehler(tx('k_name_fehlt', 'Bitte einen Namen eintragen.'));
     if (d.email && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(String(d.email).trim())) {
-      throw Fehler('Die E-Mail-Adresse sieht nicht richtig aus.');
+      throw Fehler(tx('k_email_falsch', 'Die E-Mail-Adresse sieht nicht richtig aus.'));
     }
     var doppelt = D.mitarbeiter.find(function (m) {
       return Number(m.id) !== Number(d.id || 0)
         && nameSchluessel(m.name) === nameSchluessel(name);
     });
-    if (doppelt) throw Fehler('„' + doppelt.name + '“ steht schon im Team.');
-    merken(d.id ? 'Mitarbeiter geändert' : 'Mitarbeiter angelegt');
+    if (doppelt) throw Fehler(tx('k_name_doppelt', '„{name}“ steht schon im Team.', { name: doppelt.name }));
+    merken(d.id ? tx('r_ma_geaendert', 'Mitarbeiter geändert') : tx('r_ma_angelegt', 'Mitarbeiter angelegt'));
     var ziel = d.id ? ma(d.id) : null;
     if (!ziel) {
       ziel = { id: neueId('mitarbeiter'), zugangscode: zugangscode(), beispiel: 0 };
@@ -461,21 +645,35 @@ var Kern = (function () {
     ziel.stundenlohn = Number(String(d.stundenlohn || 0).replace(',', '.')) || 0;
     ziel.wochenstunden = Number(String(d.wochenstunden || 0).replace(',', '.')) || 0;
     ziel.urlaubstage = Number(d.urlaubstage || 0) || 0;
+    ziel.telegram = telegramNormieren(ziel.telegram);
+    ['strasse', 'plz', 'ort', 'notfallkontakt'].forEach(function (f) {
+      ziel[f] = String(ziel[f] || '').trim();
+    });
+    ziel.geburtsdatum = datumGueltig(ziel.geburtsdatum) ? ziel.geburtsdatum : '';
     ziel.beispiel = 0;
     sichern();
     return ziel.id;
   }
 
+  /* Merker „eingeladen am“ – kein Rückgängig-Schritt, nur ein Vermerk. */
+  function eingeladenSetzen(id, weg) {
+    var m = ma(id);
+    if (!m) return;
+    m.eingeladen_am = heute();
+    m.eingeladen_ueber = weg || '';
+    sichern();
+  }
+
   function maLoeschen(id) {
     var m = ma(id);
-    if (!m) throw Fehler('Diesen Mitarbeiter gibt es nicht mehr.');
-    merken('Mitarbeiter „' + m.name + '“ entfernt');
+    if (!m) throw Fehler(tx('k_ma_weg', 'Diesen Mitarbeiter gibt es nicht mehr.'));
+    merken(tx('r_ma_entfernt', 'Mitarbeiter „{name}“ entfernt', { name: m.name }));
     var hatZeiten = D.zeit.some(function (z) { return Number(z.mitarbeiter_id) === Number(id); });
     if (hatZeiten) {
       m.aktiv = 0;
       sichern();
-      return 'Für ' + m.name + ' sind Arbeitszeiten erfasst – der Eintrag wurde deshalb nur '
-        + 'auf inaktiv gesetzt.';
+      return tx('k_ma_inaktiv', 'Für {name} sind Arbeitszeiten erfasst – der Eintrag wurde deshalb nur '
+        + 'auf inaktiv gesetzt.', { name: m.name });
     }
     D.mitarbeiter = D.mitarbeiter.filter(function (x) { return Number(x.id) !== Number(id); });
     D.wunsch = D.wunsch.filter(function (w) { return Number(w.mitarbeiter_id) !== Number(id); });
@@ -483,11 +681,11 @@ var Kern = (function () {
       if (Number(s.mitarbeiter_id) === Number(id)) s.mitarbeiter_id = null;
     });
     sichern();
-    return m.name + ' wurde entfernt.';
+    return tx('k_ma_entfernt', '{name} wurde entfernt.', { name: m.name });
   }
 
   function beispielEntfernen() {
-    merken('Beispieldaten entfernt');
+    merken(tx('h_beispiel_entfernt', 'Beispieldaten entfernt'));
     D.mitarbeiter = D.mitarbeiter.filter(function (m) { return !m.beispiel; });
     var bleiben = {};
     D.mitarbeiter.forEach(function (m) { bleiben[m.id] = 1; });
@@ -539,13 +737,25 @@ var Kern = (function () {
     }).map(function (z) { return z.map(function (f) { return String(f).trim(); }); });
   }
 
-  /* Welche Spalte ist was? Es zählt der Anfang der Überschrift, deutsch oder italienisch. */
+  /* Welche Spalte ist was? Es zählt der Anfang der Überschrift, deutsch oder italienisch.
+     „vorname“ und „nachname“ sind Hilfsspalten: daraus wird der Name zusammengesetzt. */
   var SPALTEN = [
-    ['name', ['name', 'mitarbeiter', 'nome', 'nominativo', 'dipendente', 'vor- und nachname']],
+    ['name', ['name', 'mitarbeiter', 'nominativo', 'dipendente', 'vor- und nachname',
+      'nome e cognome', 'nome completo']],
+    ['vorname', ['vorname', 'rufname', 'nome']],
+    ['nachname', ['nachname', 'familienname', 'zuname', 'cognome']],
     ['rolle', ['rolle', 'position', 'funktion', 'bereich', 'ruolo', 'mansione', 'reparto']],
     ['vertrag', ['vertrag', 'anstellung', 'vertragsart', 'contratto', 'tipo']],
+    ['telegram', ['telegram']],
     ['telefon', ['telefon', 'handy', 'mobil', 'nummer', 'telefono', 'cellulare']],
     ['email', ['mail', 'e-mail', 'email', 'posta']],
+    ['strasse', ['straße', 'strasse', 'str', 'anschrift', 'adresse', 'via', 'indirizzo']],
+    ['plz', ['plz', 'postleitzahl', 'cap', 'codice postale']],
+    ['ort', ['ort', 'wohnort', 'stadt', 'città', 'citta', 'comune', 'località', 'localita']],
+    ['geburtsdatum', ['geburtsdatum', 'geboren', 'geburtstag', 'data di nascita', 'nascita',
+      'nato il', 'nata il']],
+    ['notfallkontakt', ['notfallkontakt', 'notfall', 'im notfall', 'contatto di emergenza',
+      'emergenza', 'in caso di emergenza']],
     ['stundenlohn', ['stundenlohn', 'lohn', 'stundensatz', 'paga', 'retribuzione', 'euro']],
     ['wochenstunden', ['wochenstunden', 'stunden pro woche', 'sollstunden', 'ore settimanali', 'ore']],
     ['urlaubstage', ['urlaub', 'urlaubstage', 'ferien', 'ferie']],
@@ -554,17 +764,32 @@ var Kern = (function () {
     ['notiz', ['notiz', 'bemerkung', 'hinweis', 'nota', 'note']]
   ];
 
+  /* Überschrift vereinheitlichen: klein, ohne Akzente, Satzzeichen werden Leerzeichen. */
+  function kopfText(w) {
+    return String(w || '').toLowerCase()
+      .replace(/[àáâ]/g, 'a').replace(/[èéê]/g, 'e').replace(/[ìíî]/g, 'i')
+      .replace(/[òóô]/g, 'o').replace(/[ùúû]/g, 'u')
+      .replace(/[^a-zäöüß0-9 -]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  /* Alle Begriffe, die längsten zuerst: so gewinnt „data di nascita“ vor „data“,
+     „nachname“ vor „name“ und „notfallkontakt“ vor „notiz“. Kurze Begriffe (bis drei
+     Buchstaben, z. B. „ort“, „cap“, „via“) zählen nur allein oder vor einem Leerzeichen. */
+  var BEGRIFFE = [];
+  SPALTEN.forEach(function (s) {
+    s[1].forEach(function (w) { BEGRIFFE.push([kopfText(w), s[0]]); });
+  });
+  BEGRIFFE.sort(function (a, b) { return b[0].length - a[0].length; });
+
   function spalteErkennen(ueberschrift) {
-    var u = String(ueberschrift || '').toLowerCase().replace(/[^a-zäöüß0-9 -]/g, '').trim();
+    var u = kopfText(ueberschrift);
     if (!u) return '';
-    var treffer = '';
-    SPALTEN.forEach(function (s) {
-      if (treffer) return;
-      s[1].forEach(function (w) {
-        if (!treffer && (u === w || u.indexOf(w) === 0)) treffer = s[0];
-      });
-    });
-    return treffer;
+    for (var i = 0; i < BEGRIFFE.length; i++) {
+      var w = BEGRIFFE[i][0];
+      if (u === w) return BEGRIFFE[i][1];
+      if (u.indexOf(w) === 0 && (w.length > 3 || u.charAt(w.length) === ' ')) return BEGRIFFE[i][1];
+    }
+    return '';
   }
 
   /* Erkennt, ob die erste Zeile Überschriften enthält. */
@@ -600,7 +825,7 @@ var Kern = (function () {
     var t = String(w || '').trim();
     if (!t) return '';
     var m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(t);
-    if (m) return iso(Number(m[1]), Number(m[2]), Number(m[3]));
+    if (m) { var k0 = iso(Number(m[1]), Number(m[2]), Number(m[3])); return datumGueltig(k0) ? k0 : ''; }
     m = /^(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/.exec(t);
     if (m) {
       var j = Number(m[3]);
@@ -619,7 +844,7 @@ var Kern = (function () {
   /* Liest eine Tabelle und liefert eine Vorschau – gespeichert wird noch nichts. */
   function importPruefen(text, zuordnungVorgabe) {
     var zeilen = tabelleLesen(text);
-    if (!zeilen.length) throw Fehler('In der Datei stand keine einzige Zeile.');
+    if (!zeilen.length) throw Fehler(tx('k_imp_leer', 'In der Datei stand keine einzige Zeile.'));
 
     var kopfDa = hatUeberschrift(zeilen);
     var kopf = kopfDa ? zeilen[0] : [];
@@ -632,7 +857,8 @@ var Kern = (function () {
         ? zuordnungVorgabe[i]
         : (kopfDa ? spalteErkennen(kopf[i]) : (i === 0 ? 'name' : '')));
     }
-    if (zuordnung.indexOf('name') < 0) {
+    if (zuordnung.indexOf('name') < 0 && zuordnung.indexOf('vorname') < 0
+      && zuordnung.indexOf('nachname') < 0) {
       /* Ohne Überschrift: die erste Spalte mit Buchstaben ist der Name. */
       for (var j = 0; j < breite; j++) {
         if (/[a-zäöüA-ZÄÖÜ]{2,}/.test(daten[0] ? daten[0][j] || '' : '')) { zuordnung[j] = 'name'; break; }
@@ -646,14 +872,19 @@ var Kern = (function () {
 
     daten.forEach(function (z, nr) {
       var s = { name: '', rolle: '', vertrag: '', telefon: '', email: '', stundenlohn: 0,
-        wochenstunden: 0, urlaubstage: 0, eintritt: '', sprache: '', notiz: '' };
+        wochenstunden: 0, urlaubstage: 0, eintritt: '', sprache: '', notiz: '',
+        telegram: '', strasse: '', plz: '', ort: '', geburtsdatum: '', notfallkontakt: '' };
+      var vor = '', nach = '';
       zuordnung.forEach(function (feld, sp) {
         if (!feld) return;
         var w = (z[sp] === undefined ? '' : z[sp]).trim();
         if (!w) return;
         if (feld === 'stundenlohn' || feld === 'wochenstunden') s[feld] = zahlLesen(w);
         else if (feld === 'urlaubstage') s[feld] = Math.round(zahlLesen(w));
-        else if (feld === 'eintritt') s[feld] = datumLesen(w);
+        else if (feld === 'eintritt' || feld === 'geburtsdatum') s[feld] = datumLesen(w);
+        else if (feld === 'vorname') vor = w;
+        else if (feld === 'nachname') nach = w;
+        else if (feld === 'telegram') s[feld] = telegramNormieren(w);
         else if (feld === 'vertrag') s[feld] = vertragNormieren(w);
         else if (feld === 'sprache') s[feld] = /it|ital/i.test(w) ? 'it' : 'de';
         else s[feld] = w;
@@ -661,26 +892,31 @@ var Kern = (function () {
 
       var hinweise = [];
       var art = 'neu';
+      if (!s.name) s.name = (vor + ' ' + nach).trim();
       s.name = s.name.replace(/\s{2,}/g, ' ').trim();
-      if (!s.name) { art = 'fehler'; hinweise.push('kein Name'); }
+      if (!s.name) { art = 'fehler'; hinweise.push(tx('k_imp_kein_name', 'kein Name')); }
       else {
         var kl = nameSchluessel(s.name);
-        if (gesehen[kl]) { art = 'fehler'; hinweise.push('steht in der Datei doppelt'); }
+        if (gesehen[kl]) { art = 'fehler'; hinweise.push(tx('k_imp_doppelt', 'steht in der Datei doppelt')); }
         else if (bekannt[kl]) {
           art = 'aktualisieren';
-          hinweise.push('gibt es schon als „' + bekannt[kl].name + '“ – wird ergänzt');
+          hinweise.push(tx('k_imp_vorhanden', 'gibt es schon als „{name}“ – wird ergänzt',
+            { name: bekannt[kl].name }));
         }
         gesehen[kl] = 1;
       }
       if (s.email && !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(s.email)) {
-        hinweise.push('E-Mail-Adresse sieht komisch aus');
+        hinweise.push(tx('k_imp_email', 'E-Mail-Adresse sieht komisch aus'));
         s.email = '';
       }
       if (s.telefon) s.telefon = s.telefon.replace(/[^\d+ \/()-]/g, '').trim();
-      if (!s.vertrag) s.vertrag = 'Teilzeit';
-      if (!s.rolle) s.rolle = 'Service';
+      if (!plzOk(s.plz)) hinweise.push(tx('k_imp_plz', 'PLZ hat nicht 5 Ziffern'));
+      if (art !== 'aktualisieren') {
+        if (!s.vertrag) s.vertrag = 'Teilzeit';
+        if (!s.rolle) s.rolle = 'Service';
+      }
       if (s.stundenlohn && s.stundenlohn < einstZahl('mindestlohn')) {
-        hinweise.push('Stundenlohn liegt unter dem Mindestlohn');
+        hinweise.push(tx('k_imp_mindestlohn', 'Stundenlohn liegt unter dem Mindestlohn'));
       }
       zeilenAus.push({ nr: nr + 1, art: art, satz: s, hinweise: hinweise });
     });
@@ -703,8 +939,8 @@ var Kern = (function () {
       if (z.art === 'fehler') return false;
       return !nurZeilen || nurZeilen.indexOf(z.nr) >= 0;
     });
-    if (!nehmen.length) throw Fehler('Es ist keine übernehmbare Zeile ausgewählt.');
-    merken(nehmen.length + ' Mitarbeiter eingelesen');
+    if (!nehmen.length) throw Fehler(tx('k_imp_nichts', 'Es ist keine übernehmbare Zeile ausgewählt.'));
+    merken(tx('r_ma_eingelesen', '{n} Mitarbeiter eingelesen', { n: nehmen.length }));
 
     var neu = 0, geaendert = 0;
     nehmen.forEach(function (z) {
@@ -717,15 +953,17 @@ var Kern = (function () {
           id: neueId('mitarbeiter'), name: s.name, farbe: farbeFuer(D.mitarbeiter.length),
           pin: '1234', aktiv: 1, ist_chef: 0, beispiel: 0, zugangscode: zugangscode(),
           rolle: '', vertrag: 'Teilzeit', telefon: '', email: '', stundenlohn: 0,
-          wochenstunden: 0, urlaubstage: 0, eintritt: '', sprache: 'de', notiz: ''
+          wochenstunden: 0, urlaubstage: 0, eintritt: '', sprache: 'de', notiz: '',
+          telegram: '', strasse: '', plz: '', ort: '', geburtsdatum: '', notfallkontakt: ''
         };
         D.mitarbeiter.push(vorhanden);
         neu++;
       } else geaendert++;
       /* Nur gefüllte Werte überschreiben – Bestehendes bleibt sonst erhalten. */
-      ['rolle', 'vertrag', 'telefon', 'email', 'eintritt', 'sprache', 'notiz'].forEach(function (f) {
-        if (s[f]) vorhanden[f] = s[f];
-      });
+      ['rolle', 'vertrag', 'telefon', 'email', 'eintritt', 'sprache', 'notiz']
+        .concat(KONTAKT_FELDER).forEach(function (f) {
+          if (s[f]) vorhanden[f] = s[f];
+        });
       ['stundenlohn', 'wochenstunden', 'urlaubstage'].forEach(function (f) {
         if (s[f]) vorhanden[f] = s[f];
       });
@@ -735,12 +973,27 @@ var Kern = (function () {
     return { neu: neu, geaendert: geaendert };
   }
 
+  /* Gleiche Spalten wie die Excel-Vorlage Importvorlage_Mitarbeiter.xlsx. */
   var IMPORT_VORLAGE =
-    'Name;Rolle;Vertrag;Telefon;E-Mail;Stundenlohn;Wochenstunden;Urlaubstage;Eintritt;Sprache;Notiz\r\n'
-    + 'Rossi Anna;Service;Teilzeit;0170 1234567;anna.rossi@example.de;13,50;20;24;01.03.2024;it;\r\n'
-    + 'Bianchi Marco;Küche;Vollzeit;0171 2345678;marco.bianchi@example.de;16,00;40;28;15.09.2022;it;Pizzaiolo\r\n'
-    + 'Greco Luca;Lieferung;Minijob;0172 3456789;;13,00;10;10;01.06.2025;it;eigener Roller\r\n'
-    + 'Meier Sara;Theke;Minijob;0175 4567890;sara.meier@example.de;13,00;10;10;;de;\r\n';
+    'Vorname;Nachname;Rolle;Vertrag;Handy;E-Mail;Telegram;Straße;PLZ;Ort;Geburtsdatum;Eintritt;'
+    + 'Stundenlohn;Wochenstunden;Urlaubstage;Sprache;Notfallkontakt;Notiz\r\n'
+    + 'Anna;Rossi;Service;Teilzeit;0170 1234567;anna.rossi@example.de;annarossi;Hauptstraße 12;'
+    + '90402;Nürnberg;14.05.1998;01.03.2024;14,50;20;24;it;Marco Rossi 0170 7654321;\r\n'
+    + 'Marco;Bianchi;Küche;Vollzeit;0171 2345678;marco.bianchi@example.de;;Königstraße 3;90402;'
+    + 'Nürnberg;02.11.1985;15.09.2022;16,00;40;28;it;;Pizzaiolo\r\n'
+    + 'Luca;Greco;Lieferung;Minijob;0172 3456789;;lucagreco;;;Fürth;;01.06.2025;14,00;10;10;it;;'
+    + 'eigener Roller\r\n'
+    + 'Sara;Meier;Theke;Minijob;0175 4567890;sara.meier@example.de;;;;;;;14,00;10;10;de;;\r\n';
+
+  /* Zeilen (z. B. aus einer Excel-Datei) als Tabulator-Text – den versteht tabelleLesen. */
+  function zeilenAlsText(zeilen) {
+    return (zeilen || []).map(function (z) {
+      return z.map(function (f) {
+        var t = String(f === null || f === undefined ? '' : f);
+        return /[\t\n\r"]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+      }).join('\t');
+    }).join('\n');
+  }
 
   /* =========================================================================
      9 · Dienstplan
@@ -781,29 +1034,48 @@ var Kern = (function () {
     }).forEach(function (r) {
       var c = minuten(r.von), e = minuten(r.bis);
       if (e <= c) e += 1440;
-      if (a < e && c < b) warn.push('Überschneidet sich mit ' + r.von + '–' + r.bis + ' (' + r.position + ').');
+      if (a < e && c < b) {
+        warn.push(tx('k_ueberschneidung', 'Überschneidet sich mit {zeit} ({pos}).',
+          { zeit: r.von + '–' + r.bis, pos: anzeige(r.position) }));
+      }
     });
 
     D.wunsch.filter(function (w) {
-      return Number(w.mitarbeiter_id) === maId && w.von_datum <= s.datum && w.bis_datum >= s.datum;
+      return Number(w.mitarbeiter_id) === maId && w.status !== 'abgelehnt'
+        && w.von_datum <= s.datum && w.bis_datum >= s.datum;
     }).forEach(function (w) {
       warn.push(w.status === 'genehmigt'
-        ? 'An diesem Tag ist ' + w.typ + ' genehmigt.'
-        : 'Für diesen Tag liegt ein offener Wunsch vor: ' + w.typ + '.');
+        ? tx('k_wunsch_genehmigt', 'An diesem Tag ist {typ} genehmigt.', { typ: anzeige(w.typ) })
+        : tx('k_wunsch_offen', 'Für diesen Tag liegt ein offener Wunsch vor: {typ}.',
+          { typ: anzeige(w.typ) }));
     });
 
     var ruhe = einstZahl('ruhezeit_std') || 11;
-    var vortag = plusTage(s.datum, -1);
-    D.schicht.filter(function (r) {
-      return Number(r.mitarbeiter_id) === maId && r.datum === vortag;
-    }).forEach(function (r) {
-      var ende = minuten(r.bis);
-      if (minuten(r.bis) <= minuten(r.von)) ende += 1440;
-      var pause = (a + 1440 - ende) / 60;
-      if (pause >= 0 && pause < ruhe) {
-        warn.push('Nur ' + pause.toFixed(1).replace('.', ',') + ' Stunden Ruhezeit nach der Schicht '
-          + 'am Vortag (' + ruhe + ' empfohlen).');
-      }
+    [-1, 1].forEach(function (richtung) {
+      var tag = plusTage(s.datum, richtung);
+      D.schicht.filter(function (r) {
+        return Number(r.mitarbeiter_id) === maId && r.datum === tag
+          && (!eigeneId || Number(r.id) !== Number(eigeneId));
+      }).forEach(function (r) {
+        var c = minuten(r.von), e = minuten(r.bis);
+        if (e <= c) e += 1440;
+        c += richtung * 1440;
+        e += richtung * 1440;
+        if (a < e && c < b) {
+          warn.push(tx('k_ueberschneidung_tag', 'Überschneidet sich mit {zeit} am {datum} ({pos}).',
+            { zeit: r.von + '–' + r.bis, datum: dm(tag), pos: anzeige(r.position) }));
+          return;
+        }
+        var pause = (richtung < 0 ? a - e : c - b) / 60;
+        if (pause < ruhe) {
+          var werteRuhe = { std: pause.toFixed(1).replace('.', ','), soll: ruhe };
+          warn.push(richtung < 0
+            ? tx('k_ruhe_vortag', 'Nur {std} Stunden Ruhezeit nach der Schicht am Vortag ({soll} empfohlen).',
+              werteRuhe)
+            : tx('k_ruhe_folgetag', 'Nur {std} Stunden Ruhezeit bis zur Schicht am Folgetag ({soll} empfohlen).',
+              werteRuhe));
+        }
+      });
     });
 
     var wocheVon = wochenstart(s.datum);
@@ -815,22 +1087,23 @@ var Kern = (function () {
     if (soll) {
       var neuGesamt = stunden(geplant + dauerMinuten(s.von, s.bis, s.pause_min));
       if (neuGesamt > soll + 0.01) {
-        warn.push('Damit sind es ' + neuGesamt.toFixed(2).replace('.', ',') + ' Stunden in dieser '
-          + 'Woche – vereinbart sind ' + soll + '.');
+        warn.push(tx('k_wochenstunden', 'Damit sind es {std} Stunden in dieser Woche – vereinbart sind {soll}.',
+          { std: neuGesamt.toFixed(2).replace('.', ','), soll: String(soll).replace('.', ',') }));
       }
     }
     return warn;
   }
 
   function schichtSpeichern(d) {
-    if (!datumGueltig(d.datum)) throw Fehler('Bitte ein Datum wählen.');
+    if (!datumGueltig(d.datum)) throw Fehler(tx('k_datum_fehlt', 'Bitte ein Datum wählen.'));
     if (!/^\d{1,2}:\d{2}$/.test(d.von || '') || !/^\d{1,2}:\d{2}$/.test(d.bis || '')) {
-      throw Fehler('Bitte Anfang und Ende als Uhrzeit eintragen.');
+      throw Fehler(tx('k_uhrzeit_fehlt', 'Bitte Anfang und Ende als Uhrzeit eintragen.'));
     }
     if (dauerMinuten(d.von, d.bis, d.pause_min || 0) <= 0) {
-      throw Fehler('Diese Zeiten ergeben keine Arbeitszeit. Bitte Anfang, Ende und Pause prüfen.');
+      throw Fehler(tx('k_keine_arbeitszeit_pruefen',
+        'Diese Zeiten ergeben keine Arbeitszeit. Bitte Anfang, Ende und Pause prüfen.'));
     }
-    merken(d.id ? 'Schicht geändert' : 'Schicht angelegt');
+    merken(d.id ? tx('r_schicht_geaendert', 'Schicht geändert') : tx('r_schicht_angelegt', 'Schicht angelegt'));
     var s = d.id ? schicht(d.id) : null;
     if (!s) { s = { id: neueId('schicht'), beispiel: 0 }; D.schicht.push(s); }
     s.datum = d.datum;
@@ -847,15 +1120,15 @@ var Kern = (function () {
   }
 
   function schichtLoeschen(id) {
-    merken('Schicht gelöscht');
+    merken(tx('r_schicht_geloescht', 'Schicht gelöscht'));
     D.schicht = D.schicht.filter(function (s) { return Number(s.id) !== Number(id); });
     sichern();
   }
 
   function schichtVerschieben(id, neuesDatum, neueMaId) {
     var s = schicht(id);
-    if (!s) throw Fehler('Diese Schicht gibt es nicht mehr.');
-    merken('Schicht verschoben');
+    if (!s) throw Fehler(tx('k_schicht_weg', 'Diese Schicht gibt es nicht mehr.'));
+    merken(tx('r_schicht_verschoben', 'Schicht verschoben'));
     s.datum = neuesDatum;
     if (neueMaId !== undefined) s.mitarbeiter_id = neueMaId ? Number(neueMaId) : null;
     s.veroeffentlicht = 0;
@@ -865,18 +1138,24 @@ var Kern = (function () {
 
   function wocheKopieren(quelleMontag, zielMontag) {
     var versatz = Math.round((ausIso(zielMontag) - ausIso(quelleMontag)) / 86400000);
-    if (!versatz) throw Fehler('Quelle und Ziel sind dieselbe Woche.');
-    merken('Woche übernommen');
+    if (!versatz) throw Fehler(tx('k_gleiche_woche', 'Quelle und Ziel sind dieselbe Woche.'));
+    merken(tx('r_woche_uebernommen', 'Woche übernommen'));
     var bis = plusTage(quelleMontag, 6), anzahl = 0;
+    var zielBis = plusTage(zielMontag, 6);
+    /* Jede vorhandene Zielschicht deckt genau eine Quellschicht ab – so gehen
+       mehrere gleiche offene Schichten am selben Tag nicht verloren. */
+    var vorhanden = D.schicht.filter(function (s) {
+      return s.datum >= zielMontag && s.datum <= zielBis;
+    });
     D.schicht.filter(function (s) {
       return s.datum >= quelleMontag && s.datum <= bis;
     }).slice().forEach(function (r) {
       var neu = plusTage(r.datum, versatz);
-      var da = D.schicht.some(function (s) {
-        return s.datum === neu && s.von === r.von && s.bis === r.bis
+      var i = vorhanden.findIndex(function (s) {
+        return s.datum === neu && s.von === r.von && s.bis === r.bis && s.position === r.position
           && Number(s.mitarbeiter_id || 0) === Number(r.mitarbeiter_id || 0);
       });
-      if (da) return;
+      if (i >= 0) { vorhanden.splice(i, 1); return; }
       D.schicht.push({
         id: neueId('schicht'), datum: neu, von: r.von, bis: r.bis, pause_min: r.pause_min,
         mitarbeiter_id: r.mitarbeiter_id, position: r.position, notiz: r.notiz,
@@ -889,7 +1168,8 @@ var Kern = (function () {
   }
 
   function wocheFreigeben(von, bis, wert) {
-    merken(wert ? 'Plan freigegeben' : 'Freigabe zurückgenommen');
+    merken(wert ? tx('h_plan_freigegeben', 'Plan freigegeben')
+      : tx('r_freigabe_zurueck', 'Freigabe zurückgenommen'));
     var n = 0;
     D.schicht.forEach(function (s) {
       if (s.datum >= von && s.datum <= bis && !!s.veroeffentlicht !== !!wert) {
@@ -902,7 +1182,7 @@ var Kern = (function () {
   }
 
   function wocheLeeren(von, bis) {
-    merken('Woche geleert');
+    merken(tx('r_woche_geleert', 'Woche geleert'));
     var vorher = D.schicht.length;
     D.schicht = D.schicht.filter(function (s) { return !(s.datum >= von && s.datum <= bis); });
     sichern();
@@ -927,11 +1207,12 @@ var Kern = (function () {
 
   function wunschSpeichern(d, zwangMaId) {
     var maId = zwangMaId || d.mitarbeiter_id;
-    if (!maId) throw Fehler('Bitte einen Mitarbeiter wählen.');
-    if (!datumGueltig(d.von_datum)) throw Fehler('Bitte ein Datum wählen.');
+    if (!maId) throw Fehler(tx('k_ma_waehlen', 'Bitte einen Mitarbeiter wählen.'));
+    if (!datumGueltig(d.von_datum)) throw Fehler(tx('k_datum_fehlt', 'Bitte ein Datum wählen.'));
     var bis = datumGueltig(d.bis_datum) ? d.bis_datum : d.von_datum;
-    if (bis < d.von_datum) throw Fehler('Das Ende liegt vor dem Anfang.');
-    merken(d.id ? 'Eintrag geändert' : 'Wunsch eingetragen');
+    if (bis < d.von_datum) throw Fehler(tx('k_ende_vor_anfang', 'Das Ende liegt vor dem Anfang.'));
+    merken(d.id ? tx('r_eintrag_geaendert', 'Eintrag geändert')
+      : tx('r_wunsch_eingetragen', 'Wunsch eingetragen'));
     var w = d.id ? D.wunsch.find(function (x) { return Number(x.id) === Number(d.id); }) : null;
     if (!w) { w = { id: neueId('wunsch') }; D.wunsch.push(w); }
     Object.assign(w, {
@@ -944,21 +1225,23 @@ var Kern = (function () {
     tageZwischen(d.von_datum, bis).forEach(function (t) {
       if (D.schicht.some(function (s) {
         return Number(s.mitarbeiter_id) === Number(maId) && s.datum === t;
-      })) hinweise.push('Am ' + dm(t) + ' ist bereits eine Schicht geplant.');
+      })) hinweise.push(tx('k_schicht_geplant_am', 'Am {datum} ist bereits eine Schicht geplant.', { datum: dm(t) }));
     });
     return { id: w.id, warnungen: hinweise };
   }
 
   function wunschStatus(id, status) {
-    if (['offen', 'genehmigt', 'abgelehnt'].indexOf(status) < 0) throw Fehler('Unbekannter Status.');
-    merken('Wunsch ' + status);
+    if (['offen', 'genehmigt', 'abgelehnt'].indexOf(status) < 0) {
+      throw Fehler(tx('k_status_unbekannt', 'Unbekannter Status.'));
+    }
+    merken(tx('h_wunsch', 'Wunsch') + ' ' + (window.T && window.T.status ? window.T.status(status) : status));
     var w = D.wunsch.find(function (x) { return Number(x.id) === Number(id); });
     if (w) w.status = status;
     sichern();
   }
 
   function wunschLoeschen(id, zwangMaId) {
-    merken('Eintrag gelöscht');
+    merken(tx('r_eintrag_geloescht', 'Eintrag gelöscht'));
     D.wunsch = D.wunsch.filter(function (w) {
       return !(Number(w.id) === Number(id)
         && (!zwangMaId || Number(w.mitarbeiter_id) === Number(zwangMaId)));
@@ -995,7 +1278,7 @@ var Kern = (function () {
       .map(function (z) {
         return Object.assign({}, z, {
           ma_name: maName(z.mitarbeiter_id),
-          dauer_std: z.ende ? stunden(dauerMinuten(z.start, z.ende, z.pause_min)) : 0
+          dauer_std: z.ende ? stunden(echteMinuten(z.datum, z.start, z.ende, z.pause_min)) : 0
         });
       });
   }
@@ -1008,13 +1291,13 @@ var Kern = (function () {
 
   function zeitSpeichern(d, zwangMaId) {
     var maId = zwangMaId || d.mitarbeiter_id;
-    if (!maId) throw Fehler('Bitte einen Mitarbeiter wählen.');
-    if (!datumGueltig(d.datum)) throw Fehler('Bitte ein Datum wählen.');
-    if (!/^\d{1,2}:\d{2}$/.test(d.start || '')) throw Fehler('Bitte den Beginn eintragen.');
+    if (!maId) throw Fehler(tx('k_ma_waehlen', 'Bitte einen Mitarbeiter wählen.'));
+    if (!datumGueltig(d.datum)) throw Fehler(tx('k_datum_fehlt', 'Bitte ein Datum wählen.'));
+    if (!/^\d{1,2}:\d{2}$/.test(d.start || '')) throw Fehler(tx('k_beginn_fehlt', 'Bitte den Beginn eintragen.'));
     if (d.ende && dauerMinuten(d.start, d.ende, d.pause_min || 0) <= 0) {
-      throw Fehler('Diese Zeiten ergeben keine Arbeitszeit.');
+      throw Fehler(tx('k_keine_arbeitszeit', 'Diese Zeiten ergeben keine Arbeitszeit.'));
     }
-    merken(d.id ? 'Zeit geändert' : 'Zeit nachgetragen');
+    merken(d.id ? tx('r_zeit_geaendert', 'Zeit geändert') : tx('r_zeit_nachgetragen', 'Zeit nachgetragen'));
     var z = d.id ? D.zeit.find(function (x) { return Number(x.id) === Number(d.id); }) : null;
     if (!z) { z = { id: neueId('zeit'), beispiel: 0 }; D.zeit.push(z); }
     Object.assign(z, {
@@ -1027,7 +1310,7 @@ var Kern = (function () {
   }
 
   function zeitLoeschen(id) {
-    merken('Zeit gelöscht');
+    merken(tx('r_zeit_geloescht', 'Zeit gelöscht'));
     D.zeit = D.zeit.filter(function (z) { return Number(z.id) !== Number(id); });
     sichern();
   }
@@ -1035,13 +1318,14 @@ var Kern = (function () {
   function zeitFreigeben(id, wert) {
     var z = D.zeit.find(function (x) { return Number(x.id) === Number(id); });
     if (!z) return;
-    merken(wert ? 'Zeit freigegeben' : 'Freigabe zurückgenommen');
+    merken(wert ? tx('r_zeit_freigegeben', 'Zeit freigegeben')
+      : tx('r_freigabe_zurueck', 'Freigabe zurückgenommen'));
     z.freigegeben = wert ? 1 : 0;
     sichern();
   }
 
   function zeitenFreigeben(von, bis, maId) {
-    merken('Zeiten freigegeben');
+    merken(tx('r_zeiten_freigegeben', 'Zeiten freigegeben'));
     var n = 0;
     D.zeit.forEach(function (z) {
       if (z.datum >= von && z.datum <= bis && z.ende && !z.freigegeben
@@ -1072,19 +1356,27 @@ var Kern = (function () {
     }).sort(function (a, b) { return b.id - a.id; })[0] || null;
 
     if (aktion === 'start') {
-      if (offen) throw Fehler('Es läuft schon eine Schicht. Bitte zuerst Feierabend stempeln.');
-      merken('eingestempelt');
+      if (offen) throw Fehler(tx('k_schon_schicht', 'Es läuft schon eine Schicht. Bitte zuerst Feierabend stempeln.'));
+      merken(tx('r_eingestempelt', 'eingestempelt'));
       D.zeit.push({
         id: neueId('zeit'), mitarbeiter_id: Number(maId), datum: heute(), start: jetztZeit(),
         ende: '', pause_min: 0, quelle: 'Stempel', bemerkung: '', freigegeben: 0, beispiel: 0
       });
       sichern();
-      return { text: 'Kommen gestempelt um ' + jetztZeit() + ' Uhr.', zeit: jetztZeit() };
+      return {
+        text: tx('k_kommen_um', 'Kommen gestempelt um {zeit} Uhr.', { zeit: jetztZeit() }),
+        zeit: jetztZeit()
+      };
     }
     if (aktion === 'stop') {
-      if (!offen) throw Fehler('Gerade läuft keine Schicht.');
-      merken('ausgestempelt');
+      if (!offen) throw Fehler(tx('k_keine_schicht_laeuft', 'Gerade läuft keine Schicht.'));
       var ende = jetztZeit();
+      var tage = tageZwischen(offen.datum, heute()).length - 1;
+      if (tage > 1 || (tage === 1 && minuten(ende) >= minuten(offen.start))) {
+        throw Fehler(tx('k_zu_lange', 'Eingestempelt seit {datum}, {zeit} Uhr – das sind 24 Stunden oder '
+          + 'mehr. Bitte die Zeit vom Chef eintragen lassen.', { datum: dmy(offen.datum), zeit: offen.start }));
+      }
+      merken(tx('r_ausgestempelt', 'ausgestempelt'));
       var vorgabe = pausenvorgabe(dauerMinuten(offen.start, ende, 0));
       var pause = (pauseMin === null || pauseMin === undefined || pauseMin === '')
         ? vorgabe : Number(pauseMin);
@@ -1093,11 +1385,12 @@ var Kern = (function () {
       sichern();
       var std = stunden(dauerMinuten(offen.start, ende, pause));
       return {
-        text: 'Feierabend um ' + ende + ' Uhr – ' + std.toFixed(2).replace('.', ',') + ' Stunden.',
+        text: tx('k_feierabend_um', 'Feierabend um {zeit} Uhr – {std} Stunden.',
+          { zeit: ende, std: std.toFixed(2).replace('.', ',') }),
         zeit: ende, pause_min: pause, stunden: std
       };
     }
-    throw Fehler('Unbekannte Aktion.');
+    throw Fehler(tx('k_aktion_unbekannt', 'Unbekannte Aktion.'));
   }
 
   /* =========================================================================
@@ -1105,7 +1398,7 @@ var Kern = (function () {
      ========================================================================= */
 
   function monatsgrenzen(monat) {
-    if (!/^\d{4}-\d{2}$/.test(monat || '')) throw Fehler('Bitte einen Monat wählen.');
+    if (!/^\d{4}-\d{2}$/.test(monat || '')) throw Fehler(tx('k_monat_fehlt', 'Bitte einen Monat wählen.'));
     var j = Number(monat.slice(0, 4)), m = Number(monat.slice(5, 7));
     return [iso(j, m, 1), alsIso(new Date(j, m, 0))];
   }
@@ -1130,9 +1423,9 @@ var Kern = (function () {
 
       var ges = 0, son = 0, nac = 0, tage = [];
       rows.forEach(function (r) {
-        var d = dauerMinuten(r.start, r.ende, r.pause_min);
+        var d = echteMinuten(r.datum, r.start, r.ende, r.pause_min);
         ges += d;
-        if (istSonntag(r.datum)) son += d;
+        son += Math.min(sonntagMinuten(r.datum, r.start, r.ende), d);
         nac += Math.min(nachtMinuten(r.start, r.ende, nachtAb), d);
         tage.push({
           id: r.id, datum: r.datum, start: r.start, ende: r.ende, pause_min: r.pause_min,
@@ -1264,12 +1557,12 @@ var Kern = (function () {
   }
 
   function terminSpeichern(d) {
-    if (!String(d.titel || '').trim()) throw Fehler('Bitte einen Titel eintragen.');
-    if (!datumGueltig(d.datum)) throw Fehler('Bitte ein Datum wählen.');
+    if (!String(d.titel || '').trim()) throw Fehler(tx('k_titel_fehlt', 'Bitte einen Titel eintragen.'));
+    if (!datumGueltig(d.datum)) throw Fehler(tx('k_datum_fehlt', 'Bitte ein Datum wählen.'));
     if (d.von_zeit && d.bis_zeit && !d.ganztags && minuten(d.bis_zeit) <= minuten(d.von_zeit)) {
-      throw Fehler('Das Ende liegt vor dem Anfang.');
+      throw Fehler(tx('k_ende_vor_anfang', 'Das Ende liegt vor dem Anfang.'));
     }
-    merken(d.id ? 'Termin geändert' : 'Termin angelegt');
+    merken(d.id ? tx('r_termin_geaendert', 'Termin geändert') : tx('r_termin_angelegt', 'Termin angelegt'));
     var t = d.id ? D.termin.find(function (x) { return Number(x.id) === Number(d.id); }) : null;
     if (!t) {
       t = { id: neueId('termin'), erstellt: new Date().toISOString().slice(0, 19) };
@@ -1287,7 +1580,7 @@ var Kern = (function () {
   }
 
   function terminLoeschen(id) {
-    merken('Termin gelöscht');
+    merken(tx('r_termin_geloescht', 'Termin gelöscht'));
     D.termin = D.termin.filter(function (t) { return Number(t.id) !== Number(id); });
     sichern();
   }
@@ -1295,7 +1588,7 @@ var Kern = (function () {
   function terminErledigt(id, wert) {
     var t = D.termin.find(function (x) { return Number(x.id) === Number(id); });
     if (!t) return;
-    merken(wert ? 'Termin erledigt' : 'Termin wieder offen');
+    merken(wert ? tx('h_termin_erledigt', 'Termin erledigt') : tx('r_termin_offen', 'Termin wieder offen'));
     t.erledigt = wert ? 1 : 0;
     sichern();
   }
@@ -1368,7 +1661,7 @@ var Kern = (function () {
     var zeilen = rows.map(function (r) {
       ges += dauerMinuten(r.von, r.bis, r.pause_min);
       return WT_KURZ[s][wochentag(r.datum)] + ' ' + dm(r.datum) + '  ' + r.von + '–' + r.bis
-        + '  ' + r.position + (r.notiz ? '  (' + r.notiz + ')' : '');
+        + '  ' + anzeige(r.position, s) + (r.notiz ? '  (' + r.notiz + ')' : '');
     });
     zeilen.push('');
     zeilen.push((s === 'it' ? 'Totale: ' : 'Summe: ')
@@ -1392,7 +1685,7 @@ var Kern = (function () {
       }
       aus.push('  ' + r.von + '–' + r.bis + '  '
         + (maName(r.mitarbeiter_id) || (s === 'it' ? 'ancora libero' : 'noch offen'))
-        + '  (' + r.position + ')');
+        + '  (' + anzeige(r.position, s) + ')');
     });
     return aus.join('\n').trim()
       || (s === 'it' ? 'In questo periodo non è pubblicato nulla.'
@@ -1421,10 +1714,11 @@ var Kern = (function () {
 
   /* Baut die fertigen Links – geöffnet werden sie von der Oberfläche. */
   function versandVorbereiten(d) {
-    if (!datumGueltig(d.von) || !datumGueltig(d.bis)) throw Fehler('Bitte einen Zeitraum wählen.');
-    if (!d.mitarbeiter || !d.mitarbeiter.length) throw Fehler('Bitte mindestens einen Mitarbeiter auswählen.');
-    var basis = String(d.basis || '').trim()
-      || location.origin + location.pathname.replace(/[^/]*$/, '');
+    if (!datumGueltig(d.von) || !datumGueltig(d.bis)) throw Fehler(tx('k_zeitraum_fehlt', 'Bitte einen Zeitraum wählen.'));
+    if (!d.mitarbeiter || !d.mitarbeiter.length) {
+      throw Fehler(tx('k_mind_ein_ma', 'Bitte mindestens einen Mitarbeiter auswählen.'));
+    }
+    var basis = String(d.basis || '').trim() || appBasis();
     var betreff = 'Dienstplan ' + dm(d.von) + ' – ' + dmy(d.bis);
     var aus = [];
     d.mitarbeiter.map(ma).filter(Boolean).forEach(function (m) {
@@ -1433,14 +1727,14 @@ var Kern = (function () {
         var nr = nummerNormieren(m.telefon);
         aus.push({
           id: m.id, name: m.name, ok: !!nr,
-          grund: nr ? '' : 'keine Telefonnummer hinterlegt',
+          grund: nr ? '' : tx('k_keine_tel', 'keine Telefonnummer hinterlegt'),
           url: nr ? 'https://wa.me/' + nr + '?text=' + encodeURIComponent(text) : '',
           text: text
         });
       } else {
         aus.push({
           id: m.id, name: m.name, ok: !!m.email,
-          grund: m.email ? '' : 'keine E-Mail-Adresse hinterlegt',
+          grund: m.email ? '' : tx('k_keine_mail', 'keine E-Mail-Adresse hinterlegt'),
           url: m.email ? 'mailto:' + encodeURIComponent(m.email)
             + '?subject=' + encodeURIComponent(betreff)
             + '&body=' + encodeURIComponent(text) : '',
@@ -1449,6 +1743,76 @@ var Kern = (function () {
       }
     });
     return { betreff: betreff, eintraege: aus, bereit: aus.filter(function (x) { return x.ok; }).length };
+  }
+
+  /* =========================================================================
+     15b · App-Einladung
+     ========================================================================= */
+
+  /* Adresse, unter der die Apps liegen – alle Links holen sich die Basis nur hier.
+     Am gemeinsamen Server ist das …/api/pizzaplan/app/, sonst die aktuelle Seite ohne Dateinamen. */
+  function appBasis() {
+    if (SERVER_APP) {
+      var p = location.pathname;
+      return location.origin + p.slice(0, p.indexOf('/api/pizzaplan/app/')) + '/api/pizzaplan/app/';
+    }
+    return location.origin + location.pathname.replace(/[^/]*$/, '');
+  }
+
+  function maAppLink(id) {
+    var m = ma(id);
+    return appBasis() + 'team.html?k=' + (m ? m.zugangscode : '');
+  }
+
+  /* Text aus dem Wörterbuch in einer festen Sprache – die Nachricht geht in der
+     Sprache des Mitarbeiters hinaus, egal was der Chef gerade eingestellt hat. */
+  function txIn(sprache, schluessel, deutsch, werte) {
+    var w = window.T;
+    var e = w && w.W && w.W[schluessel];
+    var s = e ? e[sprache === 'it' ? 1 : 0] : deutsch;
+    Object.keys(werte || {}).forEach(function (k) { s = s.split('{' + k + '}').join(werte[k]); });
+    return s;
+  }
+
+  /* Fertige Einladung mit allen Versandwegen – geöffnet wird von der Oberfläche. */
+  function einladung(id) {
+    var m = ma(id);
+    if (!m) throw Fehler(tx('k_ma_weg', 'Diesen Mitarbeiter gibt es nicht mehr.'));
+    var s = m.sprache === 'it' ? 'it' : 'de';
+    var link = maAppLink(id);
+    var w = {
+      name: String(m.name).split(' ')[0], betrieb: einst('betrieb'), link: link,
+      pin: m.pin || '1234'
+    };
+    var anfang = txIn(s, 'ein_text_anfang', 'Hallo {name},\n\nab sofort hast du deinen Dienstplan '
+      + 'bei {betrieb} immer dabei – als App auf deinem Handy.', w);
+    var linkTeil = txIn(s, 'ein_text_link', 'Dein persönlicher Link:\n{link}', w);
+    var rest = txIn(s, 'ein_text_rest', 'Viele Grüße\n{betrieb}', w);
+    var text = anfang + '\n\n' + linkTeil + '\n\n' + rest;
+    var betreff = txIn(s, 'ein_betreff', 'Dein Dienstplan als App – {betrieb}', w);
+
+    var tg = telegramNormieren(m.telegram);
+    var nr = nummerNormieren(m.telefon);
+    var telegram = { url: '', art: '' };
+    if (tg) {
+      telegram.art = 'name';
+      telegram.url = /^\+?[\d()\/ -]{6,}$/.test(tg)
+        ? 'https://t.me/+' + tg.replace(/[^\d]/g, '').replace(/^0/, '49')
+        : 'https://t.me/' + encodeURIComponent(tg);
+    } else if (nr) {
+      telegram.art = 'teilen';
+      telegram.url = 'https://t.me/share/url?url=' + encodeURIComponent(link)
+        + '&text=' + encodeURIComponent(anfang + '\n\n' + rest);
+    }
+    return {
+      id: m.id, name: m.name, sprache: s, betreff: betreff, text: text, link: link,
+      mail: m.email ? 'mailto:' + encodeURIComponent(m.email) + '?subject='
+        + encodeURIComponent(betreff) + '&body=' + encodeURIComponent(text) : '',
+      telegram: telegram,
+      whatsapp: nr ? 'https://wa.me/' + nr + '?text=' + encodeURIComponent(text) : '',
+      hatKontakt: !!(m.email || tg || nr),
+      eingeladen_am: m.eingeladen_am || ''
+    };
   }
 
   /* =========================================================================
@@ -1461,9 +1825,9 @@ var Kern = (function () {
     var neu;
     try {
       neu = JSON.parse(String(text).replace(/^﻿/, '').trim());
-    } catch (e) { throw Fehler('Das ist keine PizzaPlan-Sicherung.'); }
-    if (!neu || !Array.isArray(neu.mitarbeiter)) throw Fehler('In der Datei fehlt das Team.');
-    merken('Sicherung eingespielt');
+    } catch (e) { throw Fehler(tx('k_keine_sicherung', 'Das ist keine PizzaPlan-Sicherung.')); }
+    if (!neu || !Array.isArray(neu.mitarbeiter)) throw Fehler(tx('k_team_fehlt', 'In der Datei fehlt das Team.'));
+    merken(tx('r_sicherung_eingespielt', 'Sicherung eingespielt'));
     D = neu;
     nachziehen();
     sichern();
@@ -1471,7 +1835,7 @@ var Kern = (function () {
   }
 
   function allesLoeschen() {
-    merken('alle Daten gelöscht');
+    merken(tx('r_alles_geloescht', 'alle Daten gelöscht'));
     D = leerBau();
     sichern();
   }
@@ -1488,7 +1852,7 @@ var Kern = (function () {
 
   function anmelden(maId) {
     var m = ma(maId);
-    if (!m || !m.aktiv) throw Fehler('Dieser Zugang gilt nicht mehr.');
+    if (!m || !m.aktiv) throw Fehler(tx('k_zugang_ungueltig', 'Dieser Zugang gilt nicht mehr.'));
     D.ichId = m.id;
     sichern(true);
     return m;
@@ -1496,7 +1860,7 @@ var Kern = (function () {
 
   function anmeldenMitCode(k) {
     var m = D.mitarbeiter.find(function (x) { return x.zugangscode === k && x.aktiv; });
-    if (!m) throw Fehler('Dieser Link gilt nicht mehr. Bitte beim Chef melden.');
+    if (!m) throw Fehler(tx('k_link_ungueltig', 'Dieser Link gilt nicht mehr. Bitte beim Chef melden.'));
     D.ichId = m.id;
     sichern(true);
     return m;
@@ -1588,7 +1952,7 @@ var Kern = (function () {
       if (treffer.indexOf(z) < 0) treffer.push(z);
     }
     var von = treffer[0] || '', bis = treffer[1] || '';
-    if (von && bis && minuten(bis) < minuten(von) && minuten(bis) < 8 * 60) {
+    if (von && bis && minuten(bis) < minuten(von) && minuten(bis) < 8 * 60 && minuten(von) < 12 * 60) {
       bis = zwei(Math.floor(minuten(bis) / 60) + 12) + bis.slice(2);
     }
     return [von, bis];
@@ -1609,7 +1973,7 @@ var Kern = (function () {
 
   function befehlDeuten(text) {
     var roh = String(text || '').trim();
-    if (!roh) throw Fehler('Es wurde nichts verstanden. Bitte noch einmal sprechen.');
+    if (!roh) throw Fehler(tx('k_nichts_verstanden', 'Es wurde nichts verstanden. Bitte noch einmal sprechen.'));
     var t = ' ' + roh.toLowerCase() + ' ';
     var basis = heute(), unklar = [];
     var treffer = maAusText(t);
@@ -1632,17 +1996,17 @@ var Kern = (function () {
         .sort(function (a, b) { return a.von.localeCompare(b.von); });
       return {
         aktion: 'auskunft', original: roh, unklar: [],
-        beschreibung: 'Dienstplan am ' + dmy(tag),
+        beschreibung: tx('k_plan_am', 'Dienstplan am {datum}', { datum: dmy(tag) }),
         antwort: rows.length
           ? rows.map(function (r) {
-            return (maName(r.mitarbeiter_id) || 'noch offen') + ' ' + r.von + '–' + r.bis;
+            return (maName(r.mitarbeiter_id) || tx('offen_bez', 'noch offen')) + ' ' + r.von + '–' + r.bis;
           }).join(' · ')
-          : 'Für diesen Tag ist niemand eingeplant.'
+          : tx('k_niemand_am_tag', 'Für diesen Tag ist niemand eingeplant.')
       };
     }
 
     if (istFrei && treffer.length) {
-      if (!datum) { unklar.push('Datum'); datum = basis; }
+      if (!datum) { unklar.push(tx('datum', 'Datum')); datum = basis; }
       var typ = /urlaub|ferie/i.test(t) ? 'Urlaub' : (/krank|malat/i.test(t) ? 'Krank' : 'Frei-Wunsch');
       var bisDatum = datum;
       var mb = re(G0 + 'bis\\s+(?:zum\\s+)?(\\d{1,2})\\.\\s*(\\d{1,2})\\.?').exec(t);
@@ -1654,42 +2018,46 @@ var Kern = (function () {
         aktion: 'abwesenheit', original: roh, unklar: unklar,
         mitarbeiter_id: treffer[0].id, mitarbeiter_name: treffer[0].name,
         von_datum: datum, bis_datum: bisDatum, typ: typ, status: 'genehmigt',
-        beschreibung: treffer[0].name + ': ' + typ + ' ab ' + dmy(datum)
-          + (bisDatum !== datum ? ' bis ' + dmy(bisDatum) : '')
+        beschreibung: tx('k_bes_abw', '{name}: {typ} ab {datum}',
+          { name: treffer[0].name, typ: anzeige(typ), datum: dmy(datum) })
+          + (bisDatum !== datum ? tx('k_bes_bis', ' bis {datum}', { datum: dmy(bisDatum) }) : '')
       };
     }
 
     if (istStreichen && treffer.length) {
-      if (!datum) { unklar.push('Datum'); datum = basis; }
+      if (!datum) { unklar.push(tx('datum', 'Datum')); datum = basis; }
       var rs = D.schicht.filter(function (s) {
         return Number(s.mitarbeiter_id) === Number(treffer[0].id) && s.datum === datum;
       }).sort(function (a, b) { return a.von.localeCompare(b.von); });
       if (!rs.length) {
         return {
-          aktion: 'auskunft', original: roh, unklar: [], beschreibung: 'Nichts zu streichen',
-          antwort: treffer[0].name + ' ist am ' + dmy(datum) + ' gar nicht eingeplant.'
+          aktion: 'auskunft', original: roh, unklar: [],
+          beschreibung: tx('k_nichts_streichen', 'Nichts zu streichen'),
+          antwort: tx('k_nicht_eingeplant', '{name} ist am {datum} gar nicht eingeplant.',
+            { name: treffer[0].name, datum: dmy(datum) })
         };
       }
       var ziel = (von && rs.find(function (r) { return r.von === von; })) || rs[0];
       return {
         aktion: 'schicht_loeschen', original: roh, unklar: unklar, schicht_id: ziel.id,
-        beschreibung: 'Schicht von ' + treffer[0].name + ' am ' + dmy(datum) + ', '
-          + ziel.von + '–' + ziel.bis + ' streichen'
+        beschreibung: tx('k_bes_streichen', 'Schicht von {name} am {datum}, {zeit} streichen',
+          { name: treffer[0].name, datum: dmy(datum), zeit: ziel.von + '–' + ziel.bis })
       };
     }
 
     if (treffer.length && (von || datum || re(G0 + '(teile|trage|plane|schicht|dienst|arbeitet|'
       + 'inserisci|metti|pianifica|turno|lavora)' + G1).test(t))) {
       if (treffer.length > 1) {
-        unklar.push('mehrere Namen erkannt: ' + treffer.map(function (x) { return x.name; }).join(', '));
+        unklar.push(tx('k_unklar_namen', 'mehrere Namen erkannt: {namen}',
+          { namen: treffer.map(function (x) { return x.name; }).join(', ') }));
       }
-      if (!datum) { datum = basis; unklar.push('Datum – auf heute gesetzt'); }
-      if (!von) { von = '17:00'; unklar.push('Anfang – 17:00 angenommen'); }
+      if (!datum) { datum = basis; unklar.push(tx('k_unklar_datum', 'Datum – auf heute gesetzt')); }
+      if (!von) { von = '17:00'; unklar.push(tx('k_unklar_anfang', 'Anfang – 17:00 angenommen')); }
       if (!bis) {
         var md = re(G0 + '(\\d+|' + zahlwoerter() + ')\\s*(stunden?|ore)' + G1).exec(t);
         var dauer = md ? zahlAus(md[1]) * 60 : 5 * 60;
         bis = alsZeit(minuten(von) + dauer);
-        if (!md) unklar.push('Ende – 5 Stunden angenommen');
+        if (!md) unklar.push(tx('k_unklar_ende', 'Ende – 5 Stunden angenommen'));
       }
       if (!position) {
         position = pos.indexOf(treffer[0].rolle) >= 0 ? treffer[0].rolle : (pos[0] || 'Service');
@@ -1699,8 +2067,8 @@ var Kern = (function () {
         mitarbeiter_id: treffer[0].id, mitarbeiter_name: treffer[0].name,
         datum: datum, von: von, bis: bis, position: position,
         pause_min: pausenvorgabe(dauerMinuten(von, bis, 0)),
-        beschreibung: treffer[0].name + ' am ' + dmy(datum) + ' von ' + von + ' bis ' + bis
-          + ' Uhr (' + position + ')'
+        beschreibung: tx('k_bes_schicht', '{name} am {datum} von {von} bis {bis} Uhr ({pos})',
+          { name: treffer[0].name, datum: dmy(datum), von: von, bis: bis, pos: anzeige(position) })
       };
     }
 
@@ -1708,13 +2076,13 @@ var Kern = (function () {
       var v = terminAusText(roh, basis);
       v.aktion = 'termin';
       v.original = roh;
-      v.beschreibung = 'Termin „' + v.titel + '“ am ' + dmy(v.datum)
-        + (v.von_zeit ? ' um ' + v.von_zeit + ' Uhr' : '');
+      v.beschreibung = tx('k_bes_termin', 'Termin „{titel}“ am {datum}', { titel: v.titel, datum: dmy(v.datum) })
+        + (v.von_zeit ? tx('um_uhr', ' um {zeit} Uhr', { zeit: v.von_zeit }) : '');
       return v;
     }
 
-    throw Fehler('Das habe ich nicht verstanden. Zum Beispiel: „Teile Anna am 5.6. um 17 Uhr ein“, '
-      + '„Marco hat morgen frei“, „Streiche Luca am Freitag“, „Wer arbeitet am Samstag?“');
+    throw Fehler(tx('k_nicht_verstanden', 'Das habe ich nicht verstanden. Zum Beispiel: „Teile Annik am '
+      + '5.6. um 17 Uhr ein“, „Filippo hat morgen frei“, „Streiche Valeria am Freitag“, „Wer arbeitet am Samstag?“'));
   }
 
   function terminAusText(text, basis) {
@@ -1722,7 +2090,7 @@ var Kern = (function () {
     var t = ' ' + roh.toLowerCase().replace(/,/g, ' , ') + ' ';
     var unklar = [];
     var datum = datumAusText(t, basis || heute());
-    if (!datum) { datum = basis || heute(); unklar.push('Datum – auf heute gesetzt'); }
+    if (!datum) { datum = basis || heute(); unklar.push(tx('k_unklar_datum', 'Datum – auf heute gesetzt')); }
 
     var zt = zeitenAusText(t);
     var vonZeit = zt[0], bisZeit = zt[1];
@@ -1736,7 +2104,7 @@ var Kern = (function () {
     var ganztags = 0;
     if (!vonZeit) {
       if (re(G0 + '(ganztägig|ganztaegig|ganzen tag|tutto il giorno)' + G1).test(t)) ganztags = 1;
-      else unklar.push('Uhrzeit');
+      else unklar.push(tx('k_unklar_uhrzeit', 'Uhrzeit'));
     }
     if (vonZeit && !bisZeit) {
       var dauer = 60;
@@ -1791,7 +2159,7 @@ var Kern = (function () {
       .replace(re('(' + Object.keys(WOCHENTAGE).join('|') + ')', 'gi'), ' ')
       .replace(/\d{1,2}\.\d{1,2}\.\d{0,4}/g, ' ')
       .replace(/\s*,\s*/g, ' ').replace(/\s{2,}/g, ' ').replace(/^[\s.,-]+|[\s.,-]+$/g, '');
-    if (titel.length < 3) { titel = roh.trim(); unklar.push('Titel'); }
+    if (titel.length < 3) { titel = roh.trim(); unklar.push(tx('titel', 'Titel')); }
 
     return {
       titel: titel.slice(0, 120), datum: datum, von_zeit: vonZeit, bis_zeit: bisZeit,
@@ -1806,21 +2174,22 @@ var Kern = (function () {
         datum: v.datum, von: v.von, bis: v.bis, pause_min: v.pause_min || 0,
         mitarbeiter_id: v.mitarbeiter_id, position: v.position, notiz: '', veroeffentlicht: 0
       });
-      return { text: 'Schicht eingetragen: ' + v.beschreibung, warnungen: r.warnungen };
+      return { text: tx('k_schicht_eingetragen', 'Schicht eingetragen: {text}', { text: v.beschreibung }),
+        warnungen: r.warnungen };
     }
     if (v.aktion === 'schicht_loeschen') {
       schichtLoeschen(v.schicht_id);
-      return { text: 'Schicht gestrichen.', warnungen: [] };
+      return { text: tx('k_schicht_gestrichen', 'Schicht gestrichen.'), warnungen: [] };
     }
     if (v.aktion === 'abwesenheit') {
       var w = wunschSpeichern(v);
-      return { text: 'Eingetragen: ' + v.beschreibung, warnungen: w.warnungen };
+      return { text: tx('k_eingetragen', 'Eingetragen: {text}', { text: v.beschreibung }), warnungen: w.warnungen };
     }
     if (v.aktion === 'termin') {
       terminSpeichern(Object.assign({}, v, { quelle: 'Sprache' }));
-      return { text: 'Termin gespeichert: ' + v.titel, warnungen: [] };
+      return { text: tx('k_termin_gespeichert', 'Termin gespeichert: {titel}', { titel: v.titel }), warnungen: [] };
     }
-    throw Fehler('Dieser Befehl lässt sich nicht ausführen.');
+    throw Fehler(tx('k_befehl_unmoeglich', 'Dieser Befehl lässt sich nicht ausführen.'));
   }
 
   /* =========================================================================
@@ -1828,16 +2197,24 @@ var Kern = (function () {
      ========================================================================= */
 
   var bereit = laden().catch(function (e) {
-    if (!D) { D = leerBau(); beispielFuellen(); }
+    if (!D) { D = leerBau(); if (!(SERVER_APP && TEAM_SEITE)) beispielFuellen(); }
     return null;
   });
 
   return {
     bereit: bereit,
     daten: function () { return D; },
-    speicherArt: function () { return speicherArt; },
+    speicherArt: function () {
+      if (speicherArt === 'gross') return tx('k_speicher_gross', 'Browserspeicher (groß)');
+      if (speicherArt === 'klein') return tx('k_speicher_klein', 'Browserspeicher (klein)');
+      return tx('k_speicher_ram', 'Arbeitsspeicher');
+    },
     beiAenderung: beiAenderung,
     Fehler: Fehler,
+
+    /* Gemeinsamer Server (verbindung.js) */
+    nachSichern: nachSichern, uebernehmen: uebernehmen, ablageLoeschen: ablageLoeschen,
+    codesVerlaengern: codesVerlaengern, serverSeite: function () { return SERVER_APP; },
 
     /* Datum und Zeit */
     heute: heute, iso: iso, alsIso: alsIso, ausIso: ausIso, plusTage: plusTage,
@@ -1858,10 +2235,17 @@ var Kern = (function () {
     /* Team */
     ma: ma, maName: maName, maListe: maListe, maSpeichern: maSpeichern, maLoeschen: maLoeschen,
     beispielEntfernen: beispielEntfernen, hatBeispieldaten: hatBeispieldaten,
+    maHinweise: maHinweise, plzOk: plzOk, telegramNormieren: telegramNormieren,
+    KONTAKT_FELDER: KONTAKT_FELDER,
+
+    /* App-Einladung */
+    appBasis: appBasis, maAppLink: maAppLink, einladung: einladung,
+    eingeladenSetzen: eingeladenSetzen,
 
     /* Einlesen */
     importPruefen: importPruefen, importUebernehmen: importUebernehmen,
     importVorlage: function () { return IMPORT_VORLAGE; }, tabelleLesen: tabelleLesen,
+    zeilenAlsText: zeilenAlsText, spalteErkennen: spalteErkennen,
 
     /* Plan */
     schichten: schichten, schicht: schicht, schichtSpeichern: schichtSpeichern,
@@ -1891,8 +2275,10 @@ var Kern = (function () {
       return D.vorlage.slice().sort(nachName).map(function (v) { return Object.assign({}, v); });
     },
     vorlageSpeichern: function (d) {
-      if (!String(d.name || '').trim()) throw Fehler('Bitte einen Namen für die Vorlage eintragen.');
-      merken('Vorlage gespeichert');
+      if (!String(d.name || '').trim()) {
+        throw Fehler(tx('k_vorlage_name', 'Bitte einen Namen für die Vorlage eintragen.'));
+      }
+      merken(tx('r_vorlage_gespeichert', 'Vorlage gespeichert'));
       var v = d.id ? D.vorlage.find(function (x) { return Number(x.id) === Number(d.id); }) : null;
       if (!v) { v = { id: neueId('vorlage') }; D.vorlage.push(v); }
       Object.assign(v, {
@@ -1904,7 +2290,7 @@ var Kern = (function () {
       return v.id;
     },
     vorlageLoeschen: function (id) {
-      merken('Vorlage gelöscht');
+      merken(tx('r_vorlage_geloescht', 'Vorlage gelöscht'));
       D.vorlage = D.vorlage.filter(function (v) { return Number(v.id) !== Number(id); });
       sichern();
     },

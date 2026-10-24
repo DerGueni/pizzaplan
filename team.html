@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mein Dienstplan</title>
+<title data-t="app_team">Mein Dienstplan</title>
 <meta name="theme-color" content="#b5322a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,16 +12,17 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=4">
-<link rel="stylesheet" href="css/handy.css?v=4">
+<link rel="stylesheet" href="css/basis.css?v=6">
+<link rel="stylesheet" href="css/handy.css?v=6">
+<link rel="stylesheet" href="css/team.css?v=6">
 </head>
-<body>
+<body class="team-app">
 
 <!-- ===================================================== Anmeldung ===== -->
 <div id="anmeldung" class="anmeldung" style="display:none">
   <div class="karte">
     <div style="text-align:center">
-      <div style="font-size:46px">🍕</div>
+      <div class="anmeldelogo" style="font-size:46px">🍕</div>
       <h1 id="anmeldung_betrieb">Mein Dienstplan</h1>
     </div>
     <div id="an_schritt1">
@@ -62,7 +63,9 @@
 
     <!-- ------------------------------------------------ Stempeln ----- -->
     <div class="seite an" id="s_stempeln">
-      <div class="karte">
+      <div class="spalten">
+      <div class="spalte">
+      <div class="karte stempelkarte">
         <div class="stempeluhr">
           <div class="uhrzeit" id="st_uhr">--:--</div>
           <div class="lage" id="st_lage">…</div>
@@ -70,23 +73,29 @@
           <button type="button" class="grossknopf" id="st_knopf">–</button>
         </div>
       </div>
+      </div>
+      <div class="spalte">
       <div class="abschnitt" data-t="heute_erfasst">Heute erfasst</div>
       <div id="st_heute"></div>
       <div class="abschnitt" data-t="naechste_schicht">Deine nächste Schicht</div>
       <div id="st_naechste"></div>
+      </div>
+      </div>
     </div>
 
     <!-- ------------------------------------------------ Mein Plan ---- -->
     <div class="seite" id="s_plan">
-      <div class="streifen">
-        <button type="button" id="pl_zurueck">‹</button>
-        <button type="button" id="pl_heute" data-t="diese_woche">Diese Woche</button>
-        <button type="button" id="pl_vor">›</button>
+      <div class="planleiste">
+        <div class="streifen">
+          <button type="button" id="pl_zurueck">‹</button>
+          <button type="button" id="pl_heute" data-t="diese_woche">Diese Woche</button>
+          <button type="button" id="pl_vor">›</button>
+        </div>
+        <div id="pl_titel"></div>
       </div>
-      <div id="pl_titel" style="font-weight:600;font-size:16px;margin:2px 0 10px"></div>
       <div class="wischhinweis" data-t="wischen_woche"></div>
       <div id="pl_liste"></div>
-      <div class="karte" style="margin-top:12px">
+      <div class="karte plansumme">
         <h3 data-t="summe">Summe</h3>
         <div id="pl_summe"></div>
       </div>
@@ -132,7 +141,8 @@
       </div>
       <div class="karte">
         <h3 data-t="app_aufs_handy">App aufs Handy legen</h3>
-        <p style="font-size:14px" data-t="install_wie"></p>
+        <p id="ic_install_wie" style="font-size:14px" data-t="install_wie"></p>
+        <p id="ic_install_ios" style="font-size:14px;display:none"></p>
         <button type="button" class="gross" id="ic_install" style="display:none" data-t="install_jetzt">Jetzt installieren</button>
       </div>
       <button type="button" class="gross" id="ic_abmelden" data-t="abmelden">Abmelden</button>
@@ -163,11 +173,12 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=4"></script>
-<script src="js/sprache.js?v=4"></script>
-<script src="js/oberflaeche.js?v=4"></script>
-<script src="js/masken.js?v=4"></script>
-<script src="js/team.js?v=4"></script>
+<script src="js/kern.js?v=6"></script>
+<script src="js/verbindung.js?v=6"></script>
+<script src="js/sprache.js?v=6"></script>
+<script src="js/oberflaeche.js?v=6"></script>
+<script src="js/masken.js?v=6"></script>
+<script src="js/team.js?v=6"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof Team === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px">'

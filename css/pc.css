@@ -3,28 +3,87 @@
 */
 
 .menue{top:56px}
+/* Kurzform der Reiter nur, wenn es eng wird (siehe unten) */
+.menue .kurz{display:none}
+
+/* ---------------------------------------------------------------- Kopfzeilen der Karten */
+.kartenkopf{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-bottom:10px}
+.kartenkopf h2{margin:0}
+.kartenkopf .wachs{flex:1}
+.leise{color:var(--text-leise);font-size:13.5px}
+
+/* ---------------------------------------------------------------- Übersicht
+   Zahlen-Kacheln dichter als in basis.css: eine Reihe, wenig Höhe. */
+#u_kacheln,#a_inhalt .kacheln{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+  margin-bottom:14px}
+#u_kacheln .kachel,#a_inhalt .kachel{padding:8px 12px;display:flex;flex-wrap:wrap;align-items:baseline;
+  gap:0 9px;min-width:0}
+#u_kacheln .kachel .wert,#a_inhalt .kachel .wert{font-size:22px;flex:0 0 auto}
+#u_kacheln .kachel .bez,#a_inhalt .kachel .bez{margin-top:0;line-height:1.25;min-width:0;flex:1 1 60px}
+#a_inhalt .kachel{cursor:default}
+#a_inhalt .kachel:hover{transform:none}
+
+/* ---------------------------------------------------------------- Einstellungen
+   Schieberegler brauchen Platz, sonst bleibt vom Regler nur ein Stummel. */
+#ei_regler{grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:4px 18px}
+.kachel:focus-visible{outline:3px solid var(--blau);outline-offset:2px}
+
+/* Wochenvorschau: sieben Tage nebeneinander */
+.wochenvorschau{display:grid;grid-template-columns:repeat(7,minmax(112px,1fr));gap:8px;
+  overflow-x:auto;padding-bottom:2px}
+.wochenvorschau .wtag{background:var(--flaeche2);border:1px solid var(--linie);
+  border-radius:var(--radius-klein);padding:7px;min-width:0}
+.wochenvorschau .wtag.heute{border-color:var(--gelb);background:var(--gelb-hell)}
+.wochenvorschau .wtag.vorbei{opacity:.72}
+.wochenvorschau .wkopf{display:block;width:100%;text-align:left;background:none;border:0;
+  padding:2px 3px 5px;border-radius:6px;font-size:13.5px;color:var(--text)}
+.wochenvorschau .wkopf:hover{background:var(--flaeche)}
+.wochenvorschau .wkopf small{display:block;color:var(--text-leise);font-size:11.5px;
+  font-variant-numeric:tabular-nums}
+.wochenvorschau .wkopf small b{color:var(--rot)}
+.wochenchip{
+  display:block;width:100%;text-align:left;color:#fff;border:0;border-radius:7px;
+  padding:4px 7px;margin-bottom:4px;font-size:12.5px;line-height:1.28;
+  box-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+.wochenchip:hover{filter:brightness(1.08);border:0}
+.wochenchip small{display:block;opacity:.94;font-size:11.5px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.wochenchip.entwurf{outline:2px dashed rgba(255,255,255,.8);outline-offset:-3px}
+.wochenvorschau .wleer{font-size:12.5px;color:var(--text-leise);padding:4px 3px}
+.wochenvorschau .wweg{font-size:12px;color:var(--gruen);font-weight:600;padding:2px 3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------------------------------------------------------------- Wochenplan */
-.planbereich{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:start}
-@media (max-width:1180px){.planbereich{grid-template-columns:1fr}}
+.planleiste{align-items:center}
+.planleiste .knopfgruppe{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.planleiste .knopfgruppe.rechts{margin-left:auto}
+.plantitel{font-weight:600;font-size:16px;white-space:nowrap;margin-left:4px;
+  font-variant-numeric:tabular-nums}
+
+.planbereich{display:grid;grid-template-columns:196px minmax(0,1fr);gap:12px;align-items:start}
+.planbereich > *{min-width:0}
 
 .vorlagenkasten{
   background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
-  padding:13px;box-shadow:var(--schatten);position:sticky;top:104px;
+  padding:11px;box-shadow:var(--schatten);position:sticky;top:104px;
 }
-.vorlagenkasten h3{font-size:14.5px;margin-bottom:4px}
-.vorlagenkasten .wozu{font-size:12.5px;color:var(--text-leise);margin-bottom:10px}
+.vorlagenkasten h3{font-size:14.5px;margin-bottom:2px}
+.vorlagenkasten .wozu{font-size:12.5px;color:var(--text-leise);margin-bottom:8px;line-height:1.3}
+.vorlagenkasten .breit{width:100%}
+.vorlagenkasten hr{border:0;border-top:1px solid var(--linie);margin:11px 0}
 .vorlagechip{
   display:block;width:100%;text-align:left;color:#fff;border:0;border-radius:8px;
-  padding:8px 10px;margin-bottom:7px;cursor:grab;font-size:13.5px;line-height:1.3;
+  padding:5px 9px;margin-bottom:5px;cursor:grab;font-size:13px;line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .vorlagechip:hover{filter:brightness(1.08);border:0}
-.vorlagechip small{display:block;opacity:.92;font-size:11.5px}
+.vorlagechip small{display:block;opacity:.92;font-size:11.5px;overflow:hidden;text-overflow:ellipsis}
 .vorlagechip:active{cursor:grabbing}
 
 .plan{overflow:auto;border:1px solid var(--linie);border-radius:var(--radius);
   background:var(--flaeche);box-shadow:var(--schatten);max-height:calc(100vh - 230px)}
-.plan table{min-width:1020px;font-size:14px}
+.plan table{min-width:980px;font-size:14px}
 .plan th.tag{text-align:center;min-width:132px;line-height:1.25}
 .plan th.tag small{display:block;font-weight:400;color:var(--text-leise);font-size:11.5px}
 .plan th.tag.heute{background:var(--gelb-hell);color:var(--text)}
@@ -79,7 +138,12 @@
 .teamkarte .punkt{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;
   align-items:center;justify-content:center;font-weight:600;font-size:14px;flex:0 0 auto}
 
+/* Team: App-Einladung als kleiner Link unter dem Namen – macht die Tabelle nicht breiter */
+.teamkarte .einladelink{font-size:12.5px;padding:1px 0;margin-top:1px;white-space:nowrap}
+
 /* ---------------------------------------------------------------- Einlesen */
+.vorlagenschritt{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.vorlagenschritt .vorlagentext{flex:1 1 100%;order:-1}
 .einlesefeld{
   border:2px dashed var(--linie-stark);border-radius:var(--radius);padding:22px;
   text-align:center;background:var(--flaeche2);transition:all .15s;
@@ -128,9 +192,128 @@ pre.plantext{
   border-radius:5px;padding:2px 8px;font-family:inherit;font-size:12.5px;white-space:nowrap;
 }
 
+/* ---------------------------------------------------------------- Dunkel: Kontrast
+   Weiße Schrift auf den hellen Dunkel-Tönen von Rot und Grün ist schwer lesbar –
+   die Knöpfe nehmen hier den kräftigeren Ton
+   (button.haupt und button.gruen regelt basis.css.) */
+:root[data-schema="dunkel"] .handystreifen a.knopf,
+:root[data-schema="dunkel"] .menue button .zahl{background:var(--rot-dunkel);border-color:var(--rot-dunkel)}
+:root[data-schema="dunkel"] .handystreifen a.knopf:hover{background:#a63c33;border-color:#a63c33}
+/* Kalender- und Uhr-Symbole in Datumsfeldern, Bildlaufleisten: dunkel statt schwarz auf schwarz */
+:root[data-schema="dunkel"]{color-scheme:dark}
+
+/* ---------------------------------------------------------------- Hinweis fürs Handy */
+.handystreifen{display:none}
+.handystreifen.zu{display:none!important}
+
+/* ---------------------------------------------------------------- Drucken */
+@media print{
+  .planbereich{display:block}
+  .plan{max-height:none;overflow:visible;box-shadow:none}
+  .plan table{min-width:0}
+  .handystreifen{display:none!important}
+}
+
+/* ---------------------------------------------------------------- Bis 1300 px
+   Kleinere Rechner (1024–1280): Reiter in Kurzform, Wochenplan ohne
+   waagrechtes Schieben – die Spalten teilen sich die Breite. */
+@media (max-width:1299px){
+  .menue .lang{display:none}
+  .menue .kurz{display:inline}
+  .menue button{padding:11px 12px}
+  .planleiste button{padding:8px 11px}
+  .plantitel{font-size:15px}
+  .planbereich{grid-template-columns:168px minmax(0,1fr)}
+  .vorlagenkasten{padding:10px}
+  .plan table{min-width:0;table-layout:fixed}
+  .plan th.person,.plan td.person{width:158px;min-width:0}
+  .plan td.person{overflow:hidden;text-overflow:ellipsis;font-size:14px;padding-right:6px}
+  .plan td.person .wochenzahl{position:absolute;right:6px;bottom:7px;float:none;font-size:11.5px}
+  .plan td.person small{overflow:hidden;text-overflow:ellipsis}
+  .plan th.tag,.plan td.zelle{min-width:0}
+  .plan td.zelle{height:62px;padding:3px}
+  .schichtchip{font-size:12px;padding:3px 5px;white-space:nowrap;text-overflow:ellipsis}
+  .schichtchip small{overflow:hidden;text-overflow:ellipsis}
+}
+
+/* ---------------------------------------------------------------- Tablet und Touch
+   Alles, was man antippt, mindestens 40 px hoch. */
+@media (pointer:coarse), (max-width:1100px){
+  .inhalt button:not(.vorlagechip):not(.wochenchip):not(.still):not(.wkopf),
+  .ffuss button{min-height:40px}
+  .menue button{min-height:44px}
+  .inhalt select,.inhalt input:not([type=checkbox]):not([type=radio]):not([type=range]){min-height:40px}
+}
+
+/* ---------------------------------------------------------------- Bis 1000 px
+   Vorlagen wandern als flache Leiste über den Plan, der Plan schiebt sich
+   in seinem eigenen Kasten waagrecht. */
+@media (max-width:1000px){
+  .menue button{padding:11px 10px}
+  /* Tablet: lieber zwei Reihen Reiter als versteckte – alles bleibt mit einem Tipp erreichbar */
+  .menue{flex-wrap:wrap;overflow-x:visible}
+  .planbereich{grid-template-columns:minmax(0,1fr)}
+  .vorlagenkasten{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:9px}
+  .vorlagenkasten h3{margin:0}
+  .vorlagenkasten .wozu{margin:0 6px 0 0}
+  #p_vorlagen{display:contents}
+  .vorlagechip{width:auto;max-width:200px;margin:0}
+  .vorlagenkasten .breit{width:auto;margin:0!important}
+  .vorlagenkasten hr{display:none}
+}
+
 /* ---------------------------------------------------------------- Schmaler */
 @media (max-width:820px){
   .inhalt{padding:12px}
   .kopf .name small{display:none}
   .plan{max-height:none}
+}
+
+/* ---------------------------------------------------------------- Handy im PC-Link
+   Unter 760 px: Hinweis auf die Handy-Fassung, Kopf kompakt, Menü waagrecht
+   wischbar, nichts läuft über den Rand. */
+@media (max-width:760px){
+  .handystreifen{
+    display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;
+    background:var(--blau-hell);border-bottom:2px solid var(--blau);color:var(--text);
+    padding:10px 12px;font-size:14px;line-height:1.35;
+  }
+  .handystreifen .zeichen{font-size:22px;flex:0 0 auto}
+  .handystreifen .text{flex:1 1 180px;min-width:0}
+  .handystreifen a.knopf{
+    background:var(--rot);border-color:var(--rot);color:#fff;font-weight:600;
+    text-decoration:none;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;
+  }
+  .handystreifen a.knopf:hover{background:var(--rot-dunkel);border-color:var(--rot-dunkel)}
+  .handystreifen button.still{min-width:40px;min-height:40px;font-size:16px}
+
+  .kopf{gap:8px;padding:7px 10px;padding-top:calc(7px + env(safe-area-inset-top))}
+  .kopf .zeichen{font-size:22px}
+  .kopf .name{font-size:16px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .kopf .rechts{gap:5px;flex:0 0 auto}
+  .kopf button{padding:6px 9px}
+  .kopf button.rund{width:36px;height:36px}
+  .menue{top:calc(50px + env(safe-area-inset-top));padding:0 4px;flex-wrap:nowrap;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .menue button{scroll-snap-align:start}
+
+  .inhalt{padding:10px}
+  .leiste .feld{min-width:0!important;flex:1 1 140px}
+  .leiste .wachs{flex-basis:100%;height:0}
+  .planleiste .wachs{display:none}
+  .planleiste .knopfgruppe.rechts{margin-left:0}
+  .plantitel{flex-basis:100%;margin:2px 0 0}
+  .gitter{grid-template-columns:minmax(0,1fr)}
+  .empfaengerliste{grid-template-columns:minmax(0,1fr)}
+  #u_kacheln{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plan th.person,.plan td.person{width:122px;font-size:13px}
+  .plan td.person .punkt{margin-right:5px}
+  .plan td.person small{padding-left:16px}
+  .plan table{min-width:800px}
+}
+@media (max-width:560px){
+  .kopf .uhr{display:none}
+}
+@media (max-width:400px){
+  .kopf .name{display:none}
 }

@@ -109,6 +109,12 @@ var UI = (function () {
      3 · Fenster
      ========================================================================= */
 
+  /* Auf dem Handy springt beim Fokus sofort die Tastatur auf und verdeckt das
+     halbe Fenster – dort erst fokussieren, wenn jemand ins Feld tippt. */
+  function beruehrung() {
+    try { return window.matchMedia('(pointer:coarse)').matches; } catch (e) { return false; }
+  }
+
   function fenster(o) {
     return new Promise(function (fertig) {
       var hg = document.createElement('div');
@@ -134,14 +140,21 @@ var UI = (function () {
         hg.remove();
         fertig(wert);
       }
-      function taste(e) { if (e.key === 'Escape') { e.stopPropagation(); schliesse(null); } }
+      /* Esc schließt nur das oberste Fenster – bei gestapelten Fenstern bleibt das darunter offen. */
+      function taste(e) {
+        var alle = document.querySelectorAll('.hintergrund');
+        if (e.key === 'Escape' && alle[alle.length - 1] === hg) {
+          e.stopImmediatePropagation();
+          schliesse(null);
+        }
+      }
       hg.querySelector('[data-x]').onclick = function () { schliesse(null); };
       hg.onclick = function (e) { if (e.target === hg) schliesse(null); };
       document.addEventListener('keydown', taste, true);
       document.body.appendChild(hg);
       if (o.beimOeffnen) o.beimOeffnen(hg);
       var erstes = rumpf.querySelector('input:not([type=hidden]),select,textarea');
-      if (erstes && !o.keinFokus) setTimeout(function () { erstes.focus(); }, 60);
+      if (erstes && !o.keinFokus && !beruehrung()) setTimeout(function () { erstes.focus(); }, 60);
     });
   }
 
@@ -185,7 +198,14 @@ var UI = (function () {
         hg.remove();
         fertig(aktion ? { aktion: aktion, werte: sammle() } : null);
       }
-      function taste(e) { if (e.key === 'Escape') { e.stopPropagation(); schliesse(null); } }
+      /* Esc schließt nur das oberste Fenster – bei gestapelten Fenstern bleibt das darunter offen. */
+      function taste(e) {
+        var alle = document.querySelectorAll('.hintergrund');
+        if (e.key === 'Escape' && alle[alle.length - 1] === hg) {
+          e.stopImmediatePropagation();
+          schliesse(null);
+        }
+      }
 
       if (o.loeschen) {
         var bl = document.createElement('button');
@@ -228,7 +248,9 @@ var UI = (function () {
       regler(hg);
       if (o.beimOeffnen) o.beimOeffnen(hg, sammle);
       var erstes = hg.querySelector('.frumpf input:not([type=hidden]),.frumpf select,.frumpf textarea');
-      if (erstes) setTimeout(function () { erstes.focus(); erstes.select && erstes.select(); }, 60);
+      if (erstes && !beruehrung()) {
+        setTimeout(function () { erstes.focus(); erstes.select && erstes.select(); }, 60);
+      }
     });
   }
 
@@ -332,7 +354,7 @@ var UI = (function () {
     var ok = false;
     try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
     t.remove();
-    melde(ok ? T.t('kopiert') : 'Das Kopieren hat der Browser nicht erlaubt.', ok ? 'gut' : 'warn');
+    melde(ok ? T.t('kopiert') : T.t('ui_kopieren_nicht'), ok ? 'gut' : 'warn');
     return ok;
   }
 
@@ -354,7 +376,7 @@ var UI = (function () {
     return new Promise(function (fertig, schief) {
       var l = new FileReader();
       l.onload = function () { fertig(String(l.result || '')); };
-      l.onerror = function () { schief(Kern.Fehler('Die Datei ließ sich nicht lesen.')); };
+      l.onerror = function () { schief(Kern.Fehler(T.t('ui_datei_unlesbar'))); };
       /* Windows-Listen kommen oft als Westeuropäisch; erst UTF-8 versuchen. */
       l.readAsText(datei, 'utf-8');
     }).then(function (text) {
@@ -366,6 +388,92 @@ var UI = (function () {
         l2.readAsText(datei, 'windows-1252');
       });
     });
+  }
+
+  /* Excel-Dateien: Die Lesebibliothek (SheetJS) ist groß – sie wird erst geladen,
+     wenn wirklich eine Excel-Datei kommt. */
+  var excelLader = null;
+
+  function excelBibliothek() {
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    if (!excelLader) {
+      excelLader = new Promise(function (fertig, schief) {
+        var sc = document.createElement('script');
+        sc.src = 'js/fremd/xlsx.full.min.js';
+        sc.onload = function () {
+          if (window.XLSX) fertig(window.XLSX);
+          else { excelLader = null; schief(Kern.Fehler(T.t('ui_excel_fehlt'))); }
+        };
+        sc.onerror = function () {
+          excelLader = null;
+          sc.remove();
+          schief(Kern.Fehler(T.t('ui_excel_fehlt')));
+        };
+        document.head.appendChild(sc);
+      });
+    }
+    return excelLader;
+  }
+
+  function istExcel(datei) {
+    return /\.(xlsx|xlsm|xls|ods)$/i.test(datei.name || '')
+      || /spreadsheetml|ms-excel|opendocument\.spreadsheet/i.test(datei.type || '');
+  }
+
+  /* Eine Zelle als Text, so wie sie in Excel zu sehen ist; Datumszellen als TT.MM.JJJJ. */
+  function zelleText(X, z) {
+    if (!z || z.t === 'z' || z.v === undefined || z.v === null) return '';
+    if (z.t === 'n' && z.z && X.SSF.is_date(z.z)) {
+      var d = X.SSF.parse_date_code(z.v);
+      if (d && d.y) {
+        return String(d.d).padStart(2, '0') + '.' + String(d.m).padStart(2, '0') + '.' + d.y;
+      }
+    }
+    if (z.t === 'd' && z.v instanceof Date) {
+      return String(z.v.getDate()).padStart(2, '0') + '.'
+        + String(z.v.getMonth() + 1).padStart(2, '0') + '.' + z.v.getFullYear();
+    }
+    if (z.t === 'b') return z.v ? '1' : '';
+    if (z.w !== undefined && z.w !== null) return String(z.w).trim();
+    return String(z.v).trim();
+  }
+
+  /* Liest das Blatt „Mitarbeiter“ (sonst das erste) und liefert Tabulator-Text. */
+  function excelLesen(datei) {
+    return excelBibliothek().then(function (X) {
+      return new Promise(function (fertig, schief) {
+        var l = new FileReader();
+        l.onload = function () {
+          try {
+            var mappe = X.read(new Uint8Array(l.result), { type: 'array', cellNF: true });
+            var blattName = mappe.SheetNames.filter(function (n) {
+              return /^\s*(mitarbeiter|dipendenti|personale|team)\s*$/i.test(n);
+            })[0] || mappe.SheetNames[0];
+            var blatt = mappe.Sheets[blattName];
+            if (!blatt || !blatt['!ref']) { fertig(''); return; }
+            var b = X.utils.decode_range(blatt['!ref']);
+            var zeilen = [];
+            for (var r = b.s.r; r <= b.e.r; r++) {
+              var zeile = [];
+              for (var c = b.s.c; c <= b.e.c; c++) {
+                zeile.push(zelleText(X, blatt[X.utils.encode_cell({ r: r, c: c })]));
+              }
+              while (zeile.length && zeile[zeile.length - 1] === '') zeile.pop();
+              if (zeile.length) zeilen.push(zeile);
+            }
+            fertig(Kern.zeilenAlsText(zeilen));
+          } catch (e) { schief(Kern.Fehler(T.t('ui_excel_fehler'))); }
+        };
+        l.onerror = function () { schief(Kern.Fehler(T.t('ui_datei_unlesbar'))); };
+        l.readAsArrayBuffer(datei);
+      });
+    });
+  }
+
+  /* Tabelle aus einer Datei: Excel über die Bibliothek, sonst als Text (CSV, TXT). */
+  function tabelleDateiLesen(datei) {
+    if (/\.numbers$/i.test(datei.name || '')) return Promise.reject(Kern.Fehler(T.t('nur_csv')));
+    return istExcel(datei) ? excelLesen(datei) : dateiLesen(datei);
   }
 
   /* =========================================================================
@@ -430,29 +538,43 @@ var UI = (function () {
 
     var ticks = '';
     for (var m = Math.ceil(von / schritt) * schritt; m <= bis; m += schritt) {
-      ticks += '<span class="tick" style="left:' + pos(m).toFixed(2) + '%">'
-        + zwei(Math.floor(m / 60) % 24) + '</span>';
+      /* Erste und letzte Zahl nach innen ausrichten, damit nichts übersteht. */
+      var p = pos(m);
+      ticks += '<span class="tick" style="left:' + p.toFixed(2) + '%'
+        + (p > 98 ? ';transform:translateX(-100%)' : (p < 2 ? ';transform:none' : '')) + '">'
+        + (m >= 1440 ? '24' : zwei(Math.floor(m / 60) % 24)) + '</span>';
     }
     var jetzt = (o.jetzt !== null && o.jetzt !== undefined && o.jetzt >= von && o.jetzt <= bis)
       ? '<i class="jetzt" style="left:' + pos(o.jetzt).toFixed(2) + '%"></i>' : '';
 
+    /* Kopfzeile mit denselben Spalten wie jede Zeile, damit die Achse genau
+       über den Spuren liegt. Ohne erfasste Stunden bleibt die Summenspalte
+       weg – mehr Platz für die Spur. */
+    var mitSumme = o.zeilen.some(function (z) { return !!z.summe; });
     var h = '<div class="strahl"><div class="strahlkopf"><div class="wer"></div>'
-      + '<div class="spur">' + ticks + '</div></div>';
+      + '<div class="spur">' + ticks + '</div>'
+      + (mitSumme ? '<div class="strahlsumme"></div>' : '') + '</div>';
 
     o.zeilen.forEach(function (z) {
       h += '<div class="strahlzeile" data-strahl="' + z.id + '">'
         + '<div class="wer"><i class="punkt" style="background:' + (z.farbe || '#7f8c8d') + '"></i>'
         + '<span>' + sicher(z.name) + '</span></div><div class="spur">' + jetzt;
+      var erfasst = (z.stuecke || []).filter(function (s) { return s.art !== 'geplant'; });
       (z.stuecke || []).forEach(function (s) {
         var links = pos(s.von), breite = Math.max(1.5, pos(s.bis) - pos(s.von));
+        /* Liegt über der Planung schon eine erfasste Zeit, trägt nur diese die Uhrzeit. */
+        var verdeckt = s.art === 'geplant' && erfasst.some(function (e) {
+          return e.von < s.bis && e.bis > s.von;
+        });
         h += '<div class="stueck ' + s.art + '" style="left:' + links.toFixed(2)
           + '%;width:' + breite.toFixed(2) + '%'
           + (s.art === 'erfasst' || s.art === 'laeuft'
             ? ';background:' + (z.farbe || '#7f8c8d') : '')
           + '" title="' + sicher(s.text || '') + '">'
-          + (breite > 24 ? '<span>' + sicher(s.text || '') + '</span>' : '') + '</div>';
+          + (breite > 12 && !verdeckt ? '<span>' + sicher(s.text || '') + '</span>' : '') + '</div>';
       });
-      h += '</div><div class="strahlsumme">' + sicher(z.summe || '') + '</div></div>';
+      h += '</div>' + (mitSumme ? '<div class="strahlsumme">' + sicher(z.summe || '') + '</div>' : '')
+        + '</div>';
     });
     return h + '</div>';
   }
@@ -465,7 +587,7 @@ var UI = (function () {
     schieber: schieber, regler: regler, auswahl: auswahl, feld: feld, haken: haken,
     farbwahl: farbwahl,
     schemaSetzen: schemaSetzen, schemaLesen: schemaLesen, kopieren: kopieren,
-    dateiSpeichern: dateiSpeichern, dateiLesen: dateiLesen,
+    dateiSpeichern: dateiSpeichern, dateiLesen: dateiLesen, tabelleDateiLesen: tabelleDateiLesen,
     leer: leer, etikett: etikett, balken: balken, tippen: tippen, wischen: wischen,
     zeitstrahl: zeitstrahl
   };

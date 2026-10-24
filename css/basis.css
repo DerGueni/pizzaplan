@@ -188,12 +188,24 @@ button.haupt{background:var(--rot);border-color:var(--rot);color:#fff;font-weigh
 button.haupt:hover{background:var(--rot-dunkel);border-color:var(--rot-dunkel)}
 button.gruen{background:var(--gruen);border-color:var(--gruen);color:#fff;font-weight:600}
 button.gruen:hover{filter:brightness(1.08)}
+/* Dunkel: weiße Schrift braucht den kräftigeren Ton (Kontrast über 4,5 : 1) */
+:root[data-schema="dunkel"] button.haupt{background:var(--rot-dunkel);border-color:var(--rot-dunkel)}
+:root[data-schema="dunkel"] button.haupt:hover{background:#a63c33;border-color:#a63c33}
+:root[data-schema="dunkel"] button.gruen{background:#2e7d4f;border-color:#2e7d4f}
 button.gefahr{color:var(--rot);border-color:var(--rot)}
 button.gefahr:hover{background:var(--rot-hell)}
 button.still{background:transparent;border-color:transparent;color:var(--text-leise);padding:5px 9px}
 button.still:hover{background:var(--flaeche2)}
 button.gross{padding:15px 20px;font-size:17px;width:100%;font-weight:600}
 button:disabled{opacity:.45;cursor:not-allowed}
+/* Link, der wie ein Knopf aussieht (z. B. Vorlage herunterladen) */
+a.knopf{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  text-decoration:none;font-weight:600}
+a.knopf.gross{display:flex;width:100%;padding:15px 20px;font-size:17px}
+/* Knopf, der wie ein kleiner Link aussieht */
+button.alslink{background:transparent;border:0;padding:2px 0;color:var(--blau);
+  text-decoration:underline;text-underline-offset:2px;font-size:13.5px}
+button.alslink:hover{background:transparent;color:var(--text)}
 button.gedrueckt{transform:scale(.96)}
 
 /* ---------------------------------------------------------------- Felder */

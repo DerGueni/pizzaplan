@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PizzaPlan · Handy</title>
+<title data-t="titel_handy">PizzaPlan · Handy</title>
 <meta name="theme-color" content="#b5322a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,17 +12,17 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=4">
-<link rel="stylesheet" href="css/handy.css?v=4">
+<link rel="stylesheet" href="css/basis.css?v=6">
+<link rel="stylesheet" href="css/handy.css?v=6">
 </head>
-<body>
+<body class="chefhandy">
 
 <!-- ===================================================== Anmeldung ===== -->
 <div id="anmeldung" class="anmeldung" style="display:none">
   <div class="karte" style="text-align:center">
     <div style="font-size:46px">🍕</div>
     <h1 id="anmeldung_betrieb">PizzaPlan</h1>
-    <p style="color:var(--text-leise);margin-top:-4px">Personal &amp; Dienstplan</p>
+    <p style="color:var(--text-leise);margin-top:-4px" data-t="untertitel">Personal &amp; Dienstplan</p>
     <div style="text-align:left;margin-top:14px">
       <label data-t="chef_pin">Chef-PIN</label>
       <input id="pin_feld" class="pinfeld" type="password" inputmode="numeric" maxlength="8"
@@ -32,7 +32,7 @@
     <button class="haupt gross" id="pin_knopf" style="margin-top:12px" data-t="anmelden">Anmelden</button>
     <p id="pin_fehler" class="hinweis rot" style="display:none;margin-top:12px"></p>
     <p style="font-size:12.5px;color:var(--text-leise);margin-top:16px">
-      <a href="team.html">Zur Mitarbeiter-App</a> · <a href="pc.html">PC-Fassung</a></p>
+      <a href="team.html" data-t="h_zur_team_app">Zur Mitarbeiter-App</a> · <a href="pc.html" data-t="h_pc_fassung">PC-Fassung</a></p>
   </div>
 </div>
 
@@ -46,7 +46,7 @@
       <button type="button" id="knopf_mikro" class="rund" title="Sprachbefehl">🎤</button>
       <button type="button" id="knopf_sprache">DE</button>
       <button type="button" id="knopf_schema" class="rund">🌙</button>
-      <button type="button" id="knopf_menue" class="rund" title="Menü">☰</button>
+      <button type="button" id="knopf_menue" class="rund" title="Menü" data-t-titel="menue_titel">☰</button>
     </div>
   </div>
 
@@ -55,50 +55,59 @@
     <!-- ------------------------------------------------ Heute -------- -->
     <div class="seite an" id="s_heute">
 
-      <div class="tageskopf">
-        <div class="datum" id="h_datum"></div>
-        <div class="lage" id="h_lage"></div>
-      </div>
-
-      <div id="h_todo"></div>
-
-      <div id="h_jetzt_block" style="display:none">
-        <div class="abschnitt" data-t="jetzt_im_dienst">Gerade im Dienst</div>
-        <div id="h_stempel"></div>
-      </div>
-
-      <div class="abschnitt" data-t="heute_im_dienst">Heute im Dienst</div>
-      <div id="h_heute"></div>
-
-      <div class="reihenkopf">
-        <div class="abschnitt" id="h_wochentitel" data-t="diese_woche">Diese Woche</div>
-        <div class="umschalter" id="h_ansicht">
-          <button type="button" data-ansicht="tag" class="an" data-t="nach_tag">nach Tag</button>
-          <button type="button" data-ansicht="person" data-t="nach_person">nach Person</button>
+      <!-- Links (Tablet/PC) bzw. oben (Handy): Überblick, schnelle Knöpfe, Heute -->
+      <div class="h_block h_oben">
+        <div class="tageskopf">
+          <div class="datum" id="h_datum"></div>
+          <div class="lage" id="h_lage"></div>
         </div>
+
+        <div class="kacheln zahlenleiste" id="h_kacheln"></div>
+
+        <div class="abschnitt" data-t="schnellstart">Schnell erledigt</div>
+        <div class="schnellknoepfe">
+          <button type="button" id="h_schicht"><span class="bild">➕</span>
+            <span data-t="schicht_neu">+ Schicht</span></button>
+          <button type="button" id="h_frei"><span class="bild">✋</span>
+            <span data-t="wuensche_kurz">Wünsche</span></button>
+          <button type="button" id="h_freigeben"><span class="bild">📣</span>
+            <span data-t="freigeben_kurz">Freigeben</span></button>
+          <button type="button" id="h_versand"><span class="bild">📤</span>
+            <span data-t="versand_kurz">Verschicken</span></button>
+        </div>
+
+        <div id="h_todo"></div>
+
+        <div id="h_jetzt_block" style="display:none">
+          <div class="abschnitt" data-t="jetzt_im_dienst">Gerade im Dienst</div>
+          <div id="h_stempel"></div>
+        </div>
+
+        <div class="abschnitt" data-t="heute_im_dienst">Heute im Dienst</div>
+        <div id="h_heute"></div>
       </div>
-      <div class="wochenlage">
-        <button type="button" class="wpfeil" id="h_wo_zurueck">‹</button>
-        <div id="h_wochenkopf" class="womitte"></div>
-        <button type="button" class="wpfeil" id="h_wo_vor">›</button>
+
+      <!-- Rechts (Tablet/PC) bzw. Mitte (Handy): die Woche -->
+      <div class="h_block h_rechts">
+        <div class="reihenkopf">
+          <div class="abschnitt" id="h_wochentitel" data-t="diese_woche">Diese Woche</div>
+          <div class="umschalter" id="h_ansicht">
+            <button type="button" data-ansicht="tag" class="an" data-t="nach_tag">nach Tag</button>
+            <button type="button" data-ansicht="person" data-t="nach_person">nach Person</button>
+          </div>
+        </div>
+        <div class="wochenlage">
+          <button type="button" class="wpfeil" id="h_wo_zurueck">‹</button>
+          <div id="h_wochenkopf" class="womitte"></div>
+          <button type="button" class="wpfeil" id="h_wo_vor">›</button>
+        </div>
+        <div id="h_woche"></div>
       </div>
-      <div id="h_woche"></div>
 
-      <div class="kacheln" id="h_kacheln"></div>
-
-      <div class="abschnitt" data-t="naechste_termine">Nächste Termine</div>
-      <div id="h_termine"></div>
-
-      <div class="abschnitt" data-t="schnellstart">Schnell erledigt</div>
-      <div class="schnellknoepfe">
-        <button type="button" id="h_schicht"><span class="bild">➕</span>
-          <span data-t="schicht_neu">+ Schicht</span></button>
-        <button type="button" id="h_frei"><span class="bild">✋</span>
-          <span data-t="wuensche_kurz">Wünsche</span></button>
-        <button type="button" id="h_freigeben"><span class="bild">📣</span>
-          <span data-t="plan_freigeben">Plan freigeben</span></button>
-        <button type="button" id="h_versand"><span class="bild">📤</span>
-          <span data-t="versand_kurz">Verschicken</span></button>
+      <!-- Links unten (Tablet/PC) bzw. unten (Handy): Termine -->
+      <div class="h_block h_unten">
+        <div class="abschnitt" data-t="naechste_termine">Nächste Termine</div>
+        <div id="h_termine"></div>
       </div>
     </div>
 
@@ -121,7 +130,8 @@
 
     <!-- ------------------------------------------------ Team --------- -->
     <div class="seite" id="s_team">
-      <div class="feld"><input id="tm_suche" data-t-platz="suchen" autocomplete="off"></div>
+      <div class="feld suchreihe"><input id="tm_suche" data-t-platz="suchen" autocomplete="off">
+        <button type="button" id="tm_einladen" data-t-titel="pc_tt_alle_einladen"><span aria-hidden="true">📲 </span><span data-t="alle_einladen">Alle einladen</span></button></div>
       <div id="tm_liste"></div>
       <button type="button" class="haupt gross" id="tm_neu" style="margin-top:12px"
         data-t="ma_neu">+ Mitarbeiter</button>
@@ -151,12 +161,11 @@
         </div>
       </div>
       <div id="ze_summe" class="wochenlage"></div>
-      <div id="ze_liste"></div>
-
-      <div class="knopfreihe">
+      <div class="knopfreihe oben">
         <button type="button" id="ze_freigeben" data-t="alle_freigeben">Alle prüfen und freigeben</button>
         <button type="button" class="haupt" id="ze_neu" data-t="zeit_neu">+ Zeit nachtragen</button>
       </div>
+      <div id="ze_liste"></div>
     </div>
 
     <!-- ------------------------------------------------ Mehr --------- -->
@@ -228,8 +237,11 @@
           <div class="nr">1</div>
           <div class="inhalt2"><b data-t="ein_s1">Vorlage holen</b>
             <p data-t="ein_s1_text"></p>
-            <button type="button" class="gross" id="ei_vorlage"
-              data-t="vorlage_holen">Importvorlage herunterladen</button></div>
+            <a class="knopf gross" id="ei_xlsx" href="Importvorlage_Mitarbeiter.xlsx"
+              download="Importvorlage_Mitarbeiter.xlsx"><span aria-hidden="true">📥</span>
+              <span data-t="ein_xl_vorlage">Excel-Vorlage herunterladen</span></a>
+            <button type="button" class="alslink" id="ei_vorlage"
+              data-t="ein_csv_vorlage">oder als CSV-Datei</button></div>
         </div>
         <div class="karte schritt">
           <div class="nr">2</div>
@@ -244,11 +256,10 @@
             <button type="button" class="haupt gross" id="ei_datei"
               data-t="datei_waehlen">Datei auswählen</button>
             <input type="file" id="ei_dateifeld"
-                   accept=".csv,.txt,.tsv,.xls,.xlsx,text/csv,text/plain" style="display:none">
+                   accept=".xlsx,.xls,.csv,.txt,.tsv,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" style="display:none">
             <div class="feld" style="margin-top:10px">
               <label data-t="einfuegen_hier">… oder Tabelle hier einfügen</label>
-              <textarea id="ei_text" rows="5" spellcheck="false"
-                style="font-family:Consolas,monospace;font-size:13px"></textarea>
+              <textarea id="ei_text" rows="5" spellcheck="false" class="tabellentext"></textarea>
             </div>
             <button type="button" class="haupt gross" id="ei_pruefen"
               data-t="pruefen">Prüfen</button></div>
@@ -279,7 +290,7 @@
         <button type="button" class="gross" id="es_abmelden" style="margin-top:6px"
           data-t="abmelden">Abmelden</button>
         <p style="text-align:center;font-size:12.5px;color:var(--text-leise);margin-top:14px">
-          <a href="pc.html">PC-Fassung</a> · <a href="team.html">Mitarbeiter-App</a></p>
+          <a href="pc.html" data-t="h_pc_fassung">PC-Fassung</a> · <a href="team.html" data-t="pc_mitarbeiter_app">Mitarbeiter-App</a></p>
       </div>
 
     </div>
@@ -316,11 +327,12 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=4"></script>
-<script src="js/sprache.js?v=4"></script>
-<script src="js/oberflaeche.js?v=4"></script>
-<script src="js/masken.js?v=4"></script>
-<script src="js/handy.js?v=4"></script>
+<script src="js/kern.js?v=6"></script>
+<script src="js/verbindung.js?v=6"></script>
+<script src="js/sprache.js?v=6"></script>
+<script src="js/oberflaeche.js?v=6"></script>
+<script src="js/masken.js?v=6"></script>
+<script src="js/handy.js?v=6"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof Handy === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px">'

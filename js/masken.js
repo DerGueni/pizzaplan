@@ -15,25 +15,27 @@ var Masken = (function () {
       .map(function (t) { return t.charAt(0).toUpperCase(); }).join('');
   }
 
-  function appLink(maId) {
-    var m = Kern.ma(maId);
-    return location.origin + location.pathname.replace(/[^/]*$/, '')
-      + 'team.html?k=' + (m ? m.zugangscode : '');
-  }
+  function appLink(maId) { return Kern.maAppLink(maId); }
 
   function farbeFuerPosition(position, ersatz) {
     var v = Kern.vorlagen().find(function (x) { return x.position === position; });
     return v ? v.farbe : (ersatz || '#7f8c8d');
   }
 
+  /* Gespeicherte Werte (Positionen, Vertrag, Wunschart …) übersetzt zur Auswahl anbieten –
+     der Wert selbst bleibt deutsch. */
+  function werteListe(liste) {
+    return liste.map(function (w) { return { wert: w, text: T.wert(w) }; });
+  }
+
   function warnungenZeigen(liste) {
     if (!liste || !liste.length) return;
     UI.fenster({
-      titel: 'Bitte kurz prüfen',
-      inhalt: '<p>Gespeichert ist alles. Dabei ist aufgefallen:</p>'
+      titel: T.t('m_kurz_pruefen'),
+      inhalt: '<p>' + T.t('m_aufgefallen') + '</p>'
         + '<ul style="padding-left:20px;line-height:1.6">'
         + liste.map(function (w) { return '<li>' + UI.sicher(w) + '</li>'; }).join('') + '</ul>',
-      knoepfe: [{ text: 'Verstanden', art: 'haupt', wert: true }]
+      knoepfe: [{ text: T.t('m_verstanden'), art: 'haupt', wert: true }]
     });
   }
 
@@ -53,7 +55,7 @@ var Masken = (function () {
       + '</div>'
       + (vorlagen.length
         ? '<div class="feld"><label>' + T.t('vorlagen') + '</label><select id="mk_vorlage">'
-          + '<option value="">— frei eintragen —</option>'
+          + '<option value="">— ' + T.t('m_frei_eintragen') + ' —</option>'
           + vorlagen.map(function (v) {
             return '<option value="' + v.id + '">' + UI.sicher(v.name) + ' · ' + v.von + '–'
               + v.bis + '</option>';
@@ -65,7 +67,7 @@ var Masken = (function () {
       + '</div>'
       + UI.schieber('pause_min', T.t('pause'), s ? s.pause_min : 0, 0, 120, 5, 'min')
       + '<div class="feldreihe">'
-      + UI.auswahl('position', T.t('position'), Kern.positionen(),
+      + UI.auswahl('position', T.t('position'), werteListe(Kern.positionen()),
         s ? s.position : (vorlagen[0] ? vorlagen[0].position : ''))
       + UI.feld('notiz', T.t('notiz'), s ? s.notiz : '')
       + '</div>'
@@ -85,8 +87,8 @@ var Masken = (function () {
           var soll = Kern.pausenvorgabe(Kern.dauerMinuten(v, b, 0));
           hg.querySelector('#mk_dauer').innerHTML = min
             ? T.t('dauer') + ': <b>' + UI.zahl(Kern.stunden(min), 2) + ' ' + T.t('stunden') + '</b>'
-              + (soll > p ? ' · gesetzlich wären <b>' + soll + ' Minuten</b> Pause fällig' : '')
-            : 'Diese Zeiten ergeben noch keine Arbeitszeit.';
+              + (soll > p ? T.t('m_pause_faellig').replace('{min}', soll) : '')
+            : T.t('m_noch_keine_arbeitszeit');
         }
         hg.querySelectorAll('[name=von],[name=bis],[name=pause_min],[data-schieber]')
           .forEach(function (e) { e.addEventListener('input', rechne); });
@@ -111,10 +113,10 @@ var Masken = (function () {
       try {
         if (r.aktion === 'loeschen') {
           Kern.schichtLoeschen(s.id);
-          UI.rueckStreifen('Schicht gelöscht', nachher);
+          UI.rueckStreifen(T.t('r_schicht_geloescht'), nachher);
         } else {
           var res = Kern.schichtSpeichern(Object.assign({ id: s ? s.id : 0 }, r.werte));
-          UI.rueckStreifen(s ? 'Schicht geändert' : 'Schicht angelegt', nachher);
+          UI.rueckStreifen(T.t(s ? 'r_schicht_geaendert' : 'r_schicht_angelegt'), nachher);
           warnungenZeigen(res.warnungen);
         }
         ruf(nachher);
@@ -129,14 +131,14 @@ var Masken = (function () {
   function vorlage(id, nachher) {
     var v = id ? Kern.vorlagen().find(function (x) { return Number(x.id) === Number(id); }) : null;
     return UI.formular({
-      titel: v ? 'Vorlage bearbeiten' : 'Neue Vorlage',
-      inhalt: UI.feld('name', 'Name', v ? v.name : '')
+      titel: v ? T.t('m_vorlage_bearbeiten') : T.t('m_vorlage_neu'),
+      inhalt: UI.feld('name', T.t('name'), v ? v.name : '')
         + '<div class="feldreihe">'
         + UI.feld('von', T.t('von'), v ? v.von : '17:00', 'time')
         + UI.feld('bis', T.t('bis'), v ? v.bis : '22:00', 'time')
         + '</div>'
         + UI.schieber('pause_min', T.t('pause'), v ? v.pause_min : 30, 0, 120, 5, 'min')
-        + UI.auswahl('position', T.t('position'), Kern.positionen(), v ? v.position : '')
+        + UI.auswahl('position', T.t('position'), werteListe(Kern.positionen()), v ? v.position : '')
         + UI.farbwahl('farbe', T.t('farbe'), v ? v.farbe : Kern.FARBTOPF[1]),
       loeschen: !!v
     }).then(function (r) {
@@ -160,25 +162,23 @@ var Masken = (function () {
       titel: m ? T.t('ma_bearbeiten') : T.t('ma_anlegen'),
       breite: 640,
       inhalt: '<div class="feldreihe">'
-        + UI.feld('name', 'Name', m ? m.name : '')
-        + UI.auswahl('rolle', T.t('rolle'), Kern.positionen().concat(['Leitung']),
-          m ? m.rolle : '', '—')
+        + UI.feld('name', T.t('name'), m ? m.name : '')
+        + UI.auswahl('rolle', T.t('rolle'), werteListe(Kern.positionen().indexOf('Leitung') < 0
+          ? Kern.positionen().concat(['Leitung']) : Kern.positionen()), m ? m.rolle : '', '—')
         + '</div><div class="feldreihe">'
-        + UI.auswahl('vertrag', T.t('vertrag'), Kern.VERTRAEGE, m ? m.vertrag : 'Teilzeit')
+        + UI.auswahl('vertrag', T.t('vertrag'), werteListe(Kern.VERTRAEGE), m ? m.vertrag : 'Teilzeit')
         + UI.auswahl('sprache', T.t('sprache'), [
-          { wert: 'de', text: 'Deutsch' }, { wert: 'it', text: 'Italiano' }
+          { wert: 'de', text: T.t('sprache_de') }, { wert: 'it', text: T.t('sprache_it') }
         ], m ? m.sprache : 'de')
-        + '</div><div class="feldreihe">'
-        + UI.feld('telefon', T.t('telefon'), m ? m.telefon : '', 'tel')
-        + UI.feld('email', T.t('email'), m ? m.email : '', 'email')
         + '</div>'
+        + kontaktGruppe(m)
         + UI.schieber('stundenlohn', T.t('stundenlohn') + ' (€)',
           m ? m.stundenlohn : Kern.einstZahl('mindestlohn'), 0, 40, 0.5, '€')
         + UI.schieber('wochenstunden', T.t('wochenstunden'), m ? m.wochenstunden : 0, 0, 48, 0.5, 'h')
-        + UI.schieber('urlaubstage', T.t('urlaubstage'), m ? m.urlaubstage : 24, 0, 40, 1, 'Tage')
+        + UI.schieber('urlaubstage', T.t('urlaubstage'), m ? m.urlaubstage : 24, 0, 40, 1, T.t('tage_wort'))
         + '<div class="feldreihe">'
         + UI.feld('eintritt', T.t('eintritt'), m ? m.eintritt : '', 'date')
-        + UI.feld('pin', 'PIN für die Mitarbeiter-App', m ? m.pin : '1234')
+        + UI.feld('pin', T.t('m_pin_app'), m ? m.pin : '1234')
         + '</div>'
         + UI.farbwahl('farbe', T.t('farbe'), m ? m.farbe : Kern.FARBTOPF[1])
         + UI.feld('notiz', T.t('notiz'), m ? m.notiz : '')
@@ -188,7 +188,15 @@ var Masken = (function () {
           + ':<br><code style="word-break:break-all">' + UI.sicher(appLink(m.id))
           + '</code></div>' : ''),
       loeschen: !!m,
-      weitere: m ? [{ text: '🔗 ' + T.t('link_kopieren'), aktion: 'link' }] : []
+      weitere: m ? [{ text: '🔗 ' + T.t('link_kopieren'), aktion: 'link' }] : [],
+      beimOeffnen: function (hg) {
+        var plz = hg.querySelector('[name=plz]');
+        var hinweis = hg.querySelector('#mk_plz_hinweis');
+        function pruefe() { hinweis.style.display = Kern.plzOk(plz.value) ? 'none' : ''; }
+        plz.addEventListener('change', pruefe);
+        plz.addEventListener('blur', pruefe);
+        plz.addEventListener('input', function () { if (Kern.plzOk(plz.value)) pruefe(); });
+      }
     }).then(function (r) {
       if (!r) return;
       try {
@@ -200,10 +208,37 @@ var Masken = (function () {
         } else {
           Kern.maSpeichern(Object.assign({ id: m ? m.id : 0 }, r.werte));
           UI.rueckStreifen(T.t('gespeichert'), nachher);
+          Kern.maHinweise(r.werte).forEach(function (x) { UI.melde(x, 'warn'); });
         }
         ruf(nachher);
       } catch (e) { UI.fehler(e); }
     });
+  }
+
+  /* Kontakt & Adresse – kompakt in Zweierreihen, PLZ schmal neben dem Ort. */
+  function kontaktGruppe(m) {
+    var w = function (f) { return m && m[f] ? m[f] : ''; };
+    return '<div class="kontaktgruppe">'
+      + '<div class="abschnitt">' + UI.sicher(T.t('kontakt_adresse')) + '</div>'
+      + '<div class="feldreihe">'
+      + UI.feld('telefon', T.t('handy_nr'), w('telefon'), 'tel', 'autocomplete="off"')
+      + UI.feld('email', T.t('email'), w('email'), 'email', 'autocomplete="off"')
+      + '</div><div class="feldreihe">'
+      + UI.feld('telegram', T.t('telegram'), w('telegram'), 'text',
+        'autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'
+        + UI.sicher(T.t('telegram_platz')) + '"')
+      + UI.feld('strasse', T.t('strasse'), w('strasse'), 'text', 'autocomplete="off"')
+      + '</div><div class="feldreihe" style="grid-template-columns:minmax(76px,118px) minmax(0,1fr)">'
+      + UI.feld('plz', T.t('plz'), w('plz'), 'text', 'inputmode="numeric" maxlength="10" autocomplete="off"')
+      + UI.feld('ort', T.t('wohnort'), w('ort'), 'text', 'autocomplete="off"')
+      + '</div>'
+      + '<div class="hinweis warn" id="mk_plz_hinweis" style="display:none">'
+      + UI.sicher(T.t('k_plz_komisch')) + '</div>'
+      + '<div class="feldreihe">'
+      + UI.feld('geburtsdatum', T.t('geburtsdatum'), w('geburtsdatum'), 'date')
+      + UI.feld('notfallkontakt', T.t('notfallkontakt'), w('notfallkontakt'), 'text',
+        'autocomplete="off" placeholder="' + UI.sicher(T.t('notfall_platz')) + '"')
+      + '</div></div>';
   }
 
   /* =========================================================================
@@ -221,11 +256,11 @@ var Masken = (function () {
         w ? w.mitarbeiter_id : '');
     }
     inhalt += '<div class="feldreihe">'
-      + UI.auswahl('typ', T.t('typ'), Kern.WUNSCH_TYPEN, w ? w.typ : 'Frei-Wunsch')
+      + UI.auswahl('typ', T.t('typ'), werteListe(Kern.WUNSCH_TYPEN), w ? w.typ : 'Frei-Wunsch')
       + (nurMaId ? '' : UI.auswahl('status', T.t('status'), [
-        { wert: 'offen', text: T.t('offen') },
-        { wert: 'genehmigt', text: T.t('genehmigt') },
-        { wert: 'abgelehnt', text: T.t('abgelehnt') }
+        { wert: 'offen', text: T.status('offen') },
+        { wert: 'genehmigt', text: T.status('genehmigt') },
+        { wert: 'abgelehnt', text: T.status('abgelehnt') }
       ], w ? w.status : 'genehmigt'))
       + '</div><div class="feldreihe">'
       + UI.feld('von_datum', T.t('von'), w ? w.von_datum : Kern.heute(), 'date')
@@ -234,7 +269,7 @@ var Masken = (function () {
       + UI.feld('bemerkung', T.t('bemerkung'), w ? w.bemerkung : '');
 
     return UI.formular({
-      titel: w ? 'Eintrag bearbeiten' : T.t('wunsch_neu'),
+      titel: w ? T.t('m_eintrag_bearbeiten') : T.t('wunsch_neu'),
       inhalt: inhalt,
       loeschen: !!w
     }).then(function (r) {
@@ -242,7 +277,7 @@ var Masken = (function () {
       try {
         if (r.aktion === 'loeschen') {
           Kern.wunschLoeschen(w.id, nurMaId || null);
-          UI.rueckStreifen('Eintrag gelöscht', nachher);
+          UI.rueckStreifen(T.t('r_eintrag_geloescht'), nachher);
         } else {
           var res = Kern.wunschSpeichern(Object.assign({ id: w ? w.id : 0 }, r.werte),
             nurMaId || null);
@@ -274,10 +309,10 @@ var Masken = (function () {
       + '</div>'
       + UI.schieber('pause_min', T.t('pause'), z ? z.pause_min : 0, 0, 120, 5, 'min')
       + UI.feld('bemerkung', T.t('bemerkung'), z ? z.bemerkung : '')
-      + (nurMaId ? '' : UI.haken('freigegeben', 'geprüft und freigegeben', z ? z.freigegeben : 0));
+      + (nurMaId ? '' : UI.haken('freigegeben', T.t('m_geprueft_frei'), z ? z.freigegeben : 0));
 
     return UI.formular({
-      titel: z ? 'Zeit bearbeiten' : T.t('zeit_neu'),
+      titel: z ? T.t('m_zeit_bearbeiten') : T.t('zeit_neu'),
       inhalt: inhalt,
       loeschen: !!z && !nurMaId
     }).then(function (r) {
@@ -285,7 +320,7 @@ var Masken = (function () {
       try {
         if (r.aktion === 'loeschen') {
           Kern.zeitLoeschen(z.id);
-          UI.rueckStreifen('Zeit gelöscht', nachher);
+          UI.rueckStreifen(T.t('r_zeit_geloescht'), nachher);
         } else {
           Kern.zeitSpeichern(Object.assign({
             id: z ? z.id : 0, quelle: z ? z.quelle : 'Korrektur'
@@ -303,9 +338,16 @@ var Masken = (function () {
 
   function erinnerungText(min) {
     if (!min) return '';
-    if (min >= 1440) return Math.round(min / 1440) + ' Tag(e) vorher';
-    if (min >= 60) return Math.round(min / 60) + ' Std. vorher';
-    return min + ' Min. vorher';
+    var n;
+    if (min >= 1440) {
+      n = Math.round(min / 1440);
+      return T.t(n === 1 ? 'm_vorher_tag' : 'm_vorher_tage').replace('{n}', n);
+    }
+    if (min >= 60) {
+      n = Math.round(min / 60);
+      return T.t(n === 1 ? 'm_vorher_std' : 'm_vorher_stdn').replace('{n}', n);
+    }
+    return T.t('m_vorher_min').replace('{n}', min);
   }
 
   function termin(id, vorbelegt, nachher) {
@@ -313,7 +355,7 @@ var Masken = (function () {
       ? Kern.termine(null, null, false).find(function (x) { return Number(x.id) === Number(id); })
       : (vorbelegt || null);
     return UI.formular({
-      titel: id ? 'Termin bearbeiten' : T.t('termin_neu'),
+      titel: id ? T.t('m_termin_bearbeiten') : T.t('termin_neu'),
       inhalt: UI.feld('titel', T.t('titel'), t ? t.titel : '')
         + '<div class="feldreihe">'
         + UI.feld('datum', T.t('datum'), t ? t.datum : Kern.heute(), 'date')
@@ -323,18 +365,19 @@ var Masken = (function () {
         + UI.haken('ganztags', T.t('ganztags'), t ? t.ganztags : 0)
         + '<div class="feldreihe">'
         + UI.feld('ort', T.t('ort'), t ? t.ort : '')
-        + UI.auswahl('kategorie', T.t('kategorie'), Kern.terminKategorien(),
+        + UI.auswahl('kategorie', T.t('kategorie'), werteListe(Kern.terminKategorien()),
           t ? t.kategorie : 'Allgemein')
         + '</div><div class="feldreihe">'
         + UI.auswahl('erinnerung_min', T.t('erinnerung'), [
-          { wert: 0, text: 'keine' }, { wert: 15, text: '15 Minuten vorher' },
-          { wert: 30, text: '30 Minuten vorher' }, { wert: 60, text: '1 Stunde vorher' },
-          { wert: 120, text: '2 Stunden vorher' }, { wert: 1440, text: '1 Tag vorher' },
-          { wert: 2880, text: '2 Tage vorher' }
+          { wert: 0, text: T.t('m_erinnerung_keine') }, { wert: 15, text: T.t('m_erinnerung_15') },
+          { wert: 30, text: T.t('m_erinnerung_30') }, { wert: 60, text: T.t('m_erinnerung_60') },
+          { wert: 120, text: T.t('m_erinnerung_120') }, { wert: 1440, text: T.t('m_erinnerung_1440') },
+          { wert: 2880, text: T.t('m_erinnerung_2880') }
         ], t ? t.erinnerung_min : Kern.einstZahl('termin_erinnerung_standard'))
         + UI.auswahl('wiederholung', T.t('wiederholung'), [
-          { wert: 'keine', text: 'einmalig' }, { wert: 'taeglich', text: 'täglich' },
-          { wert: 'woechentlich', text: 'wöchentlich' }, { wert: 'monatlich', text: 'monatlich' }
+          { wert: 'keine', text: T.t('wdh_keine') }, { wert: 'taeglich', text: T.t('wdh_taeglich') },
+          { wert: 'woechentlich', text: T.t('wdh_woechentlich') },
+          { wert: 'monatlich', text: T.t('wdh_monatlich') }
         ], t ? t.wiederholung : 'keine')
         + '</div>'
         + UI.feld('notiz', T.t('notiz'), t ? t.notiz : ''),
@@ -344,7 +387,7 @@ var Masken = (function () {
       try {
         if (r.aktion === 'loeschen') {
           Kern.terminLoeschen(id);
-          UI.rueckStreifen('Termin gelöscht', nachher);
+          UI.rueckStreifen(T.t('r_termin_geloescht'), nachher);
         } else {
           Kern.terminSpeichern(Object.assign({ id: id || 0 }, r.werte));
           UI.rueckStreifen(T.t('gespeichert'), nachher);
@@ -359,15 +402,16 @@ var Masken = (function () {
       UI.fenster({
         titel: '⏰ ' + t.titel,
         inhalt: '<p><b>' + UI.tagLang(t.datum) + '</b>'
-          + (t.von_zeit ? ' um ' + t.von_zeit + ' Uhr' : '') + '</p>'
+          + (t.von_zeit ? T.t('um_uhr').replace('{zeit}', t.von_zeit) : '') + '</p>'
           + (t.ort ? '<p>' + T.t('ort') + ': ' + UI.sicher(t.ort) + '</p>' : '')
           + (t.notiz ? '<p>' + UI.sicher(t.notiz) + '</p>' : '')
           + '<p style="color:var(--text-leise)">'
-          + (t.minuten_bis >= 0 ? 'in ' + t.minuten_bis + ' Minuten' : 'liegt gerade an') + '</p>',
+          + (t.minuten_bis >= 0 ? T.t('m_in_minuten').replace('{n}', t.minuten_bis) : T.t('m_jetzt_an'))
+          + '</p>',
         knoepfe: [
-          { text: 'In 10 Minuten nochmal', wert: 'schlummer' },
+          { text: T.t('m_schlummern'), wert: 'schlummer' },
           { text: T.t('erledigt'), wert: 'fertig' },
-          { text: 'Gesehen', art: 'haupt', wert: 'ok' }
+          { text: T.t('m_gesehen'), art: 'haupt', wert: 'ok' }
         ]
       }).then(function (w) {
         if (w === 'schlummer') setTimeout(function () { Kern.terminSchlummern(t.id); }, 600000);
@@ -380,11 +424,19 @@ var Masken = (function () {
      Mitarbeiter einlesen
      ========================================================================= */
 
+  /* Feld → Kürzel im Wörterbuch */
   var FELD_TEXT = {
-    name: 'Name', rolle: 'Rolle', vertrag: 'Vertrag', telefon: 'Telefon', email: 'E-Mail',
-    stundenlohn: 'Stundenlohn', wochenstunden: 'Wochenstunden', urlaubstage: 'Urlaubstage',
-    eintritt: 'Im Betrieb seit', sprache: 'Sprache', notiz: 'Notiz'
+    name: 'name', vorname: 'vorname', nachname: 'nachname', rolle: 'rolle', vertrag: 'vertrag',
+    telefon: 'telefon', email: 'email', telegram: 'telegram', strasse: 'strasse', plz: 'plz',
+    ort: 'wohnort', geburtsdatum: 'geburtsdatum',
+    stundenlohn: 'stundenlohn', wochenstunden: 'wochenstunden', urlaubstage: 'urlaubstage',
+    eintritt: 'eintritt', sprache: 'sprache', notfallkontakt: 'notfallkontakt', notiz: 'notiz'
   };
+
+  function adresseText(s) {
+    var ort = [s.plz, s.ort].filter(Boolean).join(' ');
+    return [s.strasse, ort].filter(Boolean).join(', ');
+  }
 
   /* Zeichnet die Vorschau in ein beliebiges Element und kümmert sich um alles
      Weitere: Spalten ändern, Zeilen abwählen, übernehmen. */
@@ -406,7 +458,7 @@ var Masken = (function () {
         + ' —</option>';
       Object.keys(FELD_TEXT).forEach(function (k) {
         h += '<option value="' + k + '"' + (feld === k ? ' selected' : '') + '>'
-          + FELD_TEXT[k] + '</option>';
+          + UI.sicher(T.t(FELD_TEXT[k])) + '</option>';
       });
       h += '</select></div>';
     });
@@ -414,8 +466,9 @@ var Masken = (function () {
 
     h += '<div class="tabelle" style="max-height:420px"><table><thead><tr>'
       + '<th style="width:34px"><input type="checkbox" data-alle="1" checked></th>'
-      + '<th>Name</th><th>' + T.t('rolle') + '</th><th>' + T.t('vertrag') + '</th>'
+      + '<th>' + T.t('name') + '</th><th>' + T.t('rolle') + '</th><th>' + T.t('vertrag') + '</th>'
       + '<th>' + T.t('telefon') + '</th><th>' + T.t('email') + '</th>'
+      + '<th>' + T.t('telegram') + '</th><th>' + T.t('adresse') + '</th>'
       + '<th class="zahl">' + T.t('stundenlohn') + '</th>'
       + '<th class="zahl">' + T.t('wochenstunden') + '</th><th></th></tr></thead><tbody>';
     p.zeilen.forEach(function (z) {
@@ -424,10 +477,12 @@ var Masken = (function () {
         + '<td>' + (z.art === 'fehler' ? ''
           : '<input type="checkbox" data-nr="' + z.nr + '" checked>') + '</td>'
         + '<td><b>' + UI.sicher(s.name || '—') + '</b></td>'
-        + '<td>' + UI.sicher(s.rolle) + '</td>'
-        + '<td>' + UI.sicher(s.vertrag) + '</td>'
+        + '<td>' + UI.sicher(T.wert(s.rolle)) + '</td>'
+        + '<td>' + UI.sicher(T.wert(s.vertrag)) + '</td>'
         + '<td>' + UI.sicher(s.telefon) + '</td>'
         + '<td>' + UI.sicher(s.email) + '</td>'
+        + '<td>' + UI.sicher(s.telegram ? '@' + s.telegram : '') + '</td>'
+        + '<td>' + UI.sicher(adresseText(s)) + '</td>'
         + '<td class="zahl">' + (s.stundenlohn ? UI.euro(s.stundenlohn) : '') + '</td>'
         + '<td class="zahl">' + (s.wochenstunden ? UI.zahl(s.wochenstunden, 1) : '') + '</td>'
         + '<td>' + UI.etikett(
@@ -465,7 +520,8 @@ var Masken = (function () {
         var r = Kern.importUebernehmen(p, nr);
         UI.melde(T.t('einlesen_fertig') + ': ' + r.neu + ' ' + T.t('neu_bez') + ', '
           + r.geaendert + ' ' + T.t('aktualisieren') + '.', 'gut');
-        UI.rueckStreifen(r.neu + ' neu · ' + r.geaendert + ' ergänzt', nachher);
+        UI.rueckStreifen(T.t('m_import_rueck').replace('{neu}', r.neu)
+          .replace('{geaendert}', r.geaendert), nachher);
         zielEl.innerHTML = '';
         ruf(nachher);
       } catch (e) { UI.fehler(e); }
@@ -482,11 +538,10 @@ var Masken = (function () {
       r = Kern.versandVorbereiten({ von: von, bis: bis, weg: weg, mitarbeiter: ids });
     } catch (e) { UI.fehler(e); return; }
     if (!r.bereit) {
-      UI.melde('Für die Auswahl fehlen Telefonnummern oder E-Mail-Adressen.', 'warn');
+      UI.melde(T.t('m_versand_fehlt'), 'warn');
       return;
     }
-    var h = '<p>Für jeden Mitarbeiter öffnet sich ein Fenster mit dem fertigen Text. '
-      + 'Abgeschickt wird erst dort – hier passiert noch nichts.</p>'
+    var h = '<p>' + T.t('m_versand_info') + '</p>'
       + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">';
     r.eintraege.forEach(function (e, i) {
       h += e.ok
@@ -503,7 +558,7 @@ var Masken = (function () {
       knoepfe: [
         { text: T.t('schliessen'), wert: null },
         { text: T.t('vorschau'), wert: 'vorschau' },
-        { text: 'Alle nacheinander', art: 'haupt', wert: 'alle' }
+        { text: T.t('m_alle_nacheinander'), art: 'haupt', wert: 'alle' }
       ],
       beimOeffnen: function (hg) {
         hg.querySelectorAll('[data-vs]').forEach(function (b) {
@@ -531,12 +586,158 @@ var Masken = (function () {
       var i = 0;
       (function naechste() {
         if (i >= fertig.length) {
-          UI.melde(fertig.length + ' Nachrichten wurden geöffnet.', 'gut');
+          UI.melde(T.t('m_nachrichten_offen').replace('{n}', fertig.length), 'gut');
           return;
         }
         window.open(fertig[i].url, '_blank');
         i++;
         setTimeout(naechste, 900);
+      })();
+    });
+  }
+
+  /* =========================================================================
+     App-Einladung
+     ========================================================================= */
+
+  /* Fenster mit fertiger Einladung für einen Mitarbeiter. Mit „folge“ ist es Teil von
+     „Alle nacheinander“: ein Tipp verschickt und es geht zum Nächsten.
+     Liefert 'weiter' (weiter zum Nächsten) oder null (abgebrochen). */
+  function einladung(maId, nachher, folge) {
+    var e;
+    try { e = Kern.einladung(maId); } catch (x) { UI.fehler(x); return Promise.resolve(null); }
+    var verschickt = false;
+
+    var wege = [];
+    if (e.mail) wege.push(['mail', '✉️ ' + T.t('ein_per_mail')]);
+    if (e.telegram.url) wege.push(['telegram', '✈️ ' + T.t('ein_per_telegram')]);
+    if (e.whatsapp) wege.push(['whatsapp', '💬 ' + T.t('ein_per_whatsapp')]);
+    wege.push(['kopie', '📋 ' + T.t('ein_text_kopieren')]);
+
+    var h = (e.hatKontakt ? ''
+      : '<div class="hinweis warn">' + UI.sicher(T.t('ein_kein_kontakt').replace('{name}', e.name))
+        + '<div style="margin-top:8px"><button type="button" class="haupt" data-ein-kontakt="1">'
+        + UI.sicher(T.t('ein_kontakt_eintragen')) + '</button></div></div>')
+      + '<p style="margin:0 0 8px;font-size:13.5px;color:var(--text-leise)">'
+      + UI.sicher(T.t('ein_sprache_info')
+        .replace('{sprache}', T.t(e.sprache === 'it' ? 'ein_sprache_it' : 'ein_sprache_de'))
+        .replace('{name}', e.name.split(' ')[0]))
+      + (e.eingeladen_am ? ' ' + UI.sicher(T.t('ein_zuletzt').replace('{datum}', Kern.dmy(e.eingeladen_am))) : '')
+      + '</p>'
+      + '<div class="einladewege" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px">'
+      + wege.map(function (w, i) {
+        return '<button type="button" data-ein-weg="' + w[0] + '"'
+          + (i === 0 && e.hatKontakt ? ' class="haupt"' : '') + '>' + UI.sicher(w[1]) + '</button>';
+      }).join('') + '</div>'
+      + '<pre class="einladetext" style="white-space:pre-wrap;word-break:break-word;margin:0;'
+      + 'font-family:inherit;font-size:13.5px;line-height:1.45;background:var(--flaeche2);'
+      + 'border:1px solid var(--linie);border-radius:8px;padding:10px 12px;max-height:32vh;'
+      + 'overflow:auto">' + UI.sicher(e.text) + '</pre>';
+
+    var knoepfe = folge
+      ? [{ text: T.t('abbrechen'), wert: null },
+        { text: folge.letzter ? T.t('schliessen') : T.t('ein_ueberspringen'), wert: 'weiter' }]
+      : [{ text: T.t('schliessen'), wert: null }];
+
+    return UI.fenster({
+      titel: T.t('app_einladung') + ' · ' + e.name + (folge ? ' (' + folge.nr + '/' + folge.gesamt + ')' : ''),
+      breite: 640,
+      inhalt: h,
+      keinFokus: true,
+      knoepfe: knoepfe,
+      beimOeffnen: function (hg) {
+        var kontakt = hg.querySelector('[data-ein-kontakt]');
+        if (kontakt) {
+          kontakt.onclick = function () {
+            hg.querySelector('[data-x]').click();
+            mitarbeiter(maId, nachher);
+          };
+        }
+        hg.querySelectorAll('[data-ein-weg]').forEach(function (b) {
+          b.onclick = function () {
+            var weg = b.getAttribute('data-ein-weg');
+            if (weg === 'mail') window.open(e.mail, '_blank');
+            else if (weg === 'whatsapp') window.open(e.whatsapp, '_blank');
+            else if (weg === 'telegram') {
+              if (e.telegram.art === 'name') {
+                UI.kopieren(e.text).then(function (ok) {
+                  if (ok !== false) UI.melde(T.t('ein_tg_kopiert'), 'gut');
+                });
+              }
+              window.open(e.telegram.url, '_blank');
+            } else UI.kopieren(e.text);
+            Kern.eingeladenSetzen(maId, weg);
+            verschickt = true;
+            if (folge) folge.verschickt = true;
+            b.classList.add('gruen');
+            b.classList.remove('haupt');
+            if (b.textContent.indexOf('✓') < 0) b.textContent = '✓ ' + b.textContent;
+            if (folge) {
+              /* Kurz stehen lassen, damit der Haken zu sehen ist – dann der Nächste. */
+              setTimeout(function () {
+                var knopfe = hg.querySelectorAll('.ffuss button');
+                if (document.body.contains(hg) && knopfe.length) knopfe[knopfe.length - 1].click();
+              }, 650);
+            }
+          };
+        });
+      }
+    }).then(function (w) {
+      if (verschickt) ruf(nachher);
+      return w;
+    });
+  }
+
+  /* Übersicht „Alle einladen“: einzeln antippen oder alle nacheinander. */
+  function alleEinladen(nachher) {
+    var leute = Kern.maListe(false).filter(function (m) { return !m.ist_chef; });
+    if (!leute.length) { UI.melde(T.t('ein_keiner'), 'warn'); return; }
+    var liste = leute.map(function (m) { return Kern.einladung(m.id); });
+    var bereit = liste.filter(function (e) { return e.hatKontakt; });
+
+    var h = '<p style="margin:0 0 10px">' + UI.sicher(T.t('ein_alle_info')) + '</p>'
+      + '<div style="display:flex;flex-wrap:wrap;gap:8px">'
+      + liste.map(function (e, i) {
+        return '<button type="button" data-ein-ma="' + i + '"'
+          + (e.hatKontakt ? (e.eingeladen_am ? ' class="gruen"' : ' class="haupt"')
+            : ' title="' + UI.sicher(T.t('ein_ohne_kontakt')) + '"')
+          + '>' + (e.eingeladen_am ? '✓ ' : (e.hatKontakt ? '' : '⚠ ')) + UI.sicher(e.name)
+          + '</button>';
+      }).join('') + '</div>';
+
+    UI.fenster({
+      titel: T.t('ein_alle_titel').replace('{n}', bereit.length),
+      breite: 620,
+      inhalt: h,
+      knoepfe: [
+        { text: T.t('schliessen'), wert: null },
+        { text: T.t('m_alle_nacheinander'), art: 'haupt', wert: 'alle' }
+      ],
+      beimOeffnen: function (hg) {
+        hg.querySelectorAll('[data-ein-ma]').forEach(function (b) {
+          b.onclick = function () {
+            var e = liste[Number(b.getAttribute('data-ein-ma'))];
+            hg.querySelector('[data-x]').click();
+            einladung(e.id, nachher).then(function () { alleEinladen(nachher); });
+          };
+        });
+      }
+    }).then(function (w) {
+      if (w !== 'alle') return;
+      if (!bereit.length) { UI.melde(T.t('ein_niemand_bereit'), 'warn'); return; }
+      var i = 0, erledigt = 0;
+      (function naechste() {
+        if (i >= bereit.length) {
+          UI.melde(T.t('ein_alle_fertig').replace('{n}', erledigt), 'gut');
+          return;
+        }
+        var e = bereit[i];
+        i++;
+        var f = { nr: i, gesamt: bereit.length, letzter: i === bereit.length, verschickt: false };
+        einladung(e.id, nachher, f).then(function (antwort) {
+          if (f.verschickt) erledigt++;
+          if (antwort === 'weiter') naechste();
+        });
       })();
     });
   }
@@ -548,7 +749,7 @@ var Masken = (function () {
   function zuhoeren(knopf, statusFeld, fertig) {
     var Erkenner = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!Erkenner) {
-      UI.melde('Dieser Browser kann nicht zuhören. In Chrome, Edge oder Safari klappt es.', 'warn');
+      UI.melde(T.t('m_kein_mikro'), 'warn');
       return;
     }
     var r = new Erkenner();
@@ -556,12 +757,12 @@ var Masken = (function () {
     r.interimResults = false;
     r.maxAlternatives = 1;
     if (knopf) knopf.classList.add('hoert');
-    if (statusFeld) statusFeld.textContent = 'Ich höre zu …';
+    if (statusFeld) statusFeld.textContent = T.t('m_hoere');
     r.onresult = function (e) { fertig(e.results[0][0].transcript); };
-    r.onerror = function () { UI.melde('Es kam nichts an. Bitte noch einmal.', 'warn'); };
+    r.onerror = function () { UI.melde(T.t('m_nichts_an'), 'warn'); };
     r.onend = function () {
       if (knopf) knopf.classList.remove('hoert');
-      if (statusFeld) statusFeld.textContent = 'Auf das Mikrofon tippen und sprechen.';
+      if (statusFeld) statusFeld.textContent = T.t('m_mikro_tippen');
     };
     r.start();
   }
@@ -575,15 +776,15 @@ var Masken = (function () {
           return;
         }
         UI.fenster({
-          titel: 'Habe ich das richtig verstanden?',
+          titel: T.t('m_richtig_verstanden'),
           inhalt: '<p style="font-size:13px;color:var(--text-leise)">„' + UI.sicher(v.original)
             + '“</p><p style="font-size:17px"><b>' + UI.sicher(v.beschreibung) + '</b></p>'
             + (v.unklar.length
-              ? '<div class="hinweis warn">Unsicher: ' + UI.sicher(v.unklar.join(', ')) + '</div>'
+              ? '<div class="hinweis warn">' + T.t('m_unsicher') + UI.sicher(v.unklar.join(', ')) + '</div>'
               : ''),
           knoepfe: [
             { text: T.t('abbrechen'), wert: false },
-            { text: 'Ja, eintragen', art: 'haupt', wert: true }
+            { text: T.t('m_ja_eintragen'), art: 'haupt', wert: true }
           ]
         }).then(function (ja) {
           if (!ja) return;
@@ -601,6 +802,7 @@ var Masken = (function () {
     schicht: schicht, vorlage: vorlage, mitarbeiter: mitarbeiter, wunsch: wunsch,
     zeit: zeit, termin: termin, erinnerungen: erinnerungen,
     importVorschau: importVorschau, versand: versand,
+    einladung: einladung, alleEinladen: alleEinladen,
     zuhoeren: zuhoeren, befehl: befehl,
     kuerzel: kuerzel, appLink: appLink, farbeFuerPosition: farbeFuerPosition,
     erinnerungText: erinnerungText, warnungenZeigen: warnungenZeigen

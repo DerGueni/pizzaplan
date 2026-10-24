@@ -3,22 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PizzaPlan · PC-Fassung</title>
+<title data-t="titel_pc">PizzaPlan · PC-Fassung</title>
 <meta name="theme-color" content="#b5322a">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=4">
-<link rel="stylesheet" href="css/pc.css?v=4">
+<link rel="stylesheet" href="css/basis.css?v=6">
+<link rel="stylesheet" href="css/pc.css?v=6">
 </head>
 <body>
+
+<!-- ============================================ Hinweis fürs Handy ===== -->
+<!-- Nur in schmalen Fenstern sichtbar (pc.css), lässt sich wegklicken. -->
+<div class="handystreifen nichtdrucken" id="handystreifen">
+  <span class="zeichen" aria-hidden="true">📱</span>
+  <span class="text" data-t="pc_handy_hinweis">Am Handy gibt es eine eigene Fassung – größer und einfacher zu bedienen.</span>
+  <a class="knopf" href="handy.html" data-t="pc_handy_oeffnen">Handy-Fassung öffnen</a>
+  <button type="button" class="still" id="handystreifen_zu" data-t-titel="pc_hinweis_zu"
+          aria-label="Hinweis ausblenden">✕</button>
+</div>
 
 <!-- ===================================================== Anmeldung ===== -->
 <div id="anmeldung" class="anmeldung" style="display:none">
   <div class="karte" style="text-align:center">
     <div style="font-size:48px">🍕</div>
     <h1 id="anmeldung_betrieb">PizzaPlan</h1>
-    <p style="color:var(--text-leise);margin-top:-4px">Personal &amp; Dienstplan</p>
+    <p style="color:var(--text-leise);margin-top:-4px" data-t="untertitel">Personal &amp; Dienstplan</p>
     <div style="text-align:left;margin-top:16px">
       <label data-t="chef_pin">Chef-PIN</label>
       <input id="pin_feld" class="pinfeld" type="password" inputmode="numeric" maxlength="8"
@@ -27,9 +37,9 @@
     <button class="haupt gross" id="pin_knopf" style="margin-top:14px" data-t="anmelden">Anmelden</button>
     <p id="pin_fehler" class="hinweis rot" style="display:none;margin-top:12px"></p>
     <p style="font-size:12.5px;color:var(--text-leise);margin-top:18px">
-      Auf dem Handy geht es hier weiter:
-      <a href="handy.html">Handy-Fassung</a> ·
-      <a href="team.html">Mitarbeiter-App</a>
+      <span data-t="pc_handy_weiter">Auf dem Handy geht es hier weiter:</span>
+      <a href="handy.html" data-t="pc_handy_fassung">Handy-Fassung</a> ·
+      <a href="team.html" data-t="pc_mitarbeiter_app">Mitarbeiter-App</a>
     </p>
   </div>
 </div>
@@ -42,25 +52,27 @@
     <div class="name">PizzaPlan<small id="kopf_betrieb">Personal &amp; Dienstplan</small></div>
     <div class="rechts">
       <span class="uhr" id="kopf_uhr"></span>
-      <button type="button" id="knopf_mikro" class="rund" title="Sprachbefehl">🎤</button>
-      <button type="button" id="knopf_sprache" title="Deutsch / Italiano">DE</button>
-      <button type="button" id="knopf_schema" class="rund" title="Hell / Dunkel">🌙</button>
-      <button type="button" id="knopf_hilfe" class="rund" data-t-titel="hilfe">?</button>
-      <button type="button" id="knopf_abmelden" data-t="abmelden">Abmelden</button>
+      <button type="button" id="knopf_mikro" class="rund" title="Sprachbefehl" data-t-titel="pc_tt_mikro">🎤</button>
+      <button type="button" id="knopf_sprache" title="Deutsch / Italiano" data-t-titel="sprache_titel">DE</button>
+      <button type="button" id="knopf_schema" class="rund" title="Hell / Dunkel" data-t-titel="pc_tt_schema">🌙</button>
+      <button type="button" id="knopf_hilfe" class="rund" data-t-titel="pc_tt_hilfe">?</button>
+      <button type="button" id="knopf_abmelden" data-t="abmelden" data-t-titel="pc_tt_abmelden">Abmelden</button>
     </div>
   </div>
 
+  <!-- Lange Namen (.lang) und Kurzform (.kurz): unter 1300 px zeigt pc.css die Kurzform,
+       der volle Name steht dann im Hover-Hinweis. -->
   <div class="menue" id="menue">
-    <button type="button" data-seite="uebersicht" class="an"><span data-t="uebersicht">Übersicht</span></button>
-    <button type="button" data-seite="plan"><span data-t="dienstplan">Dienstplan</span></button>
-    <button type="button" data-seite="wuensche"><span data-t="wuensche">Wünsche &amp; Abwesenheit</span><span class="zahl" id="zahl_wuensche" style="display:none"></span></button>
-    <button type="button" data-seite="zeiten"><span data-t="zeiten">Zeiterfassung</span><span class="zahl" id="zahl_zeiten" style="display:none"></span></button>
-    <button type="button" data-seite="team"><span data-t="team">Team</span></button>
-    <button type="button" data-seite="einlesen"><span data-t="einlesen">Mitarbeiter einlesen</span></button>
-    <button type="button" data-seite="auswertung"><span data-t="auswertung">Auswertung</span></button>
-    <button type="button" data-seite="termine"><span data-t="termine">Termine</span></button>
-    <button type="button" data-seite="versand"><span data-t="versand">Plan verschicken</span></button>
-    <button type="button" data-seite="einstellungen"><span data-t="einstellungen">Einstellungen</span></button>
+    <button type="button" data-seite="uebersicht" class="an" data-t-titel="pc_tt_m1"><span data-t="uebersicht">Übersicht</span></button>
+    <button type="button" data-seite="plan" data-t-titel="pc_tt_m2"><span data-t="dienstplan">Dienstplan</span></button>
+    <button type="button" data-seite="wuensche" data-t-titel="pc_tt_m3"><span class="lang" data-t="wuensche">Wünsche &amp; Abwesenheit</span><span class="kurz" data-t="wuensche_kurz">Wünsche</span><span class="zahl" id="zahl_wuensche" style="display:none"></span></button>
+    <button type="button" data-seite="zeiten" data-t-titel="pc_tt_m4"><span class="lang" data-t="zeiten">Zeiterfassung</span><span class="kurz" data-t="zeiten_kurz">Zeiten</span><span class="zahl" id="zahl_zeiten" style="display:none"></span></button>
+    <button type="button" data-seite="team" data-t-titel="pc_tt_m5"><span data-t="team">Team</span></button>
+    <button type="button" data-seite="einlesen" data-t-titel="pc_tt_m6"><span class="lang" data-t="einlesen">Mitarbeiter einlesen</span><span class="kurz" data-t="einlesen_kurz">Einlesen</span></button>
+    <button type="button" data-seite="auswertung" data-t-titel="pc_tt_m7"><span data-t="auswertung">Auswertung</span></button>
+    <button type="button" data-seite="termine" data-t-titel="pc_tt_m8"><span data-t="termine">Termine</span></button>
+    <button type="button" data-seite="versand" data-t-titel="pc_tt_m9"><span class="lang" data-t="versand">Plan verschicken</span><span class="kurz" data-t="versand_kurz">Verschicken</span></button>
+    <button type="button" data-seite="einstellungen" data-t-titel="pc_tt_m0"><span data-t="einstellungen">Einstellungen</span></button>
   </div>
 
   <div class="inhalt">
@@ -73,20 +85,34 @@
         <div class="karte"><h2 data-t="gerade_gestempelt">Gerade eingestempelt</h2><div id="u_stempel"></div></div>
         <div class="karte"><h2 data-t="naechste_termine">Nächste Termine</h2><div id="u_termine"></div></div>
       </div>
+      <!-- Die laufende Woche auf einen Blick, Tag für Tag -->
+      <div class="karte">
+        <div class="kartenkopf">
+          <h2 data-t="diese_woche">Diese Woche</h2>
+          <span class="leise" id="u_woche_titel"></span>
+          <div class="wachs"></div>
+          <button type="button" id="u_zum_plan" data-t="ganze_woche" data-t-titel="pc_tt_zum_plan">Ganze Woche ansehen</button>
+        </div>
+        <div class="wochenvorschau" id="u_woche"></div>
+      </div>
     </div>
 
     <!-- ------------------------------------------------ Dienstplan ---- -->
     <div class="seite" id="s_plan">
-      <div class="leiste">
-        <button type="button" id="p_zurueck" data-t="woche_zurueck">‹ Woche</button>
-        <button type="button" id="p_heute" data-t="diese_woche">Diese Woche</button>
-        <button type="button" id="p_vor" data-t="woche_vor">Woche ›</button>
-        <div style="min-width:250px;font-weight:600;font-size:16px" id="p_titel"></div>
-        <div class="wachs"></div>
-        <button type="button" id="p_kopieren" data-t="vorwoche_uebernehmen">Vorwoche übernehmen</button>
-        <button type="button" id="p_neu" data-t="schicht_neu">+ Schicht</button>
-        <button type="button" class="gruen" id="p_freigeben" data-t="plan_freigeben">Plan freigeben</button>
-        <button type="button" id="p_drucken" data-t="drucken">Drucken</button>
+      <!-- Zwei Gruppen: wird es eng, rutscht die rechte Gruppe geschlossen in die zweite Zeile. -->
+      <div class="leiste planleiste">
+        <div class="knopfgruppe">
+          <button type="button" id="p_zurueck" data-t="woche_zurueck" data-t-titel="pc_tt_zurueck">‹ Woche</button>
+          <button type="button" id="p_heute" data-t="diese_woche" data-t-titel="pc_tt_heute">Diese Woche</button>
+          <button type="button" id="p_vor" data-t="woche_vor" data-t-titel="pc_tt_vor">Woche ›</button>
+          <div class="plantitel" id="p_titel"></div>
+        </div>
+        <div class="knopfgruppe rechts">
+          <button type="button" id="p_kopieren" data-t="vorwoche_uebernehmen" data-t-titel="pc_tt_kopieren">Vorwoche übernehmen</button>
+          <button type="button" id="p_neu" data-t="schicht_neu" data-t-titel="pc_tt_neu">+ Schicht</button>
+          <button type="button" class="gruen" id="p_freigeben" data-t="plan_freigeben" data-t-titel="pc_tt_freigeben">Plan freigeben</button>
+          <button type="button" id="p_drucken" data-t="drucken" data-t-titel="pc_tt_drucken">Drucken</button>
+        </div>
       </div>
       <div class="wochenband" id="p_band"></div>
       <div class="planbereich">
@@ -94,10 +120,10 @@
           <h3 data-t="vorlagen">Vorlagen</h3>
           <div class="wozu" data-t="vorlage_ziehen">Vorlage in eine Zelle ziehen</div>
           <div id="p_vorlagen"></div>
-          <button type="button" style="width:100%;margin-top:6px" id="p_vorlage_neu" data-t="vorlage_neu">+ Vorlage</button>
-          <hr style="border:0;border-top:1px solid var(--linie);margin:13px 0">
-          <button type="button" style="width:100%;margin-bottom:7px" id="p_leeren" data-t="woche_leeren">Woche leeren</button>
-          <button type="button" style="width:100%" id="p_sperren" data-t="plan_sperren">Freigabe zurücknehmen</button>
+          <button type="button" class="breit" style="margin-top:6px" id="p_vorlage_neu" data-t="vorlage_neu" data-t-titel="pc_tt_vorlage_neu">+ Vorlage</button>
+          <hr>
+          <button type="button" class="breit" style="margin-bottom:7px" id="p_leeren" data-t="woche_leeren" data-t-titel="pc_tt_leeren">Woche leeren</button>
+          <button type="button" class="breit" id="p_sperren" data-t="plan_sperren" data-t-titel="pc_tt_sperren">Freigabe zurücknehmen</button>
         </div>
         <div>
           <div class="plan" id="p_raster"></div>
@@ -119,7 +145,7 @@
           </select>
         </div>
         <div class="wachs"></div>
-        <button type="button" class="haupt" id="w_neu" data-t="wunsch_neu">+ Eintrag für einen Mitarbeiter</button>
+        <button type="button" class="haupt" id="w_neu" data-t-titel="pc_tt_w_neu" data-t="wunsch_neu">+ Eintrag für einen Mitarbeiter</button>
       </div>
       <div class="tabelle"><table id="w_tabelle"></table></div>
     </div>
@@ -131,10 +157,10 @@
         <div class="feld"><label data-t="bis">Bis</label><input type="date" id="z_bis"></div>
         <div class="feld" style="min-width:200px"><label data-t="mitarbeiter">Mitarbeiter</label>
           <select id="z_ma"></select></div>
-        <button type="button" id="z_anzeigen" data-t="anzeigen">Anzeigen</button>
+        <button type="button" id="z_anzeigen" data-t-titel="pc_tt_z_anzeigen" data-t="anzeigen">Anzeigen</button>
         <div class="wachs"></div>
-        <button type="button" id="z_freigeben" data-t="alle_freigeben">Alle prüfen und freigeben</button>
-        <button type="button" class="haupt" id="z_neu" data-t="zeit_neu">+ Zeit nachtragen</button>
+        <button type="button" id="z_freigeben" data-t-titel="pc_tt_z_freigeben" data-t="alle_freigeben">Alle prüfen und freigeben</button>
+        <button type="button" class="haupt" id="z_neu" data-t-titel="pc_tt_z_neu" data-t="zeit_neu">+ Zeit nachtragen</button>
       </div>
       <div class="tabelle"><table id="z_tabelle"></table></div>
     </div>
@@ -147,8 +173,9 @@
         <label class="haken" style="margin-bottom:0"><input type="checkbox" id="t_inaktive">
           <span data-t="auch_inaktive">auch ausgeschiedene anzeigen</span></label>
         <div class="wachs"></div>
-        <button type="button" id="t_einlesen" data-t="einlesen">Mitarbeiter einlesen</button>
-        <button type="button" class="haupt" id="t_neu" data-t="ma_neu">+ Mitarbeiter</button>
+        <button type="button" id="t_einlesen" data-t-titel="pc_tt_t_einlesen" data-t="einlesen">Mitarbeiter einlesen</button>
+        <button type="button" id="t_einladen" data-t-titel="pc_tt_alle_einladen"><span aria-hidden="true">📲 </span><span data-t="alle_einladen">Alle einladen</span></button>
+        <button type="button" class="haupt" id="t_neu" data-t-titel="pc_tt_t_neu" data-t="ma_neu">+ Mitarbeiter</button>
       </div>
       <div class="tabelle"><table id="t_tabelle"></table></div>
       <div class="karte" style="margin-top:14px">
@@ -163,14 +190,18 @@
     <div class="seite" id="s_einlesen">
       <div class="karte">
         <h2 data-t="einlesen_titel">Vorhandene Mitarbeiterdaten einlesen</h2>
+        <div class="hinweis vorlagenschritt">
+          <a class="knopf" id="e_xlsx" href="Importvorlage_Mitarbeiter.xlsx" download="Importvorlage_Mitarbeiter.xlsx"><span aria-hidden="true">📥</span> <span data-t="ein_xl_vorlage">Excel-Vorlage herunterladen</span></a>
+          <button type="button" class="alslink" id="e_vorlage" data-t-titel="pc_tt_e_vorlage" data-t="ein_csv_vorlage">oder als CSV-Datei</button>
+          <span class="vorlagentext" data-t="ein_s1_text"></span>
+        </div>
         <p style="font-size:14.5px" data-t="einlesen_text"></p>
         <div class="leiste">
-          <button type="button" class="haupt" id="e_datei" data-t="datei_waehlen">Datei auswählen</button>
-          <button type="button" id="e_vorlage" data-t="vorlage_holen">Importvorlage herunterladen</button>
+          <button type="button" class="haupt" id="e_datei" data-t-titel="pc_tt_e_datei" data-t="datei_waehlen">Datei auswählen</button>
           <div class="wachs"></div>
-          <button type="button" id="e_beispiel" data-t="beispiel_einfuegen">Beispieldaten des Herstellers einfügen</button>
+          <button type="button" id="e_beispiel" data-t-titel="pc_tt_e_beispiel" data-t="beispiel_einfuegen">Beispieldaten des Herstellers einfügen</button>
         </div>
-        <input type="file" id="e_dateifeld" accept=".csv,.txt,.tsv,text/csv,text/plain" style="display:none">
+        <input type="file" id="e_dateifeld" accept=".xlsx,.xls,.csv,.txt,.tsv,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" style="display:none">
         <div class="einlesefeld" id="e_zone">
           <div style="font-size:34px">📋</div>
           <div style="font-weight:600" data-t="einfuegen_hier">… oder Tabelle hier einfügen</div>
@@ -178,8 +209,8 @@
           <textarea id="e_text" spellcheck="false"></textarea>
         </div>
         <div class="leiste" style="margin-top:12px">
-          <button type="button" class="haupt" id="e_pruefen" data-t="pruefen">Prüfen</button>
-          <button type="button" id="e_leeren" data-t="feld_leeren">Feld leeren</button>
+          <button type="button" class="haupt" id="e_pruefen" data-t-titel="pc_tt_e_pruefen" data-t="pruefen">Prüfen</button>
+          <button type="button" id="e_leeren" data-t-titel="pc_tt_e_leeren" data-t="feld_leeren">Feld leeren</button>
         </div>
       </div>
       <div id="e_ergebnis"></div>
@@ -189,10 +220,10 @@
     <div class="seite" id="s_auswertung">
       <div class="leiste">
         <div class="feld"><label data-t="monat">Monat</label><input type="month" id="a_monat"></div>
-        <button type="button" class="haupt" id="a_rechnen" data-t="berechnen">Berechnen</button>
+        <button type="button" class="haupt" id="a_rechnen" data-t-titel="pc_tt_a_rechnen" data-t="berechnen">Berechnen</button>
         <div class="wachs"></div>
-        <button type="button" id="a_csv" data-t="als_datei">Als Excel-Datei</button>
-        <button type="button" id="a_drucken" data-t="drucken">Drucken</button>
+        <button type="button" id="a_csv" data-t-titel="pc_tt_a_csv" data-t="als_datei">Als Excel-Datei</button>
+        <button type="button" id="a_drucken" data-t-titel="pc_tt_a_drucken" data-t="drucken">Drucken</button>
       </div>
       <div id="a_inhalt"></div>
     </div>
@@ -200,10 +231,10 @@
     <!-- ------------------------------------------------ Termine ------- -->
     <div class="seite" id="s_termine">
       <div class="mikro nichtdrucken">
-        <button type="button" id="tm_mikro">🎤</button>
+        <button type="button" id="tm_mikro" data-t-titel="termin_sprechen">🎤</button>
         <div class="text">
           <b data-t="termin_sprechen">Termin einfach sprechen</b>
-          <span id="tm_status">Auf das Mikrofon tippen und zum Beispiel sagen:
+          <span id="tm_status" data-t="tm_mikro_hinweis">Auf das Mikrofon tippen und zum Beispiel sagen:
             „Morgen um 14 Uhr Termin beim Steuerberater, eine Stunde vorher erinnern.“</span>
         </div>
       </div>
@@ -212,9 +243,9 @@
         <div class="feld"><label data-t="bis">Bis</label><input type="date" id="tm_bis"></div>
         <label class="haken" style="margin-bottom:0"><input type="checkbox" id="tm_offen" checked>
           <span data-t="nur_offene">nur offene</span></label>
-        <button type="button" id="tm_anzeigen" data-t="anzeigen">Anzeigen</button>
+        <button type="button" id="tm_anzeigen" data-t-titel="pc_tt_tm_anzeigen" data-t="anzeigen">Anzeigen</button>
         <div class="wachs"></div>
-        <button type="button" class="haupt" id="tm_neu" data-t="termin_neu">+ Neuer Termin</button>
+        <button type="button" class="haupt" id="tm_neu" data-t-titel="pc_tt_tm_neu" data-t="termin_neu">+ Neuer Termin</button>
       </div>
       <div id="tm_liste"></div>
     </div>
@@ -236,11 +267,11 @@
         <label data-t="empfaenger">Wer bekommt seinen Plan?</label>
         <div class="empfaengerliste" id="v_empfaenger"></div>
         <div class="leiste">
-          <button type="button" id="v_alle" data-t="alle">Alle</button>
-          <button type="button" id="v_keiner" data-t="keiner">Keinen</button>
+          <button type="button" id="v_alle" data-t-titel="pc_tt_v_alle" data-t="alle">Alle</button>
+          <button type="button" id="v_keiner" data-t-titel="pc_tt_v_keiner" data-t="keiner">Keinen</button>
           <div class="wachs"></div>
-          <button type="button" id="v_vorschau" data-t="vorschau_ansehen">Vorschau ansehen</button>
-          <button type="button" class="haupt" id="v_start" data-t="jetzt_verschicken">Jetzt verschicken</button>
+          <button type="button" id="v_vorschau" data-t-titel="pc_tt_v_vorschau" data-t="vorschau_ansehen">Vorschau ansehen</button>
+          <button type="button" class="haupt" id="v_start" data-t-titel="pc_tt_v_start" data-t="jetzt_verschicken">Jetzt verschicken</button>
         </div>
         <div id="v_ergebnis"></div>
       </div>
@@ -248,8 +279,8 @@
         <h2 data-t="gesamtplan">Gesamtplan zum Aushängen</h2>
         <p style="font-size:14px;color:var(--text-leise)" data-t="gesamtplan_wozu"></p>
         <div class="leiste">
-          <button type="button" id="v_gesamt" data-t="anzeigen">Anzeigen</button>
-          <button type="button" id="v_kopieren" data-t="kopieren">In die Zwischenablage</button>
+          <button type="button" id="v_gesamt" data-t-titel="pc_tt_v_gesamt" data-t="anzeigen">Anzeigen</button>
+          <button type="button" id="v_kopieren" data-t-titel="pc_tt_v_kopieren" data-t="kopieren">In die Zwischenablage</button>
         </div>
         <pre class="plantext" id="v_gesamttext" style="display:none"></pre>
       </div>
@@ -285,9 +316,9 @@
       </div>
       <div class="karte">
         <h2 data-t="nachrichtentext">Nachrichtentext</h2>
-        <label>Deutsch</label>
+        <label data-t="sprache_de">Deutsch</label>
         <textarea id="ei_versand_text" rows="7"></textarea>
-        <label style="margin-top:10px">Italiano</label>
+        <label style="margin-top:10px" data-t="sprache_it">Italiano</label>
         <textarea id="ei_versand_text_it" rows="7"></textarea>
         <p style="font-size:12.5px;color:var(--text-leise)"><span data-t="platzhalter">Platzhalter</span>:
           <code>{name}</code> <code>{zeitraum}</code> <code>{plan}</code>
@@ -296,21 +327,21 @@
       <div class="karte">
         <h2 data-t="vorlagen">Schicht-Vorlagen</h2>
         <div class="tabelle"><table id="ei_vorlagen"></table></div>
-        <button type="button" style="margin-top:11px" id="ei_vorlage_neu" data-t="vorlage_neu">+ Vorlage</button>
+        <button type="button" style="margin-top:11px" id="ei_vorlage_neu" data-t-titel="pc_tt_vorlage_neu" data-t="vorlage_neu">+ Vorlage</button>
       </div>
       <div class="karte">
         <h2 data-t="daten">Daten</h2>
         <div class="leiste">
-          <button type="button" id="ei_sicherung" data-t="sicherung">Sicherungskopie anlegen</button>
-          <button type="button" id="ei_wiederherstellen" data-t="sicherung_laden">Sicherung einspielen</button>
-          <button type="button" id="ei_beispiel_weg" data-t="beispiel_weg">Beispieldaten entfernen</button>
+          <button type="button" id="ei_sicherung" data-t-titel="pc_tt_ei_sicherung" data-t="sicherung">Sicherungskopie anlegen</button>
+          <button type="button" id="ei_wiederherstellen" data-t-titel="pc_tt_ei_wiederherstellen" data-t="sicherung_laden">Sicherung einspielen</button>
+          <button type="button" id="ei_beispiel_weg" data-t-titel="pc_tt_ei_beispiel_weg" data-t="beispiel_weg">Beispieldaten entfernen</button>
           <div class="wachs"></div>
-          <button type="button" class="gefahr" id="ei_alles_weg" data-t="alles_loeschen">Alle Daten löschen</button>
+          <button type="button" class="gefahr" id="ei_alles_weg" data-t-titel="pc_tt_ei_alles_weg" data-t="alles_loeschen">Alle Daten löschen</button>
         </div>
         <input type="file" id="ei_sicherungdatei" accept=".json,application/json" style="display:none">
         <p style="font-size:12.5px;color:var(--text-leise)" id="ei_speicherort"></p>
       </div>
-      <button type="button" class="haupt gross" id="ei_speichern" data-t="speichern">Speichern</button>
+      <button type="button" class="haupt gross" id="ei_speichern" data-t-titel="pc_tt_ei_speichern" data-t="speichern">Speichern</button>
     </div>
 
   </div>
@@ -325,11 +356,12 @@
     }
   }, true);
 </script>
-<script src="js/kern.js?v=4"></script>
-<script src="js/sprache.js?v=4"></script>
-<script src="js/oberflaeche.js?v=4"></script>
-<script src="js/masken.js?v=4"></script>
-<script src="js/pc.js?v=4"></script>
+<script src="js/kern.js?v=6"></script>
+<script src="js/verbindung.js?v=6"></script>
+<script src="js/sprache.js?v=6"></script>
+<script src="js/oberflaeche.js?v=6"></script>
+<script src="js/masken.js?v=6"></script>
+<script src="js/pc.js?v=6"></script>
 <script>
   if (typeof Kern === 'undefined' || typeof PC === 'undefined') {
     document.body.innerHTML = '<div style="font-family:system-ui;padding:20px;max-width:640px">'

@@ -13,6 +13,32 @@ var Team = (function () {
 
   function $(id) { return document.getElementById(id); }
 
+  function istIphone() {
+    var ua = navigator.userAgent || '';
+    return /iPhone|iPad|iPod/.test(ua)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  function alsAppGestartet() {
+    try {
+      return !!navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    } catch (e) { return false; }
+  }
+
+  /* Wunschfenster aus masken.js: Überschrift für den Mitarbeiter passend beschriften
+     (die Wunscharten übersetzt masken.js selbst). */
+  function wunschFensterBeschriften(neu) {
+    var alle = document.querySelectorAll('.hintergrund');
+    var hg = alle[alle.length - 1];
+    if (!hg) return;
+    var h = hg.querySelector('.fkopf h2');
+    if (h) {
+      h.textContent = neu ? T.t('wunsch_melden_titel') : T.t('tm_eintrag_aendern');
+    }
+    var x = hg.querySelector('.fkopf [data-x]');
+    if (x) x.setAttribute('aria-label', T.t('schliessen'));
+  }
+
   /* =========================================================================
      Start und Anmeldung
      ========================================================================= */
@@ -30,6 +56,8 @@ var Team = (function () {
       UI.schemaSetzen(UI.schemaLesen());
       $('anmeldung_betrieb').textContent = Kern.einst('betrieb');
       $('kopf_betrieb').textContent = Kern.einst('betrieb');
+
+      if (window.Verbindung && Verbindung.server()) { serverStart(); return; }
 
       var code = new URLSearchParams(location.search).get('k');
       if (code) {
@@ -55,16 +83,65 @@ var Team = (function () {
     try { localStorage.setItem('pp_team_code', code); } catch (e) { /* egal */ }
   }
 
-  function anmeldungZeigen() {
+  /* Am gemeinsamen Server: Anmeldung nur über den persönlichen Link, keine Namensliste.
+     Die PIN wird nur verlangt, wenn der Chef das in den Einstellungen eingeschaltet hat. */
+  function serverStart() {
+    var code = new URLSearchParams(location.search).get('k');
+    if (!code) { try { code = localStorage.getItem('pp_team_code'); } catch (e) { code = null; } }
+    if (!code) { serverHinweis('tv_link_fehlt', false, false); return; }
+    Verbindung.teamStart(code).then(function (r) {
+      if (!r.ok) {
+        if (r.grund === 'link') {
+          try { localStorage.removeItem('pp_team_code'); } catch (e) { /* egal */ }
+        }
+        serverHinweis(r.grund === 'link' ? 'tv_link_ungueltig'
+          : (r.grund === 'gesperrt' ? 'sv_gesperrt' : 'tv_kein_netz'), true, r.grund !== 'link');
+        return;
+      }
+      try { ich = Kern.anmeldenMitCode(code); } catch (e) {
+        serverHinweis('tv_link_ungueltig', true, false);
+        return;
+      }
+      merkeCode(code);
+      $('anmeldung_betrieb').textContent = Kern.einst('betrieb');
+      $('kopf_betrieb').textContent = Kern.einst('betrieb');
+      var pinOk = false;
+      try { pinOk = sessionStorage.getItem('pp_team_pin') === code; } catch (e) { pinOk = false; }
+      if (Number(ich.app_pin) === 1 && !pinOk) {
+        gewaehlt = ich;
+        anmeldungZeigen(true);
+        pinSchritt();
+        $('an_zurueck').style.display = 'none';
+        return;
+      }
+      hinein();
+    });
+  }
+
+  /* Meldung vor der Anmeldung – zweisprachig, die Sprache des Mitarbeiters ist noch unbekannt. */
+  function serverHinweis(schluessel, rot, nochmal) {
+    $('anmeldung').style.display = '';
+    $('an_schritt2').style.display = 'none';
+    var e = T.W[schluessel] || [schluessel, schluessel];
+    var n = T.W.sv_nochmal;
+    $('an_schritt1').style.display = '';
+    $('an_schritt1').innerHTML = '<p class="hinweis' + (rot ? ' rot' : '') + '" id="an_server_hinweis">'
+      + UI.sicher(e[0]) + '<br><i lang="it">' + UI.sicher(e[1]) + '</i></p>'
+      + (nochmal ? '<button type="button" class="haupt gross" id="an_nochmal">'
+        + UI.sicher(n[0] + ' · ' + n[1]) + '</button>' : '');
+    if (nochmal) $('an_nochmal').onclick = function () { location.reload(); };
+  }
+
+  function anmeldungZeigen(ohneListe) {
     $('anmeldung').style.display = '';
     T.anwenden();
-    $('an_leute').innerHTML = Kern.maListe(false).map(function (m) {
+    if (!ohneListe) $('an_leute').innerHTML = Kern.maListe(false).map(function (m) {
       return '<button type="button" data-ma="' + m.id + '">'
         + '<span class="kreis" style="background:' + m.farbe + '">'
         + UI.sicher(Masken.kuerzel(m.name)) + '</span>'
         + '<span>' + UI.sicher(m.name)
         + '<small style="display:block;color:var(--text-leise);font-size:12.5px">'
-        + UI.sicher(m.rolle || '') + '</small></span></button>';
+        + UI.sicher(T.wert(m.rolle || '')) + '</small></span></button>';
     }).join('');
     $('an_leute').querySelectorAll('[data-ma]').forEach(function (b) {
       b.onclick = function () {
@@ -111,20 +188,27 @@ var Team = (function () {
     if (String($('an_pin').value) !== String(gewaehlt.pin || '1234')) {
       var f = $('an_fehler');
       f.style.display = '';
-      f.textContent = T.aktuell() === 'it'
-        ? 'PIN sbagliato. Chiedi al titolare.'
-        : 'Die PIN stimmt nicht. Bitte beim Chef melden.';
+      f.textContent = T.t('tm_pin_falsch');
       $('an_pin').value = '';
       return;
     }
     ich = Kern.anmelden(gewaehlt.id);
     merkeCode(ich.zugangscode);
+    if (window.Verbindung && Verbindung.server()) {
+      try { sessionStorage.setItem('pp_team_pin', ich.zugangscode); } catch (e) { /* egal */ }
+    }
     hinein();
   }
 
   function hinein() {
     $('anmeldung').style.display = 'none';
     $('haupt').style.display = '';
+    /* Neuer Stand vom Server: eigenen Satz frisch holen und alles neu zeichnen. */
+    Kern.beiAenderung(function (grund) {
+      if (grund !== 'server') return;
+      ich = Kern.ma(ich.id) || ich;
+      alleZeichnen();
+    });
     T.setze(ich.sprache || Kern.einst('sprache'));
     $('kopf_name').childNodes[0].nodeValue = ich.name.split(' ')[0] + ' ';
     verdrahten();
@@ -176,7 +260,10 @@ var Team = (function () {
     };
     UI.wischen($('s_plan'), function () { wocheWechseln(7); }, function () { wocheWechseln(-7); });
 
-    $('wu_neu').onclick = function () { Masken.wunsch(null, alleZeichnen, ich.id); };
+    $('wu_neu').onclick = function () {
+      Masken.wunsch(null, alleZeichnen, ich.id);
+      wunschFensterBeschriften(true);
+    };
 
     $('su_monat').value = Kern.heute().slice(0, 7);
     $('su_monat').onchange = stundenZeichnen;
@@ -219,22 +306,25 @@ var Team = (function () {
       { hour: '2-digit', minute: '2-digit' });
   }
 
+  /* Minuten seit dem Kommen. Gleiche Minute ergibt 0 statt 24 Stunden
+     (dauerMinuten rechnet Ende = Beginn als Schicht über Mitternacht). */
+  function laufMinuten(start) {
+    return Kern.dauerMinuten(start, Kern.jetztZeit(), 0) % (24 * 60);
+  }
+
   function stempelZeichnen() {
     uhrZeichnen();
     var s = Kern.stempelStatus(ich.id);
     var knopf = $('st_knopf');
     if (s.laufend) {
-      var seit = Kern.dauerMinuten(s.laufend.start, Kern.jetztZeit(), 0);
-      $('st_lage').textContent = T.aktuell() === 'it'
-        ? 'Entrata alle ' + s.laufend.start
-        : 'Eingestempelt seit ' + s.laufend.start + ' Uhr';
+      var seit = laufMinuten(s.laufend.start);
+      $('st_lage').textContent = T.t('tm_eingestempelt_seit').replace('{zeit}', s.laufend.start);
       $('st_lauf').innerHTML = '<div class="laufband"><span class="pulspunkt"></span>'
         + UI.zahl(Kern.stunden(seit), 2) + ' ' + T.t('stunden') + '</div>';
       knopf.textContent = T.t('feierabend');
       knopf.className = 'grossknopf stop';
     } else {
-      $('st_lage').textContent = T.aktuell() === 'it'
-        ? 'Non hai timbrato l\'entrata.' : 'Du bist nicht eingestempelt.';
+      $('st_lage').textContent = T.t('tm_nicht_eingestempelt');
       $('st_lauf').innerHTML = '';
       knopf.textContent = T.t('kommen');
       knopf.className = 'grossknopf';
@@ -250,20 +340,51 @@ var Team = (function () {
           : T.t('laeuft')) + '</div></div>';
     }).join('') + '<div class="hinweis gut" style="margin-top:8px"><b>' + T.t('summe') + ': '
       + UI.zahl(s.heute_std, 2) + ' ' + T.t('stunden') + '</b></div>'
-      : UI.leer(T.aktuell() === 'it' ? 'Oggi ancora niente.' : 'Heute noch nichts erfasst.');
+      : UI.leer(T.t('tm_heute_nichts'));
 
-    var kommend = Kern.schichten(Kern.heute(), Kern.plusTage(Kern.heute(), 21), true, ich.id);
-    $('st_naechste').innerHTML = kommend.length
-      ? kommend.slice(0, 3).map(function (x) {
-        return '<div class="zeile" style="border-left-color:'
-          + Masken.farbeFuerPosition(x.position, ich.farbe) + '">'
-          + '<div class="haupttext"><b>' + UI.tagLang(x.datum) + '</b>'
-          + '<span>' + UI.sicher(x.position)
-          + (x.notiz ? ' · ' + UI.sicher(x.notiz) : '') + '</span></div>'
-          + '<div class="rechts"><b style="color:var(--text)">' + x.von + '</b><br>'
-          + x.bis + '</div></div>';
-      }).join('')
-      : UI.leer(T.t('keine_schicht'));
+    naechsteZeichnen();
+  }
+
+  /* Die nächsten freigegebenen Schichten. Hat die laufende Woche keine mehr,
+     wird die nächste aus den Folgewochen gezeigt – samt kurzem Hinweis. */
+  function naechsteZeichnen() {
+    var heute = Kern.heute();
+    var jetzt = Kern.jetztZeit();
+    var wocheEnde = Kern.plusTage(Kern.wochenstart(heute), 6);
+    var kommend = Kern.schichten(heute, Kern.plusTage(heute, 366), true, ich.id)
+      .filter(function (x) {
+        /* heute schon vorbei (Nachtschichten über Mitternacht bleiben stehen) */
+        return !(x.datum === heute && x.bis > x.von && x.bis <= jetzt);
+      });
+    if (!kommend.length) {
+      $('st_naechste').innerHTML = UI.leer(T.t('keine_schicht_ueberhaupt'));
+      return;
+    }
+    var h = '';
+    if (kommend[0].datum > wocheEnde) {
+      h += '<div class="hinweis naechste_hinweis">' + UI.sicher(T.t('keine_schicht')) + ' '
+        + UI.sicher(T.t('naechste_folgewoche')) + '</div>';
+    }
+    h += kommend.slice(0, 3).map(function (x) {
+      var wann = x.datum === heute ? T.t('heute') + ' · '
+        : (x.datum === Kern.plusTage(heute, 1) ? T.t('morgen') + ' · ' : '');
+      return '<div class="zeile tippbar" data-datum="' + x.datum + '" style="border-left-color:'
+        + Masken.farbeFuerPosition(x.position, ich.farbe) + '">'
+        + '<div class="haupttext"><b>' + wann + UI.tagLang(x.datum) + '</b>'
+        + '<span>' + UI.sicher(T.wert(x.position))
+        + (x.notiz ? ' · ' + UI.sicher(x.notiz) : '') + '</span></div>'
+        + '<div class="rechts"><b style="color:var(--text)">' + x.von + '</b><br>'
+        + x.bis + '</div></div>';
+    }).join('');
+    $('st_naechste').innerHTML = h;
+    /* Antippen springt in „Mein Plan“ zur passenden Woche. */
+    $('st_naechste').querySelectorAll('[data-datum]').forEach(function (z) {
+      z.onclick = function () {
+        wocheMontag = Kern.wochenstart(z.getAttribute('data-datum'));
+        planZeichnen();
+        seiteZeigen('plan');
+      };
+    });
   }
 
   function stempeln() {
@@ -277,12 +398,10 @@ var Team = (function () {
       } catch (e) { UI.fehler(e); }
       return;
     }
-    var vorgabe = Kern.pausenvorgabe(Kern.dauerMinuten(s.laufend.start, Kern.jetztZeit(), 0));
+    var vorgabe = Kern.pausenvorgabe(laufMinuten(s.laufend.start));
     UI.formular({
       titel: T.t('feierabend'),
-      inhalt: '<p>' + (T.aktuell() === 'it'
-        ? 'Hai iniziato alle ' + s.laufend.start + '. Quanta pausa hai fatto?'
-        : 'Angefangen um ' + s.laufend.start + ' Uhr. Wie lange war die Pause?') + '</p>'
+      inhalt: '<p>' + UI.sicher(T.t('tm_pause_frage').replace('{zeit}', s.laufend.start)) + '</p>'
         + UI.schieber('pause_min', T.t('pause'), vorgabe, 0, 120, 5, 'min'),
       speichernText: T.t('feierabend')
     }).then(function (r) {
@@ -317,14 +436,14 @@ var Team = (function () {
       if (!meine.length) {
         return '<div class="zeile frei"' + (d === h ? ' style="border-left-color:var(--gelb)"' : '')
           + '><div class="haupttext"><b>' + UI.tagKurz(d) + '</b><span>'
-          + (ab ? UI.sicher(ab.typ) : (T.aktuell() === 'it' ? 'libero' : 'frei'))
+          + (ab ? UI.sicher(T.wert(ab.typ)) : UI.sicher(T.t('tag_frei')))
           + '</span></div></div>';
       }
       return meine.map(function (s) {
         return '<div class="zeile" style="border-left-color:'
           + Masken.farbeFuerPosition(s.position, ich.farbe) + '">'
           + '<div class="haupttext"><b>' + UI.tagKurz(d) + '</b><span>'
-          + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 2) + ' h'
+          + UI.sicher(T.wert(s.position)) + ' · ' + UI.zahl(s.dauer_std, 2) + ' h'
           + (s.pause_min ? ' · ' + s.pause_min + ' min ' + T.t('pause') : '')
           + (s.notiz ? ' · ' + UI.sicher(s.notiz) : '') + '</span></div>'
           + '<div class="rechts"><b style="font-size:15px;color:var(--text)">' + s.von
@@ -337,7 +456,7 @@ var Team = (function () {
     }, 0);
     $('pl_summe').innerHTML = '<div class="hinweis gut" style="margin-bottom:0"><b>'
       + UI.zahl(Kern.stunden(min), 2) + ' ' + T.t('stunden') + '</b> · '
-      + rows.length + (T.aktuell() === 'it' ? ' turni' : ' Schichten') + '</div>';
+      + rows.length + ' ' + UI.sicher(T.t('schichten_klein')) + '</div>';
   }
 
   /* =========================================================================
@@ -350,23 +469,22 @@ var Team = (function () {
       return '<div class="zeile" data-w="' + w.id + '" style="border-left-color:'
         + (w.status === 'genehmigt' ? 'var(--gruen)'
           : (w.status === 'abgelehnt' ? 'var(--rot)' : 'var(--gelb)')) + '">'
-        + '<div class="haupttext"><b>' + UI.sicher(w.typ) + '</b><span>'
+        + '<div class="haupttext"><b>' + UI.sicher(T.wert(w.typ)) + '</b><span>'
         + UI.tagKurz(w.von_datum)
         + (w.bis_datum !== w.von_datum ? ' – ' + UI.tagKurz(w.bis_datum) : '')
         + (w.bemerkung ? ' · ' + UI.sicher(w.bemerkung) : '') + '</span></div>'
-        + '<div class="rechts">' + UI.etikett(T.t(w.status), w.status) + '</div></div>';
-    }).join('') : UI.leer(T.t('keine_wuensche'));
+        + '<div class="rechts">' + UI.etikett(T.status(w.status), w.status) + '</div></div>';
+    }).join('') : UI.leer(T.t('keine_wuensche') + ' ' + T.t('tm_wunsch_tippen'));
     $('wu_liste').querySelectorAll('[data-w]').forEach(function (z) {
       z.onclick = function () {
         var id = Number(z.getAttribute('data-w'));
         var w = rows.find(function (x) { return Number(x.id) === id; });
         if (w.status !== 'offen') {
-          UI.melde(T.aktuell() === 'it'
-            ? 'Questa richiesta è già stata decisa.'
-            : 'Dieser Eintrag ist schon entschieden – bitte beim Chef melden.', 'warn');
+          UI.melde(T.t('tm_schon_entschieden'), 'warn');
           return;
         }
         Masken.wunsch(id, alleZeichnen, ich.id);
+        wunschFensterBeschriften(false);
       };
     });
   }
@@ -390,11 +508,9 @@ var Team = (function () {
       + '</div>';
     if (z.stundenlohn) {
       h += '<div class="hinweis"><b>' + UI.euro(z.gesamt) + '</b> · '
-        + UI.euro(z.stundenlohn) + ' ' + (T.aktuell() === 'it' ? 'all\'ora' : 'pro Stunde')
+        + UI.euro(z.stundenlohn) + ' ' + UI.sicher(T.t('tm_pro_stunde'))
         + (z.zuschlaege ? ' · ' + T.t('zuschlaege') + ' ' + UI.euro(z.zuschlaege) : '')
-        + '<br><small>' + (T.aktuell() === 'it'
-          ? 'Calcolo indicativo, non è la busta paga.'
-          : 'Rechenhilfe – das ist keine Lohnabrechnung.') + '</small></div>';
+        + '<br><small>' + UI.sicher(T.t('tm_rechenhilfe')) + '</small></div>';
     }
     h += z.tage.length ? z.tage.map(function (t) {
       return '<div class="zeile" style="border-left-color:'
@@ -403,7 +519,7 @@ var Team = (function () {
         + t.start + '–' + t.ende + (t.pause_min ? ' · ' + t.pause_min + ' min' : '')
         + '</span></div><div class="rechts"><b style="color:var(--text)">'
         + UI.zahl(t.std, 2) + ' h</b><br>'
-        + (t.freigegeben ? '✓' : (T.aktuell() === 'it' ? 'da controllare' : 'offen'))
+        + (t.freigegeben ? '✓' : UI.sicher(T.t('zeit_offen')))
         + '</div></div>';
     }).join('') : UI.leer(T.t('keine_zeiten'));
     $('su_inhalt').innerHTML = h;
@@ -417,25 +533,54 @@ var Team = (function () {
     $('ic_kreis').textContent = Masken.kuerzel(ich.name);
     $('ic_kreis').style.background = ich.farbe;
     $('ic_name').textContent = ich.name;
-    $('ic_rolle').textContent = (ich.rolle || '') + (ich.vertrag ? ' · ' + ich.vertrag : '');
+    $('ic_rolle').textContent = T.wert(ich.rolle || '') + (ich.vertrag ? ' · ' + T.wert(ich.vertrag) : '');
     var zeilen = [];
     if (ich.wochenstunden) zeilen.push(T.t('wochenstunden') + ': ' + UI.zahl(ich.wochenstunden, 1));
     if (ich.urlaubstage) zeilen.push(T.t('urlaubstage') + ': ' + ich.urlaubstage);
-    if (ich.telefon) zeilen.push(T.t('telefon') + ': ' + ich.telefon);
-    if (ich.email) zeilen.push(T.t('email') + ': ' + ich.email);
     if (ich.eintritt) zeilen.push(T.t('eintritt') + ': ' + Kern.dmy(ich.eintritt));
-    $('ic_daten').innerHTML = zeilen.map(UI.sicher).join('<br>')
-      || '<span style="color:var(--text-leise)">–</span>';
+    /* Kontakt & Adresse – nur zum Ansehen, ändern kann der Chef. */
+    var kontakt = [];
+    var ort = [ich.plz, ich.ort].filter(Boolean).join(' ');
+    var adresse = [ich.strasse, ort].filter(Boolean).join(', ');
+    if (ich.telefon) kontakt.push(T.t('handy_nr') + ': ' + ich.telefon);
+    if (ich.email) kontakt.push(T.t('email') + ': ' + ich.email);
+    if (ich.telegram) kontakt.push(T.t('telegram') + ': @' + ich.telegram);
+    if (adresse) kontakt.push(T.t('adresse') + ': ' + adresse);
+    if (ich.geburtsdatum) kontakt.push(T.t('geburtsdatum') + ': ' + Kern.dmy(ich.geburtsdatum));
+    if (ich.notfallkontakt) kontakt.push(T.t('notfallkontakt') + ': ' + ich.notfallkontakt);
+    var h = zeilen.map(UI.sicher).join('<br>');
+    if (kontakt.length) {
+      h += '<div class="abschnitt" id="ic_kontakt_kopf">' + UI.sicher(T.t('kontakt_adresse')) + '</div>'
+        + '<div id="ic_kontakt">' + kontakt.map(UI.sicher).join('<br>') + '</div>';
+    }
+    $('ic_daten').innerHTML = h
+      || '<span style="color:var(--text-leise)">' + UI.sicher(T.t('tm_daten_chef')) + '</span>';
+    installHinweis();
     $('ic_sprache').querySelectorAll('[data-s]').forEach(function (b) {
       b.classList.toggle('an', b.getAttribute('data-s') === T.aktuell());
     });
   }
 
+  function installHinweis() {
+    var ios = $('ic_install_ios');
+    if (!ios) return;
+    if (alsAppGestartet()) {
+      ios.textContent = T.t('tm_app_schon');
+    } else if (istIphone()) {
+      ios.textContent = T.t('tm_iphone_wie');
+    } else {
+      ios.style.display = 'none';
+      $('ic_install_wie').style.display = '';
+      return;
+    }
+    ios.style.display = '';
+    $('ic_install_wie').style.display = 'none';
+  }
+
   function pinAendern() {
     var neu = String($('ic_pin').value || '').trim();
     if (!/^\d{4,8}$/.test(neu)) {
-      UI.melde(T.aktuell() === 'it' ? 'Il PIN deve avere da 4 a 8 cifre.'
-        : 'Die PIN muss aus 4 bis 8 Ziffern bestehen.', 'warn');
+      UI.melde(T.t('tm_pin_regel'), 'warn');
       return;
     }
     try {

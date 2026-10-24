@@ -12,8 +12,20 @@ var Handy = (function () {
   var wunschStatus = 'offen';
   var wochenAnsicht = 'tag';
   var wochenVersatz = 0;
+  var heuteAlle = false;
+
+  /* Handy-Breite (wie in handy.css): dort wird „Heute im Dienst“ gekürzt. */
+  var HANDY_BREITE = '(max-width:759.98px)';
+  function istHandyBreite() {
+    try { return window.matchMedia(HANDY_BREITE).matches; } catch (e) { return false; }
+  }
 
   function $(id) { return document.getElementById(id); }
+
+  /* Kurzer Betrag für die Zahlenleiste: ganze Euro mit Tausenderpunkt. */
+  function euroKurz(z) {
+    return String(Math.round(z || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
+  }
 
   /* =========================================================================
      Start
@@ -57,7 +69,7 @@ var Handy = (function () {
     if (!Kern.chefPinPruefen($('pin_feld').value)) {
       var f = $('pin_fehler');
       f.style.display = '';
-      f.textContent = 'Diese PIN stimmt nicht. Beim ersten Start ist sie 1234.';
+      f.textContent = T.t('h_pin_falsch');
       $('pin_feld').value = '';
       return;
     }
@@ -72,9 +84,17 @@ var Handy = (function () {
     if (c) Kern.anmelden(c.id);
     verdrahten();
     zurueckEinrichten();
+    tastaturBeachten();
     T.anwenden();
     spracheKnopf();
     alleZeichnen();
+    /* Neuer Stand vom gemeinsamen Server (nur dort): alles neu zeichnen. */
+    Kern.beiAenderung(function (grund) {
+      if (grund !== 'server') return;
+      $('es_regler').dataset.gebaut = '';
+      $('kopf_betrieb').textContent = Kern.einst('betrieb');
+      alleZeichnen();
+    });
     setInterval(function () { Masken.erinnerungen(alleZeichnen); }, 40000);
     setTimeout(function () { Masken.erinnerungen(alleZeichnen); }, 3000);
   }
@@ -110,6 +130,34 @@ var Handy = (function () {
     window.addEventListener('popstate', function () {
       zurueckPuffer();
       zurueckSchritt();
+    });
+  }
+
+  /* =========================================================================
+     Tastatur am iPhone
+     Die Bildschirmtastatur verkleinert nur den sichtbaren Ausschnitt, nicht die
+     Seite. Fenster richten sich deshalb nach dem sichtbaren Ausschnitt, und ein
+     angetipptes Feld rutscht in die Mitte, statt hinter der Tastatur zu landen.
+     ========================================================================= */
+
+  function tastaturBeachten() {
+    var vv = window.visualViewport;
+    if (vv) {
+      var passe = function () {
+        var st = document.documentElement.style;
+        st.setProperty('--sicht-hoehe', Math.round(vv.height) + 'px');
+        st.setProperty('--sicht-oben', Math.round(vv.offsetTop) + 'px');
+      };
+      vv.addEventListener('resize', passe);
+      vv.addEventListener('scroll', passe);
+      passe();
+    }
+    document.addEventListener('focusin', function (e) {
+      var el = e.target;
+      if (!el || !el.matches || !el.matches('.frumpf input,.frumpf select,.frumpf textarea')) return;
+      setTimeout(function () {
+        try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (x) { /* egal */ }
+      }, 320);
     });
   }
 
@@ -225,6 +273,13 @@ var Handy = (function () {
     /* Team */
     $('tm_suche').oninput = teamZeichnen;
     $('tm_neu').onclick = function () { Masken.mitarbeiter(null, alleZeichnen); };
+    $('tm_einladen').onclick = function () { Masken.alleEinladen(alleZeichnen); };
+    /* Drehen oder Fenster ziehen: Heute-Liste an die neue Breite anpassen. */
+    try {
+      var mq = window.matchMedia(HANDY_BREITE);
+      var neu = function () { heuteListeZeichnen(); };
+      if (mq.addEventListener) mq.addEventListener('change', neu); else mq.addListener(neu);
+    } catch (e) { /* egal */ }
     $('tm_einlesen').onclick = function () { seiteZeigen('mehr'); teilZeigen('einlesen'); };
 
     /* Zeiten */
@@ -246,8 +301,8 @@ var Handy = (function () {
 
     $('ze_freigeben').onclick = function () {
       var n = Kern.zeitenFreigeben(Kern.plusTage(Kern.heute(), -zeitTage + 1), Kern.heute(), null);
-      UI.melde(n ? n + ' Zeiten freigegeben.' : 'Es war nichts offen.', n ? 'gut' : 'warn');
-      if (n) UI.rueckStreifen(n + ' Zeiten freigegeben', alleZeichnen);
+      UI.melde(n ? n + ' ' + T.t('zeiten_freigegeben') + '.' : T.t('nichts_offen'), n ? 'gut' : 'warn');
+      if (n) UI.rueckStreifen(n + ' ' + T.t('zeiten_freigegeben'), alleZeichnen);
       alleZeichnen();
     };
     $('ze_neu').onclick = function () { Masken.zeit(null, alleZeichnen); };
@@ -278,7 +333,7 @@ var Handy = (function () {
     $('au_csv').onclick = function () {
       var monat = $('au_monat').value || Kern.heute().slice(0, 7);
       UI.dateiSpeichern('PizzaPlan_' + monat + '.csv', Kern.auswertungCsv(monat), 'text/csv');
-      UI.melde('Die Datei ist gespeichert.', 'gut');
+      UI.melde(T.t('h_datei_gespeichert'), 'gut');
     };
 
     /* Versand */
@@ -311,12 +366,7 @@ var Handy = (function () {
     $('ei_dateifeld').onchange = function () {
       var d = $('ei_dateifeld').files[0];
       if (!d) return;
-      if (/\.(xlsx?|ods|numbers)$/i.test(d.name)) {
-        UI.melde(T.t('nur_csv'), 'warn');
-        $('ei_dateifeld').value = '';
-        return;
-      }
-      UI.dateiLesen(d).then(function (text) {
+      UI.tabelleDateiLesen(d).then(function (text) {
         $('ei_text').value = text;
         einlesenPruefen();
       }).catch(UI.fehler);
@@ -325,7 +375,7 @@ var Handy = (function () {
     $('ei_pruefen').onclick = einlesenPruefen;
     $('ei_vorlage').onclick = function () {
       UI.dateiSpeichern('Importvorlage_Mitarbeiter.csv', Kern.importVorlage(), 'text/csv');
-      UI.melde('Die Vorlage ist gespeichert.', 'gut');
+      UI.melde(T.t('h_vorlage_gespeichert'), 'gut');
     };
 
     /* Einstellungen */
@@ -333,15 +383,15 @@ var Handy = (function () {
     $('es_sicherung').onclick = function () {
       UI.dateiSpeichern('PizzaPlan_Sicherung_' + Kern.heute() + '.json',
         Kern.sicherungText(), 'application/json');
-      UI.melde('Die Sicherung ist gespeichert.', 'gut');
+      UI.melde(T.t('h_sicherung_gespeichert'), 'gut');
     };
     $('es_beispiel').onclick = function () {
-      if (!Kern.hatBeispieldaten()) { UI.melde('Es sind keine Beispieldaten mehr da.', 'warn'); return; }
-      UI.frage(T.t('beispiel_weg'), 'Alle Beispieleinträge verschwinden, eigene bleiben.')
+      if (!Kern.hatBeispieldaten()) { UI.melde(T.t('h_keine_beispiele'), 'warn'); return; }
+      UI.frage(T.t('beispiel_weg'), T.t('h_beispiel_frage'))
         .then(function (ja) {
           if (!ja) return;
           Kern.beispielEntfernen();
-          UI.rueckStreifen('Beispieldaten entfernt', alleZeichnen);
+          UI.rueckStreifen(T.t('h_beispiel_entfernt'), alleZeichnen);
           alleZeichnen();
         });
     };
@@ -506,7 +556,7 @@ var Handy = (function () {
       h += '<div class="wperson' + (meine.length ? '' : ' ruht') + '" data-ma="' + m.id
         + '" style="border-left:4px solid ' + (m.farbe || '#7f8c8d') + '">'
         + '<div class="wpinhalt"><b>' + UI.sicher(m.name) + '</b>'
-        + '<span>' + UI.sicher(m.rolle || '')
+        + '<span>' + UI.sicher(T.wert(m.rolle || ''))
         + (meine.length ? ' · ' + UI.zahl(std, 1) + ' ' + UI.sicher(T.t('stunden')) : '')
         + '</span>'
         + (meine.length
@@ -531,12 +581,12 @@ var Handy = (function () {
   function kachelnZeichnen(u) {
     var rows = wochenSchichten(u);
     $('h_kacheln').innerHTML = [
-      [T.t('kachel_woche'), UI.zahl(u.wochenstunden, 1), 'gut', 'plan'],
-      [T.t('kachel_unbesetzt'), u.unbesetzt, u.unbesetzt ? 'rot' : 'gut', 'plan'],
-      [T.t('kachel_kosten'), UI.euro(lohnSumme(rows)), '', 'mehr'],
+      [T.t('kachel_woche_k'), UI.zahl(u.wochenstunden, 1), 'gut', 'plan'],
+      [T.t('kachel_unbesetzt_k'), u.unbesetzt, u.unbesetzt ? 'rot' : 'gut', 'plan'],
+      [T.t('kachel_kosten_k'), euroKurz(lohnSumme(rows)), '', 'mehr'],
       [T.t('kachel_team'), u.team_aktiv, '', 'team']
     ].map(function (k) {
-      return '<div class="kachel ' + k[2] + '" data-ziel="' + k[3] + '">'
+      return '<div class="kachel ' + k[2] + '" data-ziel="' + k[3] + '" role="button" tabindex="0">'
         + '<div class="wert">' + UI.sicher(k[1]) + '</div>'
         + '<div class="bez">' + UI.sicher(k[0]) + '</div></div>';
     }).join('');
@@ -558,26 +608,11 @@ var Handy = (function () {
     $('h_stempel').innerHTML = u.eingestempelt.map(function (z) {
       return '<div class="zeile" style="border-left-color:var(--gruen)">'
         + '<div class="haupttext"><b>' + UI.sicher(z.ma_name) + '</b>'
-        + '<span>seit ' + UI.sicher(z.start) + ' Uhr</span></div>'
+        + '<span>' + UI.sicher(T.t('h_seit').replace('{z}', z.start)) + '</span></div>'
         + '<div class="rechts">' + UI.etikett(T.t('laeuft'), 'laeuft') + '</div></div>';
     }).join('');
 
-    $('h_heute').innerHTML = u.heute.length ? u.heute.map(function (s) {
-      return '<div class="zeile schichtzeile' + (s.veroeffentlicht ? '' : ' entwurf')
-        + '" data-schicht="' + s.id + '" style="border-left-color:'
-        + (s.mitarbeiter_id ? s.farbe : 'var(--linie-stark)') + '">'
-        + '<div class="uhrzeit"><b>' + s.von + '</b><span>' + s.bis + '</span></div>'
-        + '<div class="haupttext"><b>'
-        + UI.sicher(s.mitarbeiter_id ? s.ma_name : T.t('offen_bez')) + '</b>'
-        + '<span>' + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 1) + ' '
-        + UI.sicher(T.t('stunden')) + '</span></div>'
-        + '</div>';
-    }).join('') : UI.leer(T.t('heute_niemand'));
-    $('h_heute').querySelectorAll('[data-schicht]').forEach(function (z) {
-      z.onclick = function () {
-        Masken.schicht(Number(z.getAttribute('data-schicht')), null, null, alleZeichnen);
-      };
-    });
+    heuteListeZeichnen(u);
 
     wocheZeichnen();
     kachelnZeichnen(u);
@@ -585,7 +620,7 @@ var Handy = (function () {
     $('h_termine').innerHTML = u.termine.length ? u.termine.slice(0, 4).map(function (t) {
       return '<div class="zeile" data-termin="' + t.id + '" style="border-left-color:var(--gelb)">'
         + '<div class="haupttext"><b>' + UI.sicher(t.titel) + '</b><span>'
-        + UI.tagKurz(t.datum) + (t.von_zeit ? ' · ' + t.von_zeit + ' Uhr' : '')
+        + UI.tagKurz(t.datum) + (t.von_zeit ? ' · ' + t.von_zeit + T.t('h_uhr') : '')
         + '</span></div></div>';
     }).join('') : UI.leer(T.t('keine_termine'));
     $('h_termine').querySelectorAll('[data-termin]').forEach(function (z) {
@@ -593,6 +628,47 @@ var Handy = (function () {
         Masken.termin(Number(z.getAttribute('data-termin')), null, alleZeichnen);
       };
     });
+  }
+
+  /* „Heute im Dienst“: am Handy höchstens vier Zeilen, der Rest klappt auf.
+     Tablet und PC zeigen immer alle. */
+  var HEUTE_HANDY = 4;
+
+  function heuteListeZeichnen(u) {
+    u = u || Kern.uebersicht();
+    var kurz = istHandyBreite() && !heuteAlle && u.heute.length > HEUTE_HANDY;
+    var zeigen = kurz ? u.heute.slice(0, HEUTE_HANDY) : u.heute;
+    var mehr = '';
+    if (kurz) {
+      mehr = '<button type="button" class="weiterezeile" data-heute-mehr="1">'
+        + UI.sicher(T.t('h_heute_weitere').replace('{n}', u.heute.length - HEUTE_HANDY)) + '</button>';
+    } else if (heuteAlle && istHandyBreite() && u.heute.length > HEUTE_HANDY) {
+      mehr = '<button type="button" class="weiterezeile" data-heute-mehr="0">'
+        + UI.sicher(T.t('h_heute_weniger')) + ' ‹</button>';
+    }
+    $('h_heute').innerHTML = zeigen.length ? zeigen.map(function (s) {
+      return '<div class="zeile schichtzeile' + (s.veroeffentlicht ? '' : ' entwurf')
+        + '" data-schicht="' + s.id + '" style="border-left-color:'
+        + (s.mitarbeiter_id ? s.farbe : 'var(--linie-stark)') + '">'
+        + '<div class="uhrzeit"><b>' + s.von + '</b><span>' + s.bis + '</span></div>'
+        + '<div class="haupttext"><b>'
+        + UI.sicher(s.mitarbeiter_id ? s.ma_name : T.t('offen_bez')) + '</b>'
+        + '<span>' + UI.sicher(T.wert(s.position)) + ' · ' + UI.zahl(s.dauer_std, 1) + ' '
+        + UI.sicher(T.t('stunden')) + '</span></div>'
+        + '</div>';
+    }).join('') + mehr : UI.leer(T.t('heute_niemand'));
+    $('h_heute').querySelectorAll('[data-schicht]').forEach(function (z) {
+      z.onclick = function () {
+        Masken.schicht(Number(z.getAttribute('data-schicht')), null, null, alleZeichnen);
+      };
+    });
+    var knopf = $('h_heute').querySelector('[data-heute-mehr]');
+    if (knopf) {
+      knopf.onclick = function () {
+        heuteAlle = knopf.getAttribute('data-heute-mehr') === '1';
+        heuteListeZeichnen();
+      };
+    }
   }
 
   /* =========================================================================
@@ -649,9 +725,8 @@ var Handy = (function () {
   function wocheFreigeben() {
     var mo = Kern.wochenstart(plTag);
     var n = Kern.wocheFreigeben(mo, Kern.plusTage(mo, 6), 1);
-    UI.melde(n ? n + ' Schichten freigegeben – das Team sieht den Plan jetzt.'
-      : 'In dieser Woche war schon alles freigegeben.', n ? 'gut' : 'warn');
-    if (n) UI.rueckStreifen('Plan freigegeben', alleZeichnen);
+    UI.melde(n ? n + ' ' + T.t('h_plan_frei_n') : T.t('h_plan_schon_frei'), n ? 'gut' : 'warn');
+    if (n) UI.rueckStreifen(T.t('h_plan_freigegeben'), alleZeichnen);
     alleZeichnen();
   }
 
@@ -702,9 +777,9 @@ var Handy = (function () {
           + '" data-schicht="' + s.id + '" style="border-left-color:'
           + Masken.farbeFuerPosition(s.position, s.farbe) + '">'
           + '<div class="haupttext"><b>' + UI.sicher(s.ma_name || T.t('offen_bez')) + '</b>'
-          + '<span>' + UI.sicher(s.position) + ' · ' + UI.zahl(s.dauer_std, 1) + ' h'
-          + (s.pause_min ? ' · ' + s.pause_min + ' min Pause' : '')
-          + (s.veroeffentlicht ? '' : ' · Entwurf')
+          + '<span>' + UI.sicher(T.wert(s.position)) + ' · ' + UI.zahl(s.dauer_std, 1) + ' h'
+          + (s.pause_min ? ' · ' + s.pause_min + ' min ' + UI.sicher(T.t('pause_wort')) : '')
+          + (s.veroeffentlicht ? '' : ' · ' + UI.sicher(T.t('h_entwurf')))
           + (warn.length ? ' · ⚠' : '') + '</span></div>'
           + '<div class="rechts"><b style="font-size:15px;color:var(--text)">' + s.von
           + '</b><br>' + s.bis + '</div></div>';
@@ -722,7 +797,7 @@ var Handy = (function () {
     if (frei.length) {
       $('pl_liste').innerHTML += '<div class="hinweis" style="margin-top:10px">'
         + frei.map(function (m) {
-          return UI.sicher(m.name) + ' – ' + UI.sicher(Kern.abwesend(m.id, plTag).typ);
+          return UI.sicher(m.name) + ' – ' + UI.sicher(T.wert(Kern.abwesend(m.id, plTag).typ));
         }).join('<br>') + '</div>';
     }
   }
@@ -730,8 +805,9 @@ var Handy = (function () {
   function wochenUebersicht() {
     var mo = Kern.wochenstart(plTag);
     var bes = Kern.besetzung(mo, Kern.plusTage(mo, 6));
-    var h = '<table><thead><tr><th>Tag</th><th class="zahl">Schichten</th>'
-      + '<th class="zahl">Stunden</th><th class="zahl">offen</th></tr></thead><tbody>';
+    var h = '<table><thead><tr><th>' + UI.sicher(T.t('h_tag')) + '</th><th class="zahl">'
+      + UI.sicher(T.t('schichten_wort')) + '</th><th class="zahl">' + UI.sicher(T.t('stunden'))
+      + '</th><th class="zahl">' + UI.sicher(T.t('h_offen_spalte')) + '</th></tr></thead><tbody>';
     bes.forEach(function (b) {
       h += '<tr><td>' + UI.tagKurz(b.datum) + '</td>'
         + '<td class="zahl">' + b.anzahl + '</td>'
@@ -741,7 +817,7 @@ var Handy = (function () {
     });
     h += '</tbody></table>';
     UI.fenster({
-      titel: 'Woche ' + Kern.dm(mo) + ' – ' + Kern.dmy(Kern.plusTage(mo, 6)),
+      titel: T.t('woche_knopf') + ' ' + Kern.dm(mo) + ' – ' + Kern.dmy(Kern.plusTage(mo, 6)),
       inhalt: '<div class="tabelle">' + h + '</div>',
       knoepfe: [
         { text: T.t('schliessen'), wert: null },
@@ -753,9 +829,9 @@ var Handy = (function () {
       if (w === 'kopie') {
         try {
           var n = Kern.wocheKopieren(Kern.plusTage(mo, -7), mo);
-          UI.melde(n ? n + ' Schichten übernommen.' : 'Es gab nichts zu übernehmen.',
+          UI.melde(n ? n + ' ' + T.t('h_uebernommen') + '.' : T.t('h_nichts_uebernehmen'),
             n ? 'gut' : 'warn');
-          if (n) UI.rueckStreifen(n + ' Schichten übernommen', alleZeichnen);
+          if (n) UI.rueckStreifen(n + ' ' + T.t('h_uebernommen'), alleZeichnen);
           alleZeichnen();
         } catch (e) { UI.fehler(e); }
       }
@@ -775,14 +851,27 @@ var Handy = (function () {
     $('tm_liste').innerHTML = rows.length ? rows.map(function (m) {
       return '<div class="zeile" data-ma="' + m.id + '" style="border-left-color:' + m.farbe + '">'
         + '<div class="haupttext"><b>' + UI.sicher(m.name) + '</b><span>'
-        + UI.sicher(m.rolle || '') + (m.vertrag ? ' · ' + UI.sicher(m.vertrag) : '')
+        + UI.sicher(T.wert(m.rolle || '')) + (m.vertrag ? ' · ' + UI.sicher(T.wert(m.vertrag)) : '')
         + (m.telefon ? ' · ' + UI.sicher(m.telefon) : '') + '</span></div>'
-        + '<div class="rechts">' + (m.stundenlohn ? UI.euro(m.stundenlohn) : '') + '</div></div>';
+        + '<div class="rechts">' + (m.stundenlohn ? UI.euro(m.stundenlohn) : '')
+        + (m.eingeladen_am ? '<span class="eingeladen">' + UI.etikett(T.t('eingeladen_am')
+          .replace('{datum}', Kern.dm(m.eingeladen_am)), 'genehmigt') + '</span>' : '')
+        + '</div>'
+        + '<button type="button" class="einladeknopf" data-einladen="' + m.id + '" title="'
+        + UI.sicher(T.t('pc_tt_einladen')) + '" aria-label="' + UI.sicher(T.t('app_einladung')) + '">'
+        + '📲 <span>' + UI.sicher(T.t('einladen_kurz')) + '</span></button></div>';
     }).join('') : UI.leer(T.t('niemand_gefunden'));
     $('tm_liste').querySelectorAll('[data-ma]').forEach(function (z) {
       z.onclick = function () {
         UI.tippen(z);
         Masken.mitarbeiter(Number(z.getAttribute('data-ma')), alleZeichnen);
+      };
+    });
+    $('tm_liste').querySelectorAll('[data-einladen]').forEach(function (b) {
+      b.onclick = function (e) {
+        e.stopPropagation();
+        UI.tippen(b);
+        Masken.einladung(Number(b.getAttribute('data-einladen')), alleZeichnen);
       };
     });
   }
@@ -903,7 +992,7 @@ var Handy = (function () {
       return '<div class="zeile eng" data-maz="' + e.id + '" style="border-left-color:'
         + (m.farbe || 'var(--linie-stark)') + '">'
         + '<div class="haupttext"><b>' + UI.sicher(e.name) + '</b><span>'
-        + UI.sicher(m.rolle || '') + ' · ' + e.n + ' ' + UI.sicher(T.t('eintraege'))
+        + UI.sicher(T.wert(m.rolle || '')) + ' · ' + e.n + ' ' + UI.sicher(T.t('eintraege'))
         + (e.laeuft ? ' · ' + UI.sicher(T.t('laeuft')) : '') + '</span></div>'
         + '<div class="rechts"><b class="wertgross">' + UI.zahl(e.std, 1) + ' h</b>'
         + (e.offen ? '<span class="warnzahl">' + e.offen + ' '
@@ -939,7 +1028,7 @@ var Handy = (function () {
         + (z.ende ? '–' + z.ende : ' …') + '</b><span>'
         + (z.pause_min ? z.pause_min + ' min ' + UI.sicher(T.t('pause_wort')) + ' · ' : '')
         + (z.ende ? (z.freigegeben ? '✓ ' + UI.sicher(T.t('geprueft'))
-          : UI.sicher(T.t('offen'))) : UI.sicher(T.t('laeuft'))) + '</span></div>'
+          : UI.sicher(T.t('zeit_offen'))) : UI.sicher(T.t('laeuft'))) + '</span></div>'
         + '<div class="rechts"><b class="wertgross">'
         + (z.ende ? UI.zahl(z.dauer_std, 1) + ' h' : '–') + '</b></div></div>';
     }).join('') : UI.leer(T.t('keine_zeiten'));
@@ -986,7 +1075,7 @@ var Handy = (function () {
       return '<div class="zeile" style="border-left-color:'
         + (w.status === 'genehmigt' ? 'var(--gruen)'
           : (w.status === 'abgelehnt' ? 'var(--rot)' : 'var(--gelb)')) + '">'
-        + '<div class="haupttext"><b>' + UI.sicher(w.ma_name) + ' · ' + UI.sicher(w.typ) + '</b>'
+        + '<div class="haupttext"><b>' + UI.sicher(w.ma_name) + ' · ' + UI.sicher(T.wert(w.typ)) + '</b>'
         + '<span>' + UI.tagKurz(w.von_datum)
         + (w.bis_datum !== w.von_datum ? ' – ' + UI.tagKurz(w.bis_datum) : '')
         + (w.bemerkung ? ' · ' + UI.sicher(w.bemerkung) : '') + '</span></div>'
@@ -1012,7 +1101,7 @@ var Handy = (function () {
   function statusSetzen(id, status) {
     try {
       Kern.wunschStatus(id, status);
-      UI.rueckStreifen('Wunsch ' + T.t(status), alleZeichnen);
+      UI.rueckStreifen(T.t('h_wunsch') + ' ' + T.status(status), alleZeichnen);
       alleZeichnen();
     } catch (e) { UI.fehler(e); }
   }
@@ -1027,7 +1116,7 @@ var Handy = (function () {
       return '<div class="zeile" data-termin="' + t.id + '" style="border-left-color:var(--gelb)">'
         + '<div class="haupttext"><b>' + UI.sicher(t.titel) + '</b><span>'
         + UI.tagKurz(t.datum)
-        + (t.ganztags ? ' · ' + T.t('ganztags') : (t.von_zeit ? ' · ' + t.von_zeit + ' Uhr' : ''))
+        + (t.ganztags ? ' · ' + T.t('ganztags') : (t.von_zeit ? ' · ' + t.von_zeit + T.t('h_uhr') : ''))
         + (t.ort ? ' · ' + UI.sicher(t.ort) : '') + '</span></div>'
         + '<div class="rechts"><button type="button" data-fertig="' + t.id + '">✓</button></div>'
         + '</div>';
@@ -1037,7 +1126,7 @@ var Handy = (function () {
       b.onclick = function (e) {
         e.stopPropagation();
         Kern.terminErledigt(Number(b.getAttribute('data-fertig')), 1);
-        UI.rueckStreifen('Termin erledigt', alleZeichnen);
+        UI.rueckStreifen(T.t('h_termin_erledigt'), alleZeichnen);
         alleZeichnen();
       };
     });
@@ -1078,8 +1167,10 @@ var Handy = (function () {
 
   function versandZeichnen() {
     var weg = $('vs_weg').value;
+    var erreichbar = 0;
     $('vs_empfaenger').innerHTML = Kern.maListe(false).map(function (m) {
       var fehlt = weg === 'whatsapp' ? !m.telefon : !m.email;
+      if (!fehlt) erreichbar++;
       return '<label class="haken" style="background:var(--flaeche);border:1px solid var(--linie);'
         + 'border-radius:10px;padding:11px 12px;margin-bottom:7px">'
         + '<input type="checkbox" value="' + m.id + '"' + (fehlt ? ' disabled' : ' checked')
@@ -1088,6 +1179,11 @@ var Handy = (function () {
           + T.t(weg === 'whatsapp' ? 'keine_nummer' : 'keine_adresse') + '</small>' : '')
         + '</span></label>';
     }).join('');
+    if (!erreichbar) {
+      $('vs_empfaenger').insertAdjacentHTML('afterbegin',
+        '<div class="hinweis warn">' + UI.sicher(T.t('h_niemand_erreichbar')) + '</div>');
+    }
+    $('vs_start').disabled = !erreichbar;
   }
 
   /* =========================================================================
@@ -1106,7 +1202,7 @@ var Handy = (function () {
   function einlesenPruefen() {
     var text = $('ei_text').value;
     if (!String(text).trim()) {
-      UI.melde('Erst eine Datei wählen oder eine Tabelle einfügen.', 'warn');
+      UI.melde(T.t('h_erst_datei'), 'warn');
       return;
     }
     Masken.importVorschau($('ei_ergebnis'), text, function () {
@@ -1141,7 +1237,7 @@ var Handy = (function () {
       $('es_regler').dataset.gebaut = '1';
       UI.regler($('es_regler'));
     }
-    $('es_ort').textContent = 'Die Daten liegen in diesem Gerät (' + Kern.speicherArt() + ').';
+    $('es_ort').textContent = T.t('h_daten_ort').replace('{art}', Kern.speicherArt());
   }
 
   function einstellungenSpeichern() {
@@ -1151,9 +1247,9 @@ var Handy = (function () {
       var e = $('es_regler').querySelector('[name="' + r[0] + '"]');
       if (e) w[r[0]] = e.value;
     });
-    if (!String(w.betrieb || '').trim()) { UI.melde('Der Betrieb braucht einen Namen.', 'warn'); return; }
+    if (!String(w.betrieb || '').trim()) { UI.melde(T.t('h_betrieb_fehlt'), 'warn'); return; }
     if (!/^\d{4,8}$/.test(String(w.chef_pin || ''))) {
-      UI.melde('Die Chef-PIN muss aus 4 bis 8 Ziffern bestehen.', 'warn');
+      UI.melde(T.t('h_pin_regel'), 'warn');
       return;
     }
     Kern.einstSetzen(w);

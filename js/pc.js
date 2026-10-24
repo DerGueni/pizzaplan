@@ -17,6 +17,7 @@ var PC = (function () {
      ========================================================================= */
 
   function start() {
+    handystreifen();
     Kern.bereit.then(function () {
       T.setze(Kern.einst('sprache'));
       UI.schemaSetzen(UI.schemaLesen());
@@ -40,7 +41,7 @@ var PC = (function () {
     if (!Kern.chefPinPruefen($('pin_feld').value)) {
       var f = $('pin_fehler');
       f.style.display = '';
-      f.textContent = 'Diese PIN stimmt nicht. Beim ersten Start ist sie 1234.';
+      f.textContent = T.t('h_pin_falsch');
       $('pin_feld').value = '';
       $('pin_feld').focus();
       return;
@@ -59,8 +60,27 @@ var PC = (function () {
     spracheKnopf();
     uhrLaufen();
     alleZeichnen();
+    /* Neuer Stand vom gemeinsamen Server (nur dort): alles neu zeichnen. */
+    Kern.beiAenderung(function (grund) {
+      if (grund !== 'server') return;
+      $('ei_regler').dataset.gebaut = '';
+      $('kopf_betrieb').textContent = Kern.einst('betrieb');
+      alleZeichnen();
+    });
     setInterval(function () { Masken.erinnerungen(alleZeichnen); }, 30000);
     setTimeout(function () { Masken.erinnerungen(alleZeichnen); }, 2500);
+  }
+
+  /* Hinweis auf die Handy-Fassung (nur in schmalen Fenstern sichtbar, siehe pc.css).
+     Weggeklickt bleibt er für diese Sitzung weg. */
+  function handystreifen() {
+    var zu = false;
+    try { zu = sessionStorage.getItem('pp_handy_zu') === '1'; } catch (e) { zu = false; }
+    if (zu) $('handystreifen').classList.add('zu');
+    $('handystreifen_zu').onclick = function () {
+      $('handystreifen').classList.add('zu');
+      try { sessionStorage.setItem('pp_handy_zu', '1'); } catch (e) { /* egal */ }
+    };
   }
 
   function uhrLaufen() {
@@ -107,7 +127,118 @@ var PC = (function () {
       s.classList.toggle('an', s.id === 's_' + name);
     });
     window.scrollTo(0, 0);
+    menueReiterZeigen();
     if (name === 'auswertung' && !$('a_inhalt').innerHTML) auswertungZeichnen();
+  }
+
+  /* Im schmalen Fenster ist das Menü waagrecht wischbar – der gewählte Reiter
+     wird dann in den sichtbaren Bereich geschoben. */
+  function menueReiterZeigen() {
+    var m = $('menue');
+    var b = m.querySelector('button.an');
+    if (!b || m.scrollWidth <= m.clientWidth) return;
+    if (b.offsetLeft < m.scrollLeft) m.scrollLeft = b.offsetLeft - 12;
+    else if (b.offsetLeft + b.offsetWidth > m.scrollLeft + m.clientWidth) {
+      m.scrollLeft = b.offsetLeft + b.offsetWidth - m.clientWidth + 12;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     Tastatur in Fenstern
+     Esc schließt nur das oberste Fenster, Enter löst den Hauptknopf aus
+     (auch aus einer Auswahlliste, im Textfeld mit Strg+Enter), Tab bleibt im Fenster.
+     Beim Öffnen landet der Fokus im Fenster, beim Schließen wieder dort, wo er war.
+     ------------------------------------------------------------------------- */
+
+  function oberstesFenster() {
+    var alle = document.querySelectorAll('.hintergrund');
+    return alle.length ? alle[alle.length - 1] : null;
+  }
+
+  function fokussierbar(hg) {
+    return Array.prototype.filter.call(
+      hg.querySelectorAll('button,input,select,textarea,a[href],[tabindex]:not([tabindex="-1"])'),
+      function (e) { return !e.disabled && e.offsetParent !== null; });
+  }
+
+  function hauptknopf(hg) {
+    var knoepfe = hg.querySelectorAll('.ffuss button');
+    return hg.querySelector('.ffuss button.haupt') || knoepfe[knoepfe.length - 1] || null;
+  }
+
+  function fensterTasten(e) {
+    var hg = oberstesFenster();
+    if (!hg) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      var x = hg.querySelector('[data-x]');
+      if (x) x.click();
+      return;
+    }
+    var ziel = e.target;
+    var drin = hg.contains(ziel);
+    if (e.key === 'Enter' && !e.shiftKey && !e.altKey) {
+      var knopf = hauptknopf(hg);
+      var tag = drin ? ziel.tagName : '';
+      var ausloesen = !drin || tag === 'SELECT'
+        || (tag === 'TEXTAREA' && (e.ctrlKey || e.metaKey));
+      if (ausloesen && knopf) {
+        e.preventDefault();
+        e.stopPropagation();
+        knopf.click();
+      }
+      return;
+    }
+    if (e.key === 'Tab') {
+      var f = fokussierbar(hg);
+      if (!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if (i < 0 || (!e.shiftKey && i === f.length - 1)) { e.preventDefault(); f[0].focus(); }
+      else if (e.shiftKey && i === 0) { e.preventDefault(); f[f.length - 1].focus(); }
+    }
+  }
+
+  function fensterBeobachten() {
+    var vorher = [];
+    new MutationObserver(function (aenderungen) {
+      aenderungen.forEach(function (a) {
+        Array.prototype.forEach.call(a.addedNodes, function (n) {
+          if (!n.classList || !n.classList.contains('hintergrund')) return;
+          vorher.push({ hg: n, fokus: document.activeElement });
+          var x = n.querySelector('[data-x]');
+          if (x) { x.title = T.t('pc_tt_schliessen'); x.setAttribute('aria-label', x.title); }
+          var sp = n.querySelector('.ffuss button.haupt');
+          if (sp && !sp.title && n.querySelector('.frumpf input')) sp.title = T.t('pc_tt_speichern');
+          /* Masken setzen den Fokus nach 60 ms ins erste Feld; ohne Feld nehmen wir den Hauptknopf. */
+          setTimeout(function () {
+            if (!document.body.contains(n) || n.contains(document.activeElement)) return;
+            var k = hauptknopf(n) || x;
+            if (k) k.focus();
+          }, 120);
+        });
+        Array.prototype.forEach.call(a.removedNodes, function (n) {
+          if (!n.classList || !n.classList.contains('hintergrund')) return;
+          var i = vorher.findIndex(function (v) { return v.hg === n; });
+          if (i < 0) return;
+          var f = vorher.splice(i, 1)[0].fokus;
+          if (f && f.focus && document.body.contains(f) && !oberstesFenster()) {
+            try { f.focus({ preventScroll: true }); } catch (x) { /* egal */ }
+          }
+        });
+      });
+    }).observe(document.body, { childList: true });
+  }
+
+  /* Kacheln, Schicht-Chips und Auswertungszeilen sind keine Knöpfe,
+     sollen aber auch mit Enter oder Leertaste gehen. */
+  function tastenKlick(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var el = e.target;
+    if (!el || !el.getAttribute || el.getAttribute('role') !== 'button') return;
+    if (/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
+    e.preventDefault();
+    el.click();
   }
 
   function verdrahten() {
@@ -171,6 +302,7 @@ var PC = (function () {
     $('t_inaktive').onchange = teamZeichnen;
     $('t_suche').oninput = teamZeichnen;
     $('t_einlesen').onclick = function () { seiteZeigen('einlesen'); };
+    $('t_einladen').onclick = function () { Masken.alleEinladen(nachTeam); };
 
     einlesenVerdrahten();
 
@@ -218,7 +350,19 @@ var PC = (function () {
       Masken.vorlage(null, function () { planZeichnen(); einstellungenFuellen(); });
     };
 
+    /* Übersicht: Wochenvorschau */
+    $('u_zum_plan').onclick = function () {
+      wocheMontag = Kern.wochenstart(Kern.heute());
+      planZeichnen();
+      seiteZeigen('plan');
+    };
+    $('tm_mikro').title = T.t('termin_sprechen');
+
     document.addEventListener('keydown', tastenkuerzel);
+    document.addEventListener('keydown', tastenKlick);
+    window.addEventListener('keydown', fensterTasten, true);
+    window.addEventListener('resize', menueReiterZeigen);
+    fensterBeobachten();
   }
 
   function nachPlan() { planZeichnen(); uebersichtZeichnen(); zaehlerZeichnen(); }
@@ -234,7 +378,7 @@ var PC = (function () {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (document.querySelector('.hintergrund')) return;
     var karte = { '1': 'uebersicht', '2': 'plan', '3': 'wuensche', '4': 'zeiten', '5': 'team',
-      '6': 'einlesen', '7': 'auswertung', '8': 'termine', '9': 'versand' };
+      '6': 'einlesen', '7': 'auswertung', '8': 'termine', '9': 'versand', '0': 'einstellungen' };
     if (karte[e.key]) { seiteZeigen(karte[e.key]); return; }
     if (seiteJetzt === 'plan') {
       if (e.key === 'ArrowLeft') { wocheWechseln(-7); e.preventDefault(); }
@@ -246,34 +390,25 @@ var PC = (function () {
 
   function hilfeZeigen() {
     UI.fenster({
-      titel: 'Kurz erklärt',
+      titel: T.t('pc_hilfe_titel'),
       breite: 640,
-      inhalt: '<h3 style="margin-top:0">Tasten</h3><div class="tasten">'
-        + '<kbd>1</kbd><span>Übersicht</span>'
-        + '<kbd>2</kbd><span>Dienstplan</span>'
-        + '<kbd>3</kbd><span>Wünsche &amp; Abwesenheit</span>'
-        + '<kbd>4</kbd><span>Zeiterfassung</span>'
-        + '<kbd>5</kbd><span>Team</span>'
-        + '<kbd>6</kbd><span>Mitarbeiter einlesen</span>'
-        + '<kbd>7</kbd><span>Auswertung</span>'
-        + '<kbd>8</kbd><span>Termine</span>'
-        + '<kbd>9</kbd><span>Plan verschicken</span>'
-        + '<kbd>← →</kbd><span>eine Woche zurück oder vor</span>'
-        + '<kbd>n</kbd><span>neue Schicht</span>'
-        + '<kbd>?</kbd><span>dieses Fenster</span>'
+      inhalt: '<h3 style="margin-top:0">' + T.t('pc_h_tasten') + '</h3><div class="tasten">'
+        + [['1', 'uebersicht'], ['2', 'dienstplan'], ['3', 'wuensche'], ['4', 'zeiten'],
+          ['5', 'team'], ['6', 'einlesen'], ['7', 'auswertung'], ['8', 'termine'],
+          ['9', 'versand'], ['0', 'einstellungen'], ['← →', 'pc_h_woche'], ['n', 'pc_h_neu'],
+          ['?', 'pc_h_fenster'], [T.t('pc_h_enter_taste'), 'pc_h_enter'], ['Esc', 'pc_h_esc']]
+          .map(function (k) {
+            return '<kbd>' + UI.sicher(k[0]) + '</kbd><span>' + UI.sicher(T.t(k[1])) + '</span>';
+          }).join('')
         + '</div>'
-        + '<h3 style="margin-top:18px">Im Dienstplan</h3>'
+        + '<h3 style="margin-top:18px">' + T.t('pc_h_plan') + '</h3>'
         + '<ul style="font-size:14.5px;padding-left:20px;line-height:1.65">'
-        + '<li>Leere Zelle anklicken → neue Schicht für diese Person an diesem Tag.</li>'
-        + '<li>Schicht anklicken → bearbeiten.</li>'
-        + '<li>Schicht mit der Maus in eine andere Zelle ziehen → verschieben.</li>'
-        + '<li>Vorlage aus der linken Spalte in eine Zelle ziehen → Schicht in einem Zug.</li>'
-        + '<li>Gestrichelt umrandet heißt: noch nicht freigegeben, das Team sieht sie nicht.</li>'
-        + '<li>⚠ auf einer Schicht heißt: es gibt einen Hinweis, z. B. zu wenig Ruhezeit.</li>'
+        + ['pc_h_l1', 'pc_h_l2', 'pc_h_l3', 'pc_h_l4', 'pc_h_l5', 'pc_h_l6'].map(function (k) {
+          return '<li>' + UI.sicher(T.t(k)) + '</li>';
+        }).join('')
         + '</ul>'
-        + '<h3 style="margin-top:14px">Wenn etwas schiefgeht</h3>'
-        + '<p style="font-size:14.5px">Nach jeder Änderung erscheint unten kurz ein Streifen mit '
-        + '<b>Rückgängig</b>. Ein Klick darauf stellt den Zustand davor wieder her.</p>'
+        + '<h3 style="margin-top:14px">' + T.t('pc_h_schief') + '</h3>'
+        + '<p style="font-size:14.5px">' + T.t('pc_h_rueck') + '</p>'
     });
   }
 
@@ -292,7 +427,8 @@ var PC = (function () {
       [T.t('kachel_zeiten'), u.offene_zeiten, u.offene_zeiten ? 'warn' : 'gut', 'zeiten']
     ];
     $('u_kacheln').innerHTML = kacheln.map(function (k) {
-      return '<div class="kachel ' + k[2] + '" data-ziel="' + k[3] + '">'
+      return '<div class="kachel ' + k[2] + '" data-ziel="' + k[3] + '" role="button" tabindex="0"'
+        + ' title="' + UI.sicher(T.t('pc_tt_kachel')) + '">'
         + '<div class="wert">' + UI.sicher(k[1]) + '</div>'
         + '<div class="bez">' + UI.sicher(k[0]) + '</div></div>';
     }).join('');
@@ -303,23 +439,74 @@ var PC = (function () {
     $('u_heute').innerHTML = u.heute.length ? u.heute.map(function (s) {
       return '<div class="zeile" style="border-left-color:' + s.farbe + '">'
         + '<div class="haupttext"><b>' + UI.sicher(s.ma_name || T.t('offen_bez')) + '</b>'
-        + '<span>' + UI.sicher(s.position) + '</span></div>'
+        + '<span>' + UI.sicher(T.wert(s.position)) + '</span></div>'
         + '<div class="rechts">' + s.von + '–' + s.bis + '</div></div>';
     }).join('') : UI.leer(T.t('heute_niemand'));
 
     $('u_stempel').innerHTML = u.eingestempelt.length ? u.eingestempelt.map(function (z) {
       return '<div class="zeile" style="border-left-color:var(--gruen)">'
         + '<div class="haupttext"><b>' + UI.sicher(z.ma_name) + '</b>'
-        + '<span>seit ' + UI.sicher(z.start) + ' Uhr</span></div>'
+        + '<span>' + UI.sicher(T.t('h_seit').replace('{z}', z.start)) + '</span></div>'
         + '<div class="rechts">' + UI.etikett(T.t('laeuft'), 'laeuft') + '</div></div>';
     }).join('') : UI.leer(T.t('niemand_gestempelt'));
 
     $('u_termine').innerHTML = u.termine.length ? u.termine.map(function (t) {
       return '<div class="zeile" style="border-left-color:var(--gelb)">'
         + '<div class="haupttext"><b>' + UI.sicher(t.titel) + '</b>'
-        + '<span>' + UI.tagKurz(t.datum) + (t.von_zeit ? ' · ' + t.von_zeit + ' Uhr' : '')
+        + '<span>' + UI.tagKurz(t.datum) + (t.von_zeit ? ' · ' + t.von_zeit + T.t('h_uhr') : '')
         + (t.ort ? ' · ' + UI.sicher(t.ort) : '') + '</span></div></div>';
     }).join('') : UI.leer(T.t('keine_termine'));
+
+    wochenvorschauZeichnen(u.woche_von, u.woche_bis);
+  }
+
+  /* Die laufende Woche Tag für Tag: wer wann arbeitet, wer frei hat, was offen ist. */
+  function wochenvorschauZeichnen(mo, so) {
+    var h = Kern.heute();
+    var rows = Kern.schichten(mo, so, false, null);
+    var leute = Kern.maListe(false);
+    $('u_woche_titel').textContent = T.t('kw') + ' ' + kalenderwoche(mo) + ' · '
+      + Kern.dm(mo) + ' – ' + Kern.dmy(so);
+    var tagTitel = UI.sicher(T.t('pc_tt_tag'));
+    var chipTitel = T.t('pc_tt_schicht').split(' · ')[0];
+
+    $('u_woche').innerHTML = Kern.besetzung(mo, so).map(function (b) {
+      var d = b.datum;
+      var meine = rows.filter(function (s) { return s.datum === d; });
+      var weg = [];
+      leute.forEach(function (m) {
+        var ab = Kern.abwesend(m.id, d);
+        if (ab) weg.push(UI.sicher(m.name) + ': ' + UI.sicher(T.wert(ab.typ)));
+      });
+      return '<div class="wtag' + (d === h ? ' heute' : '') + (d < h ? ' vorbei' : '') + '">'
+        + '<button type="button" class="wkopf" data-wtag="' + d + '" title="' + tagTitel + '">'
+        + '<b>' + UI.sicher(Kern.WT_LANG[T.aktuell()][Kern.wochentag(d)]) + '</b> '
+        + Kern.dm(d)
+        + '<small>' + b.anzahl + ' × · ' + UI.zahl(b.stunden, 1) + ' h'
+        + (b.offen ? ' · <b>' + b.offen + ' ' + UI.sicher(T.t('offen_turni')) + '</b>' : '')
+        + '</small></button>'
+        + (meine.length ? meine.map(function (s) {
+          var farbe = s.mitarbeiter_id ? Masken.farbeFuerPosition(s.position, s.farbe) : 'var(--rot)';
+          var wer = s.mitarbeiter_id ? s.ma_name : T.t('offen_bez');
+          return '<button type="button" class="wochenchip' + (s.veroeffentlicht ? '' : ' entwurf')
+            + '" data-schicht="' + s.id + '" style="background:' + farbe + '" title="'
+            + UI.sicher(wer + ' · ' + s.von + '–' + s.bis + ' · ' + T.wert(s.position) + ' – ' + chipTitel)
+            + '">' + s.von + '–' + s.bis + '<small>' + UI.sicher(wer) + '</small></button>';
+        }).join('') : '<div class="wleer">' + UI.sicher(T.t('woche_frei')) + '</div>')
+        + weg.map(function (w) { return '<div class="wweg" title="' + w + '">' + w + '</div>'; }).join('')
+        + '</div>';
+    }).join('');
+
+    $('u_woche').querySelectorAll('[data-wtag]').forEach(function (k) {
+      k.onclick = function () {
+        wocheMontag = Kern.wochenstart(k.getAttribute('data-wtag'));
+        planZeichnen();
+        seiteZeigen('plan');
+      };
+    });
+    $('u_woche').querySelectorAll('[data-schicht]').forEach(function (c) {
+      c.onclick = function () { Masken.schicht(Number(c.getAttribute('data-schicht')), null, null, nachPlan); };
+    });
   }
 
   /* =========================================================================
@@ -340,7 +527,7 @@ var PC = (function () {
 
   function planZeichnen() {
     var bis = Kern.plusTage(wocheMontag, 6);
-    $('p_titel').textContent = 'KW ' + kalenderwoche(wocheMontag) + ' · '
+    $('p_titel').textContent = T.t('kw') + ' ' + kalenderwoche(wocheMontag) + ' · '
       + Kern.dm(wocheMontag) + ' – ' + Kern.dmy(bis);
 
     var leute = Kern.maListe(false);
@@ -353,14 +540,15 @@ var PC = (function () {
         + '<b>' + UI.sicher(Kern.WT_KURZ[T.aktuell()][Kern.wochentag(b.datum)]) + ' '
         + Kern.dm(b.datum) + '</b><div class="zahlen">' + b.anzahl + ' × · '
         + UI.zahl(b.stunden, 1) + ' h'
-        + (b.offen ? ' · <b style="color:var(--rot)">' + b.offen + ' offen</b>' : '')
+        + (b.offen ? ' · <b style="color:var(--rot)">' + b.offen + ' ' + UI.sicher(T.t('offen_turni')) + '</b>' : '')
         + '</div></div>';
     }).join('');
 
     $('p_vorlagen').innerHTML = Kern.vorlagen().map(function (v) {
       return '<button type="button" class="vorlagechip" draggable="true" data-vorlage="' + v.id
-        + '" style="background:' + v.farbe + '">' + UI.sicher(v.name)
-        + '<small>' + v.von + '–' + v.bis + ' · ' + UI.sicher(v.position) + '</small></button>';
+        + '" style="background:' + v.farbe + '" title="' + UI.sicher(v.name + ' · ' + T.t('pc_tt_vorlage'))
+        + '">' + UI.sicher(v.name)
+        + '<small>' + v.von + '–' + v.bis + ' · ' + UI.sicher(T.wert(v.position)) + '</small></button>';
     }).join('') || '<div style="font-size:13px;color:var(--text-leise)">' + T.t('keine_vorlage')
       + '</div>';
     $('p_vorlagen').querySelectorAll('[data-vorlage]').forEach(function (b) {
@@ -392,10 +580,12 @@ var PC = (function () {
       }).reduce(function (a, s) { return a + Kern.dauerMinuten(s.von, s.bis, s.pause_min); }, 0);
       var soll = Number(m.wochenstunden || 0);
       var farbeZahl = soll && Kern.stunden(wochenMin) > soll + 0.01 ? 'var(--rot)' : 'inherit';
-      t += '<tr><td class="person"><span class="wochenzahl" style="color:' + farbeZahl + '">'
+      t += '<tr><td class="person" title="' + UI.sicher(m.name + (m.rolle ? ' · ' + T.wert(m.rolle) : '')
+        + ' · ' + UI.zahl(Kern.stunden(wochenMin), 1) + (soll ? ' / ' + UI.zahl(soll, 0) : '') + ' h')
+        + '"><span class="wochenzahl" style="color:' + farbeZahl + '">'
         + UI.zahl(Kern.stunden(wochenMin), 1) + (soll ? ' / ' + UI.zahl(soll, 0) : '') + ' h</span>'
         + '<span class="punkt" style="background:' + m.farbe + '"></span>'
-        + UI.sicher(m.name) + '<small>' + UI.sicher(m.rolle || '') + '</small></td>';
+        + UI.sicher(m.name) + '<small>' + UI.sicher(T.wert(m.rolle || '')) + '</small></td>';
       tage.forEach(function (d) {
         var meine = rows.filter(function (s) {
           return Number(s.mitarbeiter_id) === Number(m.id) && s.datum === d;
@@ -404,20 +594,23 @@ var PC = (function () {
         var wu = ab ? null : Kern.wunschOffen(m.id, d);
         t += '<td class="zelle' + (d === h ? ' heute' : '') + (ab ? ' frei' : '')
           + (wu ? ' wunsch' : '') + '" data-tag="' + d + '" data-ma="' + m.id + '"'
-          + (ab ? ' title="' + UI.sicher(ab.typ) + '"'
-            : (wu ? ' title="Wunsch: ' + UI.sicher(wu.typ) + '"' : '')) + '>';
+          + (ab ? ' title="' + UI.sicher(T.wert(ab.typ)) + '"'
+            : (wu ? ' title="' + UI.sicher(T.t('h_wunsch')) + ': ' + UI.sicher(T.wert(wu.typ)) + ' · '
+              + UI.sicher(T.t('pc_tt_zelle')) + '"'
+              : ' title="' + UI.sicher(T.t('pc_tt_zelle')) + '"')) + '>';
         meine.forEach(function (s) {
           var warn = Kern.konflikte(s, s.id).length;
           t += '<span class="schichtchip' + (s.veroeffentlicht ? '' : ' entwurf')
-            + '" draggable="true" data-schicht="' + s.id + '" style="background:'
-            + Masken.farbeFuerPosition(s.position, m.farbe) + '">'
-            + (warn ? '<span class="warnzeichen" title="Es gibt Hinweise">⚠</span>' : '')
-            + s.von + '–' + s.bis + '<small>' + UI.sicher(s.position)
+            + '" draggable="true" data-schicht="' + s.id + '" role="button" tabindex="0" title="'
+            + UI.sicher(s.von + '–' + s.bis + ' · ' + T.wert(s.position) + ' – ' + T.t('pc_tt_schicht'))
+            + '" style="background:' + Masken.farbeFuerPosition(s.position, m.farbe) + '">'
+            + (warn ? '<span class="warnzeichen" title="' + UI.sicher(T.t('pc_tt_hinweise')) + '">⚠</span>' : '')
+            + s.von + '–' + s.bis + '<small>' + UI.sicher(T.wert(s.position))
             + (s.pause_min ? ' · ' + s.pause_min + ' min' : '') + '</small></span>';
         });
         if (!meine.length && ab) {
           t += '<span style="font-size:12px;color:var(--gruen);font-weight:600">'
-            + UI.sicher(ab.typ) + '</span>';
+            + UI.sicher(T.wert(ab.typ)) + '</span>';
         }
         t += '</td>';
       });
@@ -430,11 +623,14 @@ var PC = (function () {
         + '<span class="punkt" style="background:var(--rot)"></span>'
         + T.t('offen_bez') + '<small>' + T.t('niemand_eingeteilt') + '</small></td>';
       tage.forEach(function (d) {
-        t += '<td class="zelle" data-tag="' + d + '" data-ma="">';
+        t += '<td class="zelle" data-tag="' + d + '" data-ma="" title="'
+          + UI.sicher(T.t('pc_tt_zelle')) + '">';
         offene.filter(function (s) { return s.datum === d; }).forEach(function (s) {
           t += '<span class="schichtchip' + (s.veroeffentlicht ? '' : ' entwurf')
-            + '" draggable="true" data-schicht="' + s.id + '" style="background:var(--rot)">'
-            + s.von + '–' + s.bis + '<small>' + UI.sicher(s.position) + '</small></span>';
+            + '" draggable="true" data-schicht="' + s.id + '" role="button" tabindex="0" title="'
+            + UI.sicher(s.von + '–' + s.bis + ' · ' + T.wert(s.position) + ' – ' + T.t('pc_tt_schicht'))
+            + '" style="background:var(--rot)">'
+            + s.von + '–' + s.bis + '<small>' + UI.sicher(T.wert(s.position)) + '</small></span>';
         });
         t += '</td>';
       });
@@ -472,7 +668,7 @@ var PC = (function () {
         try {
           if (gezogen.art === 'schicht') {
             var warn = Kern.schichtVerschieben(gezogen.id, tag, maId);
-            UI.rueckStreifen('Schicht verschoben', nachPlan);
+            UI.rueckStreifen(T.t('r_schicht_verschoben'), nachPlan);
             if (warn.length) UI.melde(warn[0], 'warn');
           } else {
             var v = Kern.vorlagen().find(function (x) { return Number(x.id) === gezogen.id; });
@@ -481,7 +677,7 @@ var PC = (function () {
               datum: tag, von: v.von, bis: v.bis, pause_min: v.pause_min,
               mitarbeiter_id: maId, position: v.position, notiz: '', veroeffentlicht: 0
             });
-            UI.rueckStreifen('Schicht angelegt', nachPlan);
+            UI.rueckStreifen(T.t('r_schicht_angelegt'), nachPlan);
             if (r.warnungen.length) UI.melde(r.warnungen[0], 'warn');
           }
           nachPlan();
@@ -504,15 +700,13 @@ var PC = (function () {
   }
 
   function vorwocheUebernehmen() {
-    UI.frage(T.t('vorwoche_uebernehmen'),
-      'Die Schichten der Woche davor werden in diese Woche kopiert – als Entwurf, noch nicht '
-      + 'freigegeben. Bereits vorhandene Schichten bleiben unberührt.').then(function (ja) {
+    UI.frage(T.t('vorwoche_uebernehmen'), T.t('pc_vorwoche_frage')).then(function (ja) {
       if (!ja) return;
       try {
         var n = Kern.wocheKopieren(Kern.plusTage(wocheMontag, -7), wocheMontag);
-        UI.melde(n ? n + ' Schichten übernommen.' : 'Es gab nichts zu übernehmen.',
+        UI.melde(n ? T.t('pc_uebernommen_n').replace('{n}', n) : T.t('h_nichts_uebernehmen'),
           n ? 'gut' : 'warn');
-        if (n) UI.rueckStreifen(n + ' Schichten übernommen', nachPlan);
+        if (n) UI.rueckStreifen(n + ' ' + T.t('h_uebernommen'), nachPlan);
         nachPlan();
       } catch (e) { UI.fehler(e); }
     });
@@ -522,20 +716,18 @@ var PC = (function () {
     try {
       var n = Kern.wocheFreigeben(wocheMontag, Kern.plusTage(wocheMontag, 6), wert);
       UI.melde(n
-        ? n + (wert ? ' Schichten freigegeben – das Team sieht den Plan jetzt.'
-          : ' Schichten wieder zurückgezogen.')
-        : 'Es gab nichts zu ändern.', n ? 'gut' : 'warn');
-      if (n) UI.rueckStreifen(wert ? 'Plan freigegeben' : 'Freigabe zurückgenommen', nachPlan);
+        ? n + ' ' + T.t(wert ? 'h_plan_frei_n' : 'pc_zurueckgezogen')
+        : T.t('pc_nichts_aendern'), n ? 'gut' : 'warn');
+      if (n) UI.rueckStreifen(T.t(wert ? 'h_plan_freigegeben' : 'r_freigabe_zurueck'), nachPlan);
       nachPlan();
     } catch (e) { UI.fehler(e); }
   }
 
   function wocheLeeren() {
-    UI.frage(T.t('woche_leeren'), 'Alle Schichten dieser Woche werden entfernt. '
-      + 'Mit „Rückgängig“ lässt sich das gleich danach zurücknehmen.').then(function (ja) {
+    UI.frage(T.t('woche_leeren'), T.t('pc_leeren_frage')).then(function (ja) {
       if (!ja) return;
       var n = Kern.wocheLeeren(wocheMontag, Kern.plusTage(wocheMontag, 6));
-      UI.rueckStreifen(n + ' Schichten entfernt', nachPlan);
+      UI.rueckStreifen(T.t('pc_entfernt_n').replace('{n}', n), nachPlan);
       nachPlan();
     });
   }
@@ -553,18 +745,21 @@ var PC = (function () {
     rows.forEach(function (w) {
       var anzahl = Kern.tageZwischen(w.von_datum, w.bis_datum).length;
       t += '<tr><td><b>' + UI.sicher(w.ma_name) + '</b></td>'
-        + '<td>' + UI.sicher(w.typ) + '</td>'
+        + '<td>' + UI.sicher(T.wert(w.typ)) + '</td>'
         + '<td>' + UI.tagKurz(w.von_datum)
         + (w.bis_datum !== w.von_datum
           ? ' – ' + UI.tagKurz(w.bis_datum) + ' <small>(' + anzahl + ')</small>' : '') + '</td>'
         + '<td>' + UI.sicher(w.bemerkung || '') + '</td>'
-        + '<td>' + UI.etikett(T.t(w.status), w.status) + '</td>'
+        + '<td>' + UI.etikett(T.status(w.status), w.status) + '</td>'
         + '<td style="white-space:nowrap;text-align:right">'
         + (w.status !== 'genehmigt'
-          ? '<button type="button" class="gruen" data-ja="' + w.id + '">✓</button> ' : '')
+          ? '<button type="button" class="gruen" data-ja="' + w.id + '" title="'
+            + UI.sicher(T.t('pc_tt_genehmigen')) + '">✓</button> ' : '')
         + (w.status !== 'abgelehnt'
-          ? '<button type="button" data-nein="' + w.id + '">✕</button> ' : '')
-        + '<button type="button" data-bearb="' + w.id + '">…</button></td></tr>';
+          ? '<button type="button" data-nein="' + w.id + '" title="'
+            + UI.sicher(T.t('pc_tt_ablehnen')) + '">✕</button> ' : '')
+        + '<button type="button" data-bearb="' + w.id + '" title="'
+        + UI.sicher(T.t('pc_tt_bearbeiten')) + '">…</button></td></tr>';
     });
     $('w_tabelle').innerHTML = t + '</tbody>';
     $('w_tabelle').querySelectorAll('[data-ja]').forEach(function (b) {
@@ -581,7 +776,7 @@ var PC = (function () {
   function statusSetzen(id, status) {
     try {
       Kern.wunschStatus(id, status);
-      UI.rueckStreifen('Wunsch ' + T.t(status), nachWunsch);
+      UI.rueckStreifen(T.t('h_wunsch') + ' ' + T.status(status), nachWunsch);
       nachWunsch();
     } catch (e) { UI.fehler(e); }
   }
@@ -617,12 +812,13 @@ var PC = (function () {
         + '<td>' + (z.ende ? UI.sicher(z.ende) : UI.etikett(T.t('laeuft'), 'laeuft')) + '</td>'
         + '<td class="zahl">' + (z.pause_min || 0) + '</td>'
         + '<td class="zahl">' + (z.ende ? UI.zahl(z.dauer_std, 2) : '–') + '</td>'
-        + '<td>' + UI.sicher(z.quelle) + '</td>'
+        + '<td>' + UI.sicher(T.wert(z.quelle)) + '</td>'
         + '<td>' + UI.sicher(z.bemerkung || '') + '</td>'
         + '<td style="white-space:nowrap;text-align:right">'
         + (z.ende ? '<button type="button" class="' + (z.freigegeben ? 'gruen' : '')
-          + '" data-frei="' + z.id + '" title="geprüft">✓</button> ' : '')
-        + '<button type="button" data-bearb="' + z.id + '">…</button></td></tr>';
+          + '" data-frei="' + z.id + '" title="' + UI.sicher(T.t('pc_tt_zeit_ok')) + '">✓</button> ' : '')
+        + '<button type="button" data-bearb="' + z.id + '" title="'
+        + UI.sicher(T.t('pc_tt_bearbeiten')) + '">…</button></td></tr>';
     });
     $('z_tabelle').innerHTML = t + '</tbody><tfoot><tr><td colspan="5">' + T.t('summe') + '</td>'
       + '<td class="zahl">' + UI.zahl(summe, 2) + '</td><td colspan="3"></td></tr></tfoot>';
@@ -642,9 +838,9 @@ var PC = (function () {
 
   function zeitenFreigeben() {
     var n = Kern.zeitenFreigeben($('z_von').value, $('z_bis').value, $('z_ma').value || null);
-    UI.melde(n ? n + ' Zeiten geprüft und freigegeben.' : 'Es war nichts offen.',
+    UI.melde(n ? T.t('pc_zeiten_frei_n').replace('{n}', n) : T.t('nichts_offen'),
       n ? 'gut' : 'warn');
-    if (n) UI.rueckStreifen(n + ' Zeiten freigegeben', nachZeit);
+    if (n) UI.rueckStreifen(n + ' ' + T.t('zeiten_freigegeben'), nachZeit);
     nachZeit();
   }
 
@@ -659,8 +855,7 @@ var PC = (function () {
       return (m.name + ' ' + (m.rolle || '') + ' ' + (m.telefon || '') + ' ' + (m.email || ''))
         .toLowerCase().indexOf(suche) >= 0;
     });
-    $('t_adresse').textContent = location.origin
-      + location.pathname.replace(/[^/]*$/, '') + 'team.html';
+    $('t_adresse').textContent = Kern.appBasis() + 'team.html';
 
     var t = '<thead><tr><th>' + T.t('mitarbeiter') + '</th><th>' + T.t('rolle') + '</th>'
       + '<th>' + T.t('vertrag') + '</th><th>' + T.t('telefon') + '</th><th>' + T.t('email') + '</th>'
@@ -672,28 +867,41 @@ var PC = (function () {
       t += '<tr' + (m.aktiv ? '' : ' class="aus"') + '>'
         + '<td><div class="teamkarte"><div class="punkt" style="background:' + m.farbe + '">'
         + UI.sicher(Masken.kuerzel(m.name)) + '</div><div><b>' + UI.sicher(m.name) + '</b>'
-        + (m.ist_chef ? ' ' + UI.etikett('Leitung') : '')
-        + (m.beispiel ? ' ' + UI.etikett('Beispiel', 'offen') : '')
-        + (m.aktiv ? '' : ' ' + UI.etikett('nicht mehr da'))
+        + (m.ist_chef ? ' ' + UI.etikett(T.wert('Leitung')) : '')
+        + (m.beispiel ? ' ' + UI.etikett(T.t('pc_beispiel'), 'offen') : '')
+        + (m.aktiv ? '' : ' ' + UI.etikett(T.t('pc_nicht_mehr_da')))
+        + (m.eingeladen_am ? ' ' + UI.etikett(T.t('eingeladen_am')
+          .replace('{datum}', Kern.dm(m.eingeladen_am)), 'genehmigt') : '')
         + '<small style="display:block;color:var(--text-leise)">'
-        + (m.sprache === 'it' ? 'Italiano' : 'Deutsch')
-        + (m.eintritt ? ' · seit ' + Kern.dmy(m.eintritt) : '') + '</small></div></div></td>'
-        + '<td>' + UI.sicher(m.rolle || '') + '</td>'
-        + '<td>' + UI.sicher(m.vertrag || '') + '</td>'
+        + T.t(m.sprache === 'it' ? 'sprache_it' : 'sprache_de')
+        + (m.eintritt ? T.t('pc_seit_datum').replace('{datum}', Kern.dmy(m.eintritt)) : '')
+        + '</small>'
+        + (m.aktiv ? '<button type="button" class="alslink einladelink" data-einladen="' + m.id
+          + '" title="' + UI.sicher(T.t('pc_tt_einladen')) + '">📲 '
+          + UI.sicher(T.t('einladen_kurz')) + '</button>' : '')
+        + '</div></div></td>'
+        + '<td>' + UI.sicher(T.wert(m.rolle || '')) + '</td>'
+        + '<td>' + UI.sicher(T.wert(m.vertrag || '')) + '</td>'
         + '<td>' + UI.sicher(m.telefon || '') + '</td>'
         + '<td>' + UI.sicher(m.email || '') + '</td>'
         + '<td class="zahl">' + (m.stundenlohn ? UI.euro(m.stundenlohn) : '–') + '</td>'
         + '<td class="zahl">' + (m.wochenstunden ? UI.zahl(m.wochenstunden, 1) : '–') + '</td>'
         + '<td style="white-space:nowrap">'
-        + '<button type="button" data-link="' + m.id + '">🔗 ' + T.t('link_kopieren') + '</button> '
-        + (m.telefon ? '<button type="button" data-wa="' + m.id + '">WhatsApp</button>' : '')
+        + '<button type="button" data-link="' + m.id + '" title="' + UI.sicher(T.t('pc_tt_link')) + '">🔗 '
+        + T.t('link_kopieren') + '</button> '
+        + (m.telefon ? '<button type="button" data-wa="' + m.id + '" title="'
+          + UI.sicher(T.t('pc_tt_whatsapp')) + '">WhatsApp</button>' : '')
         + '</td><td style="text-align:right">'
-        + '<button type="button" data-bearb="' + m.id + '">…</button></td></tr>';
+        + '<button type="button" data-bearb="' + m.id + '" title="'
+        + UI.sicher(T.t('pc_tt_bearbeiten')) + '">…</button></td></tr>';
     });
     $('t_tabelle').innerHTML = t + '</tbody>';
 
     $('t_tabelle').querySelectorAll('[data-bearb]').forEach(function (b) {
       b.onclick = function () { Masken.mitarbeiter(Number(b.getAttribute('data-bearb')), nachTeam); };
+    });
+    $('t_tabelle').querySelectorAll('[data-einladen]').forEach(function (b) {
+      b.onclick = function () { Masken.einladung(Number(b.getAttribute('data-einladen')), nachTeam); };
     });
     $('t_tabelle').querySelectorAll('[data-link]').forEach(function (b) {
       b.onclick = function () { UI.kopieren(Masken.appLink(Number(b.getAttribute('data-link')))); };
@@ -720,7 +928,7 @@ var PC = (function () {
     $('e_dateifeld').onchange = function () {
       var d = $('e_dateifeld').files[0];
       if (!d) return;
-      UI.dateiLesen(d).then(function (text) {
+      UI.tabelleDateiLesen(d).then(function (text) {
         $('e_text').value = text;
         einlesenPruefen();
       }).catch(UI.fehler);
@@ -728,7 +936,7 @@ var PC = (function () {
     };
     $('e_vorlage').onclick = function () {
       UI.dateiSpeichern('Importvorlage_Mitarbeiter.csv', Kern.importVorlage(), 'text/csv');
-      UI.melde('Die Vorlage liegt jetzt in den Downloads.', 'gut');
+      UI.melde(T.t('pc_vorlage_downloads'), 'gut');
     };
     $('e_beispiel').onclick = function () {
       $('e_text').value = Kern.importVorlage();
@@ -750,7 +958,7 @@ var PC = (function () {
     zone.addEventListener('drop', function (e) {
       var d = e.dataTransfer.files && e.dataTransfer.files[0];
       if (!d) return;
-      UI.dateiLesen(d).then(function (text) {
+      UI.tabelleDateiLesen(d).then(function (text) {
         $('e_text').value = text;
         einlesenPruefen();
       }).catch(UI.fehler);
@@ -760,7 +968,7 @@ var PC = (function () {
   function einlesenPruefen() {
     var text = $('e_text').value;
     if (!String(text).trim()) {
-      UI.melde('Erst eine Datei wählen oder eine Tabelle einfügen.', 'warn');
+      UI.melde(T.t('h_erst_datei'), 'warn');
       return;
     }
     Masken.importVorschau($('e_ergebnis'), text, function () {
@@ -795,12 +1003,13 @@ var PC = (function () {
       + '<th class="zahl">' + T.t('gesamt') + '</th></tr></thead><tbody>';
     if (!a.zeilen.length) h += '<tr><td colspan="9">' + UI.leer(T.t('keine_zeiten')) + '</td></tr>';
     a.zeilen.forEach(function (z) {
-      h += '<tr class="lohnzeile" data-ma="' + z.mitarbeiter_id + '">'
+      h += '<tr class="lohnzeile" data-ma="' + z.mitarbeiter_id + '" role="button" tabindex="0" title="'
+        + UI.sicher(T.t('pc_tt_lohnzeile')) + '">'
         + '<td><b>' + UI.sicher(z.name) + '</b>'
         + (z.offen ? ' ' + UI.etikett(z.offen + ' ' + T.t('ungeprueft'), 'offen') : '')
-        + (z.urlaubstage ? ' ' + UI.etikett(z.urlaubstage + ' Urlaub') : '')
-        + (z.kranktage ? ' ' + UI.etikett(z.kranktage + ' krank') : '') + '</td>'
-        + '<td>' + UI.sicher(z.vertrag || '') + '</td>'
+        + (z.urlaubstage ? ' ' + UI.etikett(T.t('pc_urlaub_n').replace('{n}', z.urlaubstage)) : '')
+        + (z.kranktage ? ' ' + UI.etikett(T.t('pc_krank_n').replace('{n}', z.kranktage)) : '') + '</td>'
+        + '<td>' + UI.sicher(T.wert(z.vertrag || '')) + '</td>'
         + '<td class="zahl"><b>' + UI.zahl(z.stunden, 2) + '</b></td>'
         + '<td class="zahl">' + UI.zahl(z.geplant_std, 2) + '</td>'
         + '<td class="zahl" style="color:' + (z.differenz_std < 0 ? 'var(--rot)' : 'var(--gruen)')
@@ -813,7 +1022,8 @@ var PC = (function () {
           ? UI.balken(z.anteil_grenze,
             z.ueber_grenze ? 'rot' : (z.anteil_grenze > 0.85 ? 'warn' : ''))
             + '<small style="color:' + (z.ueber_grenze ? 'var(--rot)' : 'var(--text-leise)') + '">'
-            + (z.ueber_grenze ? T.t('minijob_hinweis') : 'von ' + UI.euro(a.minijob_grenze))
+            + (z.ueber_grenze ? T.t('minijob_hinweis')
+              : T.t('pc_von_betrag').replace('{betrag}', UI.euro(a.minijob_grenze)))
             + '</small>' : '')
         + '</td></tr>';
       h += '<tr class="lohndetail" data-detail="' + z.mitarbeiter_id + '" style="display:none">'
@@ -824,9 +1034,9 @@ var PC = (function () {
         + (z.tage.length ? z.tage.map(function (d) {
           return '<tr><td>' + UI.tagKurz(d.datum) + '</td><td>' + d.start + '</td><td>' + d.ende
             + '</td><td class="zahl">' + d.pause_min + '</td><td class="zahl">'
-            + UI.zahl(d.std, 2) + '</td><td>' + UI.sicher(d.quelle) + '</td><td>'
+            + UI.zahl(d.std, 2) + '</td><td>' + UI.sicher(T.wert(d.quelle)) + '</td><td>'
             + (d.freigegeben ? UI.etikett(T.t('geprueft'), 'genehmigt')
-              : UI.etikett(T.t('offen'), 'offen'))
+              : UI.etikett(T.t('zeit_offen'), 'offen'))
             + '</td></tr>';
         }).join('') : '<tr><td colspan="7">' + UI.leer(T.t('keine_zeiten')) + '</td></tr>')
         + '</tbody></table></td></tr>';
@@ -835,10 +1045,8 @@ var PC = (function () {
       + '<td class="zahl">' + UI.zahl(a.summe_stunden, 2) + '</td><td colspan="5"></td>'
       + '<td class="zahl">' + UI.euro(a.summe_lohn) + '</td></tr></tfoot></table></div>'
       + '<p style="font-size:12.5px;color:var(--text-leise);margin-top:10px">'
-      + 'Auf eine Zeile klicken zeigt die einzelnen Tage. Zuschläge: Sonntag '
-      + a.zuschlag_sonntag + ' %, Nacht ' + a.zuschlag_nacht + ' % ab '
-      + UI.sicher(Kern.einst('nacht_ab')) + ' Uhr. Diese Übersicht ist eine Rechenhilfe und '
-      + 'ersetzt keine Lohnabrechnung.</p></div>';
+      + UI.sicher(T.t('pc_auswertung_satz').replace('{so}', a.zuschlag_sonntag)
+        .replace('{na}', a.zuschlag_nacht).replace('{ab}', Kern.einst('nacht_ab'))) + '</p></div>';
     $('a_inhalt').innerHTML = h;
 
     $('a_inhalt').querySelectorAll('.lohnzeile').forEach(function (r) {
@@ -853,7 +1061,7 @@ var PC = (function () {
     var monat = $('a_monat').value || Kern.heute().slice(0, 7);
     try {
       UI.dateiSpeichern('PizzaPlan_' + monat + '.csv', Kern.auswertungCsv(monat), 'text/csv');
-      UI.melde('Die Datei liegt in den Downloads und öffnet sich in Excel.', 'gut');
+      UI.melde(T.t('pc_csv_downloads'), 'gut');
     } catch (e) { UI.fehler(e); }
   }
 
@@ -877,13 +1085,16 @@ var PC = (function () {
         + (t.erledigt ? ' style="text-decoration:line-through;opacity:.6"' : '') + '>'
         + UI.sicher(t.titel) + '</b><span>'
         + (t.ganztags ? T.t('ganztags')
-          : (t.von_zeit || '') + (t.bis_zeit ? '–' + t.bis_zeit : '') + (t.von_zeit ? ' Uhr' : ''))
-        + (t.ort ? ' · ' + UI.sicher(t.ort) : '') + ' · ' + UI.sicher(t.kategorie)
-        + (t.wiederholung !== 'keine' ? ' · ' + UI.sicher(t.wiederholung) : '')
+          : (t.von_zeit || '') + (t.bis_zeit ? '–' + t.bis_zeit : '') + (t.von_zeit ? T.t('h_uhr') : ''))
+        + (t.ort ? ' · ' + UI.sicher(t.ort) : '') + ' · ' + UI.sicher(T.wert(t.kategorie))
+        + (t.wiederholung !== 'keine' ? ' · ' + UI.sicher(T.wert(t.wiederholung)) : '')
         + (t.erinnerung_min ? ' · ⏰ ' + Masken.erinnerungText(t.erinnerung_min) : '')
         + '</span></div><div class="rechts" style="white-space:nowrap">'
-        + '<button type="button" data-fertig="' + t.id + '">' + (t.erledigt ? '↺' : '✓') + '</button> '
-        + '<button type="button" data-bearb="' + t.id + '">…</button></div></div>';
+        + '<button type="button" data-fertig="' + t.id + '" title="'
+        + UI.sicher(T.t(t.erledigt ? 'pc_tt_wieder_offen' : 'pc_tt_erledigt')) + '">'
+        + (t.erledigt ? '↺' : '✓') + '</button> '
+        + '<button type="button" data-bearb="' + t.id + '" title="'
+        + UI.sicher(T.t('pc_tt_bearbeiten')) + '">…</button></div></div>';
     });
     $('tm_liste').innerHTML = h;
     $('tm_liste').querySelectorAll('[data-fertig]').forEach(function (b) {
@@ -907,8 +1118,14 @@ var PC = (function () {
 
   function versandZeichnen() {
     var weg = $('v_weg').value;
+    var erreichbar = Kern.maListe(false).filter(function (m) {
+      return weg === 'whatsapp' ? m.telefon : m.email;
+    }).length;
+    /* Kann niemand etwas bekommen, sagen wir gleich, woran es liegt. */
     $('v_hinweis').textContent = T.t(weg === 'whatsapp'
-      ? 'versand_hinweis_whatsapp' : 'versand_hinweis_email');
+      ? 'versand_hinweis_whatsapp' : 'versand_hinweis_email')
+      + (erreichbar ? '' : ' ' + T.t(weg === 'whatsapp' ? 'pc_versand_keine_nummer' : 'pc_versand_keine_adresse'));
+    $('v_hinweis').classList.toggle('warn', !erreichbar);
     $('v_empfaenger').innerHTML = Kern.maListe(false).map(function (m) {
       var fehlt = weg === 'whatsapp' ? !m.telefon : !m.email;
       return '<label><input type="checkbox" value="' + m.id + '"' + (fehlt ? '' : ' checked')
@@ -940,13 +1157,14 @@ var PC = (function () {
         mitarbeiter: gewaehlteEmpfaenger()
       });
       var erste = r.eintraege.filter(function (e) { return e.ok; })[0];
-      if (!erste) { UI.melde('Für die Auswahl fehlen Nummern oder Adressen.', 'warn'); return; }
+      if (!erste) { UI.melde(T.t('pc_fehlen_nummern'), 'warn'); return; }
       UI.fenster({
-        titel: 'So sieht die Nachricht aus · ' + erste.name,
+        titel: T.t('pc_so_sieht').replace('{name}', erste.name),
         breite: 620,
         inhalt: '<pre class="plantext">' + UI.sicher(erste.text) + '</pre>'
           + '<p style="margin-top:11px;color:var(--text-leise);font-size:13.5px">'
-          + r.bereit + ' von ' + r.eintraege.length + ' Nachrichten sind versandbereit.</p>'
+          + UI.sicher(T.t('pc_bereit').replace('{a}', r.bereit).replace('{b}', r.eintraege.length))
+          + '</p>'
       });
     } catch (e) { UI.fehler(e); }
   }
@@ -986,18 +1204,18 @@ var PC = (function () {
       $('ei_regler').dataset.gebaut = '1';
       UI.regler($('ei_regler'));
     }
-    $('ei_speicherort').textContent = 'Die Daten liegen in diesem Gerät (' + Kern.speicherArt()
-      + '). Eine Sicherungskopie ab und zu schadet nie.';
+    $('ei_speicherort').textContent = T.t('pc_daten_ort').replace('{art}', Kern.speicherArt());
 
-    var t = '<thead><tr><th>Name</th><th>' + T.t('von') + '</th><th>' + T.t('bis') + '</th>'
+    var t = '<thead><tr><th>' + T.t('name') + '</th><th>' + T.t('von') + '</th><th>' + T.t('bis') + '</th>'
       + '<th class="zahl">' + T.t('pause') + '</th><th>' + T.t('position') + '</th><th></th>'
       + '</tr></thead><tbody>';
     Kern.vorlagen().forEach(function (v) {
       t += '<tr><td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;'
         + 'background:' + v.farbe + ';margin-right:7px"></span>' + UI.sicher(v.name) + '</td>'
         + '<td>' + v.von + '</td><td>' + v.bis + '</td><td class="zahl">' + v.pause_min + '</td>'
-        + '<td>' + UI.sicher(v.position) + '</td><td style="text-align:right">'
-        + '<button type="button" data-v="' + v.id + '">…</button></td></tr>';
+        + '<td>' + UI.sicher(T.wert(v.position)) + '</td><td style="text-align:right">'
+        + '<button type="button" data-v="' + v.id + '" title="'
+        + UI.sicher(T.t('pc_tt_bearbeiten')) + '">…</button></td></tr>';
     });
     $('ei_vorlagen').innerHTML = t + '</tbody>';
     $('ei_vorlagen').querySelectorAll('[data-v]').forEach(function (b) {
@@ -1023,17 +1241,17 @@ var PC = (function () {
     var na = $('ei_regler').querySelector('[name=nacht_ab]');
     if (na) w.nacht_ab = na.value;
     if (!String(w.betrieb || '').trim()) {
-      UI.melde('Der Betrieb braucht einen Namen.', 'warn');
+      UI.melde(T.t('h_betrieb_fehlt'), 'warn');
       return;
     }
     if (!/^\d{4,8}$/.test(String(w.chef_pin || ''))) {
-      UI.melde('Die Chef-PIN muss aus 4 bis 8 Ziffern bestehen.', 'warn');
+      UI.melde(T.t('h_pin_regel'), 'warn');
       return;
     }
     Kern.einstSetzen(w);
     $('kopf_betrieb').textContent = w.betrieb;
     UI.melde(T.t('gespeichert'), 'gut');
-    UI.rueckStreifen('Einstellungen geändert', function () {
+    UI.rueckStreifen(T.t('r_einst_geaendert'), function () {
       $('ei_regler').dataset.gebaut = '';
       alleZeichnen();
     });
@@ -1043,19 +1261,18 @@ var PC = (function () {
   function sicherungAnlegen() {
     UI.dateiSpeichern('PizzaPlan_Sicherung_' + Kern.heute() + '.json',
       Kern.sicherungText(), 'application/json');
-    UI.melde('Die Sicherung liegt jetzt in den Downloads.', 'gut');
+    UI.melde(T.t('pc_sicherung_downloads'), 'gut');
   }
 
   function sicherungEinspielen() {
     var d = $('ei_sicherungdatei').files[0];
     if (!d) return;
     UI.dateiLesen(d).then(function (text) {
-      UI.frage(T.t('sicherung_laden'),
-        'Der jetzige Stand wird durch die Sicherung ersetzt. Fortfahren?').then(function (ja) {
+      UI.frage(T.t('sicherung_laden'), T.t('pc_sicherung_frage')).then(function (ja) {
         if (!ja) return;
         try {
           var n = Kern.sicherungEinlesen(text);
-          UI.melde(n + ' Mitarbeiter eingespielt.', 'gut');
+          UI.melde(T.t('pc_eingespielt').replace('{n}', n), 'gut');
           $('ei_regler').dataset.gebaut = '';
           alleZeichnen();
         } catch (e) { UI.fehler(e); }
@@ -1066,26 +1283,24 @@ var PC = (function () {
 
   function beispielEntfernen() {
     if (!Kern.hatBeispieldaten()) {
-      UI.melde('Es sind keine Beispieldaten mehr da.', 'warn');
+      UI.melde(T.t('h_keine_beispiele'), 'warn');
       return;
     }
-    UI.frage(T.t('beispiel_weg'), 'Alle Einträge, die beim ersten Start als Beispiel angelegt '
-      + 'wurden, verschwinden. Eigene Eingaben bleiben.').then(function (ja) {
+    UI.frage(T.t('beispiel_weg'), T.t('pc_beispiel_frage')).then(function (ja) {
       if (!ja) return;
       Kern.beispielEntfernen();
-      UI.rueckStreifen('Beispieldaten entfernt', alleZeichnen);
+      UI.rueckStreifen(T.t('h_beispiel_entfernt'), alleZeichnen);
       alleZeichnen();
     });
   }
 
   function allesLoeschen() {
-    UI.frage('Alle Daten löschen', 'Team, Dienstpläne, Zeiten und Termine werden gelöscht. '
-      + 'Das lässt sich nur direkt danach mit „Rückgängig“ zurücknehmen. Wirklich löschen?')
+    UI.frage(T.t('alles_loeschen'), T.t('pc_alles_frage'))
       .then(function (ja) {
         if (!ja) return;
         Kern.allesLoeschen();
         $('ei_regler').dataset.gebaut = '';
-        UI.rueckStreifen('Alle Daten gelöscht', alleZeichnen);
+        UI.rueckStreifen(T.t('pc_alles_geloescht'), alleZeichnen);
         alleZeichnen();
       });
   }

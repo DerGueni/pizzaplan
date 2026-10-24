@@ -71,7 +71,7 @@ aside h2{font-size:14px;margin-bottom:9px;letter-spacing:.4px;text-transform:upp
   <div class="mitte">
     <div>
       <div class="marke">Pizzeria Gabriels · PizzaPlan</div>
-      <h1 id="ueberschrift">Erklärvideo: die Anwendung in fünf Minuten</h1>
+      <h1 id="ueberschrift">Erklärvideo: die Anwendung in zwei Minuten</h1>
       <div class="unter" id="unterzeile">Mit gesprochener Erklärung. Eine Datei mit Bild und Ton –
         auch zum Weitergeben.</div>
     </div>
@@ -120,45 +120,13 @@ aside h2{font-size:14px;margin-bottom:9px;letter-spacing:.4px;text-transform:upp
 
 <script>
 var KAPITEL = {
- "de": [
-  {"t":1.2,"n":"Worum es geht"},
-  {"t":23.36,"n":"Die Übersicht"},
-  {"t":42.54,"n":"Der Wochenplan"},
-  {"t":62.84,"n":"Eine Schicht anlegen"},
-  {"t":81.81,"n":"Vorlagen und Verschieben"},
-  {"t":97.12,"n":"Es passt auf"},
-  {"t":115.66,"n":"Mitarbeiter einlesen"},
-  {"t":134.52,"n":"Erst zeigen, dann übernehmen"},
-  {"t":155.14,"n":"Das Team"},
-  {"t":173.2,"n":"Wünsche und Zeiten"},
-  {"t":190.29,"n":"Die Auswertung"},
-  {"t":209.54,"n":"Der Plan geht raus"},
-  {"t":225.53,"n":"Die Fassung fürs Handy"},
-  {"t":242.36,"n":"Die App der Mitarbeiter"},
-  {"t":260.86,"n":"Zum Schluss"}
- ],
- "it": [
-  {"t":1.2,"n":"Di cosa si tratta"},
-  {"t":20.86,"n":"La panoramica"},
-  {"t":38.31,"n":"Il piano della settimana"},
-  {"t":55.43,"n":"Creare un turno"},
-  {"t":70.58,"n":"Modelli e spostamenti"},
-  {"t":83.68,"n":"Il programma sta attento"},
-  {"t":97.49,"n":"Importare i dipendenti"},
-  {"t":112.88,"n":"Prima si vede, poi si importa"},
-  {"t":130.88,"n":"La squadra"},
-  {"t":147.16,"n":"Richieste e ore"},
-  {"t":161.51,"n":"Il riepilogo"},
-  {"t":177.36,"n":"Il piano parte"},
-  {"t":191.98,"n":"La versione per il telefono"},
-  {"t":208.64,"n":"L'app dei dipendenti"},
-  {"t":224.38,"n":"Per finire"}
- ]
+ de: [{"t": 1.2, "n": "Worum es geht"}, {"t": 19.35, "n": "Die Übersicht"}, {"t": 31.57, "n": "Der Wochenplan"}, {"t": 43.31, "n": "Vorlagen und Warnungen"}, {"t": 59.85, "n": "Daten mit Excel einlesen"}, {"t": 77.06, "n": "Die App-Einladung"}, {"t": 90.05, "n": "Wünsche, Zeiten, Auswertung"}, {"t": 102.1, "n": "Der Plan geht raus"}, {"t": 111.22, "n": "Die App fürs Handy"}, {"t": 122.36, "n": "Die App der Mitarbeiter"}, {"t": 130.62, "n": "Zum Schluss"}],
+ it: [{"t": 1.2, "n": "Di cosa si tratta"}, {"t": 20.36, "n": "La panoramica"}, {"t": 32.05, "n": "Il piano settimanale"}, {"t": 43.88, "n": "Modelli e avvisi"}, {"t": 61.12, "n": "Importare i dati con Excel"}, {"t": 78.76, "n": "L'invito all'app"}, {"t": 89.62, "n": "Richieste, orari, riepilogo"}, {"t": 102.05, "n": "Il piano parte"}, {"t": 110.29, "n": "L'app per il telefono"}, {"t": 123.01, "n": "L'app dei dipendenti"}, {"t": 131.68, "n": "Per finire"}]
 };
 
 var WORTE = {
   de: {
-    ueberschrift: 'Erklärvideo: die Anwendung in fünf Minuten',
+    ueberschrift: 'Erklärvideo: die Anwendung in zwei Minuten',
     unterzeile: 'Mit gesprochener Erklärung. Eine Datei mit Bild und Ton – auch zum Weitergeben.',
     kapitel: 'Kapitel',
     kaphinweis: 'Ein Klick auf ein Kapitel springt an die Stelle.',
@@ -167,7 +135,7 @@ var WORTE = {
     ab: '▶ Abspielen', pause: '❚❚ Pause', anfang: 'An den Anfang', datei: 'Demo_PizzaPlan_DE.mp4'
   },
   it: {
-    ueberschrift: 'Video di presentazione: l\'applicazione in cinque minuti',
+    ueberschrift: 'Video di presentazione: l\'applicazione in due minuti',
     unterzeile: 'Con spiegazione parlata. Un unico file con immagine e audio, anche da inoltrare.',
     kapitel: 'Capitoli',
     kaphinweis: 'Un clic su un capitolo salta al punto giusto.',
@@ -279,6 +247,11 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'ArrowRight') springe(v.currentTime + 10);
 });
 kapitelZeichnen();
+(function () {
+  var wunsch = new URLSearchParams(location.search).get('spr')
+    || ((navigator.language || '').slice(0, 2) === 'it' ? 'it' : 'de');
+  if (wunsch === 'it') spracheSetzen('it');
+})();
 </script>
 </body>
 </html>

@@ -8,36 +8,68 @@
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/basis.css?v=2">
+<link rel="stylesheet" href="css/basis.css?v=6">
 <style>
-  .band{background:var(--grad);color:#fff;padding:34px 22px 30px;
-    padding-top:calc(34px + env(safe-area-inset-top))}
+  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+  .band{background:var(--grad);color:#fff;padding:20px 18px 18px;
+    padding-top:calc(20px + env(safe-area-inset-top))}
   .band .mitte{max-width:1000px;margin:0 auto}
-  .band .marke{font-size:12.5px;letter-spacing:1.4px;text-transform:uppercase;opacity:.85;
+  .band .marke{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;opacity:.88;
     font-weight:600}
-  .band h1{font-size:clamp(24px,4.4vw,36px);margin:6px 0 8px}
-  .band p{font-size:16.5px;opacity:.94;max-width:640px;margin:0}
-  main{max-width:1000px;margin:0 auto;padding:24px 22px 70px}
-  .tuere{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;
-    margin-bottom:26px}
-  .tuere a{display:block;text-decoration:none;color:var(--text);background:var(--flaeche);
-    border:1px solid var(--linie);border-left:5px solid var(--rot);border-radius:var(--radius);
-    padding:17px 18px;box-shadow:var(--schatten);transition:transform .12s,box-shadow .12s}
-  .tuere a:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(40,30,20,.16)}
-  .tuere a .bild{font-size:27px;display:block;margin-bottom:6px}
-  .tuere a b{font-size:17.5px;display:block;margin-bottom:3px}
-  .tuere a span{font-size:14px;color:var(--text-leise);display:block;line-height:1.45}
+  .band h1{font-size:clamp(21px,3.6vw,30px);margin:4px 0 6px}
+  .band p{font-size:14.5px;opacity:.95;max-width:640px;margin:0;line-height:1.45}
+  main{max-width:1000px;margin:0 auto;padding:16px 16px calc(40px + env(safe-area-inset-bottom))}
+
+  /* Hinweis fürs passende Gerät und fürs iPhone */
+  .geraetzeile{font-size:13.5px;color:var(--text-leise);margin:0 0 9px;display:none}
+  .geraetzeile b{color:var(--text)}
+  .iphonetipp{display:none;align-items:flex-start;gap:10px;background:var(--blau-hell);
+    border-left:4px solid var(--blau);border-radius:0 var(--radius-klein) var(--radius-klein) 0;
+    padding:10px 12px;margin:0 0 12px;font-size:14px;line-height:1.45}
+  .iphonetipp .bild{font-size:20px;line-height:1.2;flex:0 0 auto}
+  .iphonetipp b{display:block}
+
+  /* Verweise als kompakte Zeilen */
+  .tuere{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px;
+    margin-bottom:20px}
+  .tuere a{display:flex;align-items:center;gap:12px;min-height:58px;text-decoration:none;
+    color:var(--text);background:var(--flaeche);border:1px solid var(--linie);
+    border-left:5px solid var(--rot);border-radius:var(--radius);padding:9px 12px 9px 11px;
+    box-shadow:var(--schatten);transition:transform .12s,box-shadow .12s,border-color .12s}
+  .tuere a:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(40,30,20,.14)}
+  .tuere a:active{transform:scale(.99)}
+  .tuere a .bild{font-size:24px;line-height:1;flex:0 0 32px;text-align:center}
+  .tuere a .txt{flex:1;min-width:0;display:block}
+  .tuere a b{font-size:16px;display:block;line-height:1.3}
+  .tuere a .txt > span{font-size:13.5px;color:var(--text-leise);display:block;line-height:1.4;
+    margin-top:1px}
+  .tuere a .pfeil{flex:0 0 auto;color:var(--text-leise);font-size:20px}
   .tuere a.zweit{border-left-color:var(--blau)}
   .tuere a.dritt{border-left-color:var(--gruen)}
   .tuere a.viert{border-left-color:var(--gelb)}
-  h2{font-size:20px;margin:28px 0 12px}
-  .liste{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px}
-  .punktkarte{background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
-    padding:14px 16px}
-  .punktkarte b{display:block;margin-bottom:4px;font-size:15.5px}
-  .punktkarte span{font-size:14px;color:var(--text-leise);line-height:1.5}
-  .fuss{border-top:1px solid var(--linie);margin-top:34px;padding-top:18px;font-size:13.5px;
+  .tuere a .marke2{display:none;margin-left:6px;vertical-align:2px;font-size:11px;
+    font-weight:700;letter-spacing:.3px;padding:1px 8px;border-radius:20px;
+    background:var(--rot);color:#fff;white-space:nowrap}
+  .tuere a.empfohlen{border-color:var(--rot);border-left-width:5px;
+    box-shadow:0 0 0 1px var(--rot),var(--schatten)}
+  .tuere a.empfohlen .marke2{display:inline-block}
+  :root[data-schema="dunkel"] .tuere a .marke2{background:var(--rot-dunkel)}
+
+  h2{font-size:17px;margin:22px 0 9px}
+  /* Neuheiten und Wissenswertes als dichte Liste statt großer Kacheln */
+  .liste{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0 26px;
+    background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--radius);
+    padding:0 14px;box-shadow:var(--schatten);overflow:hidden}
+  .punktkarte{padding:9px 0;border-top:1px solid var(--linie);margin-top:-1px}
+  .punktkarte b{display:block;margin-bottom:1px;font-size:14.5px}
+  .punktkarte span{font-size:13.5px;color:var(--text-leise);line-height:1.45}
+  .fuss{border-top:1px solid var(--linie);margin-top:24px;padding-top:14px;font-size:13px;
     color:var(--text-leise)}
+  @media (min-width:700px){
+    .band{padding:26px 22px 22px;padding-top:calc(26px + env(safe-area-inset-top))}
+    main{padding:20px 22px 50px}
+    .band p{font-size:15px}
+  }
 </style>
 </head>
 <body>
@@ -53,41 +85,53 @@
 
 <main>
 
-  <div class="tuere">
-    <a href="pc.html">
+  <p class="geraetzeile" id="geraetzeile"></p>
+  <div class="iphonetipp" id="iphonetipp">
+    <span class="bild">📲</span>
+    <span id="iphonetipp_text"></span>
+  </div>
+
+  <div class="tuere" id="tuere">
+    <a href="pc.html" data-art="pc">
       <span class="bild">🖥️</span>
-      <b>PC-Fassung</b>
+      <span class="txt"><b>PC-Fassung<span class="marke2"></span></b>
       <span>Der ganze Wochenplan auf einen Blick, Schichten mit der Maus verschieben,
-        Auswertung und Versand. PIN beim ersten Start: 1234.</span>
+        Auswertung und Versand. PIN beim ersten Start: 1234.</span></span>
+      <span class="pfeil">›</span>
     </a>
-    <a href="handy.html" class="zweit">
+    <a href="handy.html" class="zweit" data-art="handy">
       <span class="bild">📱</span>
-      <b>Handy-Fassung</b>
+      <span class="txt"><b>Handy-Fassung<span class="marke2"></span></b>
       <span>Dieselbe Anwendung für unterwegs: ein Tag auf einmal, wischen, große Knöpfe,
-        alles mit dem Daumen erreichbar.</span>
+        alles mit dem Daumen erreichbar.</span></span>
+      <span class="pfeil">›</span>
     </a>
-    <a href="team.html" class="dritt">
+    <a href="team.html" class="dritt" data-art="team">
       <span class="bild">👥</span>
-      <b>Mitarbeiter-App</b>
+      <span class="txt"><b>Mitarbeiter-App<span class="marke2"></span></b>
       <span>Was die Mitarbeiter sehen: eigener Plan, Stempeluhr, Frei-Wünsche, eigene
-        Stunden – auf Deutsch oder Italienisch.</span>
+        Stunden – auf Deutsch oder Italienisch.</span></span>
+      <span class="pfeil">›</span>
     </a>
     <a href="Praesentation.html" class="viert">
       <span class="bild">📊</span>
-      <b>Präsentation</b>
+      <span class="txt"><b>Präsentation</b>
       <span>Zehn Seiten: was die Anwendung kann, wie der Import läuft und wie ein
-        Wochenablauf damit aussieht.</span>
+        Wochenablauf damit aussieht.</span></span>
+      <span class="pfeil">›</span>
     </a>
     <a href="Demo_Video.html" class="viert">
       <span class="bild">🎬</span>
-      <b>Erklärvideo mit Ton</b>
-      <span>Rund fünf Minuten, umschaltbar zwischen Deutsch und Italienisch.</span>
+      <span class="txt"><b>Erklärvideo mit Ton</b>
+      <span>Gut zwei Minuten, umschaltbar zwischen Deutsch und Italienisch.</span></span>
+      <span class="pfeil">›</span>
     </a>
     <a href="Importvorlage_Mitarbeiter.csv" download>
       <span class="bild">📄</span>
-      <b>Importvorlage</b>
+      <span class="txt"><b>Importvorlage</b>
       <span>Die Tabelle zum Ausfüllen. Einmal befüllen, einlesen – und das ganze Team
-        steht im Programm.</span>
+        steht im Programm.</span></span>
+      <span class="pfeil">↓</span>
     </a>
   </div>
 
@@ -141,6 +185,59 @@
       if (s) document.documentElement.setAttribute('data-schema', s);
     } catch (e) { /* egal */ }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+
+    /* Gerät erkennen und die passende Fassung nach oben holen und hervorheben.
+       Es wird nichts umgeleitet – alle Verweise bleiben wählbar. */
+    var it = /^it/i.test(navigator.language || '');
+    function tx(de, itText) { return it ? itText : de; }
+    var ua = navigator.userAgent || '';
+    var grob = false;
+    try { grob = window.matchMedia('(pointer:coarse)').matches; } catch (e) { grob = false; }
+    var ipad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var iphone = /iPhone|iPod/.test(ua);
+    var handy = iphone || /Android.*Mobile|Windows Phone|Mobile.*Firefox/i.test(ua)
+      || (grob && Math.min(screen.width, screen.height) < 600);
+    var tablet = !handy && (ipad || grob || /Android|Tablet/i.test(ua));
+    var reihe = handy ? ['handy', 'team'] : ['pc', 'team'];
+
+    var tuere = document.getElementById('tuere');
+    reihe.slice().reverse().forEach(function (art) {
+      var a = tuere.querySelector('[data-art="' + art + '"]');
+      if (a) tuere.insertBefore(a, tuere.firstChild);
+    });
+    var erste = tuere.querySelector('[data-art="' + reihe[0] + '"]');
+    erste.classList.add('empfohlen');
+    erste.querySelector('.marke2').textContent = tx('Empfohlen', 'Consigliato');
+    if (handy) {
+      var team = tuere.querySelector('[data-art="team"]');
+      team.classList.add('empfohlen');
+      team.querySelector('.marke2').textContent = tx('Fürs Team', 'Per il team');
+    }
+
+    var zeile = document.getElementById('geraetzeile');
+    zeile.innerHTML = handy
+      ? tx('Du bist am <b>Handy</b> – die Handy-Fassung und die Mitarbeiter-App stehen oben.',
+        'Sei sul <b>telefono</b>: la versione per telefono e l\'app dei dipendenti sono in alto.')
+      : (tablet
+        ? tx('Du bist am <b>Tablet</b> – die PC-Fassung nutzt den großen Bildschirm am besten.',
+          'Sei su un <b>tablet</b>: la versione PC sfrutta meglio lo schermo grande.')
+        : tx('Du bist am <b>PC</b> – die PC-Fassung steht oben.',
+          'Sei al <b>PC</b>: la versione PC è in alto.'));
+    zeile.style.display = 'block';
+
+    /* Kurzer Tipp fürs iPhone, solange die Seite nicht schon als App läuft */
+    var alsApp = false;
+    try {
+      alsApp = !!navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    } catch (e) { alsApp = false; }
+    if ((iphone || ipad) && !alsApp) {
+      document.getElementById('iphonetipp_text').innerHTML = tx(
+        '<b>Als App auf den Home-Bildschirm</b>In Safari unten auf „Teilen“ (Kästchen mit Pfeil) '
+          + 'tippen, dann „Zum Home-Bildschirm“. Fertig – startet wie eine App.',
+        '<b>Metti l\'app sulla schermata Home</b>In Safari tocca „Condividi“ in basso (quadrato '
+          + 'con freccia), poi „Aggiungi alla schermata Home“. Fatto: parte come un\'app.');
+      document.getElementById('iphonetipp').style.display = 'flex';
+    }
   })();
 </script>
 </body>
