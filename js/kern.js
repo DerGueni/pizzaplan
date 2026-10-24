@@ -201,8 +201,8 @@ var Kern = (function () {
      eigenen Eintrag nie wieder angefasst und lässt sich in einem Zug löschen. */
   /* Name, Rolle, Farbe, Vertrag, Chef, Stundenlohn, Sprache, Handy, E-Mail, Wochenstunden, Notiz */
   var TEAM_START = [
-    ['Genarino', 'Leitung', '#c0392b', 'Vollzeit', 1, 0, 'it',
-      '0151 2345601', 'genarino@example.de', 40, ''],
+    ['Gennaro', 'Leitung', '#c0392b', 'Vollzeit', 1, 0, 'it',
+      '0151 2345601', 'gennaro@example.de', 40, ''],
     ['Annik', 'Service', '#3d8bfd', 'Teilzeit', 0, 14.5, 'de',
       '0151 2345602', 'annik@example.de', 22, ''],
     ['Bettina', 'Service', '#8e44ad', 'Minijob', 0, 14, 'de',
@@ -221,8 +221,8 @@ var Kern = (function () {
 
   /* Wochenmuster des Beispielplans: Wochentag (0 = Montag, Ruhetag), Person (Nummer in
      TEAM_START, null = noch offen), von, bis, Pause, Position. Mittags 1 Service (Di–Fr
-     Genarino selbst), abends 2 Service (Di und Mi einer), Küche (Di und Mi 1, ab
-     Donnerstag 2) und Franco: Vorbereitung am Nachmittag, an Genarinos freien Abenden
+     Gennaro selbst), abends 2 Service (Di und Mi einer), Küche (Di und Mi 1, ab
+     Donnerstag 2) und Franco: Vorbereitung am Nachmittag, an Gennaros freien Abenden
      (Di, Do) die stellvertretende Abendleitung. Sonntagabend bleibt eine Service-Schicht
      offen. Die Wochenstunden aus TEAM_START werden damit nirgends überschritten. */
   var PLAN_MUSTER = [
