@@ -1,0 +1,227 @@
+/* basic */
+
+html {
+    font-family: 'Oswald', 'Open Sans', arial, helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: #fffffc;
+    color: #3D3D36;
+    font-size: 18px;
+    line-height: 30px;
+    text-rendering: optimizeLegibility;
+}
+
+h1 {
+    font-size: 80px;
+    line-height: 80px;
+}
+
+h2 {
+    font-size: 40px;
+    line-height: 40px;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 30px;
+    line-height: 30px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 0 0 3px;
+}
+
+
+/* stuff */
+
+::selection {
+    color: #fffffc;
+    background: #3D3D36;
+}
+::-moz-selection {
+    color: #fffffc;
+    background: #3D3D36;
+}
+
+.logo {
+    margin-top: 40px;
+    background-image: url(img/pizzeria_gabriels_postbauer-heng_m.jpg);
+    background-repeat: no-repeat;
+    float: right;
+    height: 180px;
+    width: 180px;
+}
+
+.google {
+    float: right;
+    height: 160px;
+    width: 60%;
+    margin-top: 26px;
+}
+
+.preis {
+    float: right;
+    margin-right: 0px;
+}
+
+.inline {
+    display: inline;
+}
+
+.w_015 {
+    width: 15px:
+}
+
+.h_010 {
+    height: 10px;
+}
+
+.h_020 {
+    height: 20px;
+}
+
+.h_050 {
+    height: 50px;
+}
+
+.sub {
+    margin-top: -50px;
+    font-size: 25px;
+}
+
+.italia {
+    background: repeating-linear-gradient(45deg, #09B21A, #09B21A 10px, #ffffff 10px, #ffffff 20px, #B22D18 10px, #B22D18 30px);
+    height: 7px;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.zutat {
+    font-style: italic;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.left {
+    float: left;
+}
+
+.main_wrapper  {
+    margin: 0 auto;
+    width: 800px;
+}
+
+.clear {
+    clear: both;
+}
+
+
+/* akkordeon */
+
+.akkordeon .inhalt {
+  display: none;
+  overflow: hidden;
+}
+
+.thema {
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+}
+
+
+/* responsiver shit */
+
+@media (max-width:1200px) {
+    .main_wrapper {
+        width: auto;
+        margin: 0 20% 0 20%;
+    }
+    
+    .google {
+        width: 50%;
+    }
+}
+
+@media (max-width:1100px;) {
+    .google {
+        width: 40%;
+    }
+
+}
+
+@media (max-width:900px) {
+    .google {
+        display: none;
+    }
+    
+    .italia {
+        width: 100%;
+    }
+    
+    .main_wrapper {
+        width: auto;
+        margin: 0 10% 0 10%;
+    }
+}
+
+@media (min-width:1100px) {
+        .logo {
+            background-image: url(img/pizzeria_gabriels_postbauer-heng_l.jpg);
+            background-repeat: no-repeat;
+            height: 300px;
+            width: 300px;
+            margin-top: 10px;
+    }
+}
+
+@media (max-width: 750px) {
+    
+    .main_wrapper {
+        width: auto;
+        margin: 0 30px 0 30px;
+    }
+
+}
+
+@media (max-width:600px) {
+    .logo {
+        display: none;
+    }
+}
+
+@media (max-width: 470px) {
+    
+    .preis {
+        margin-right: 0px;
+    }
+}
+
+@media (max-width: 370px) {
+    
+    h1 {
+        font-size: 70px;
+        line-height: 70px;
+    }
+}
+
+@media (max-width: 350px) {
+    
+    h1 {
+        font-size: 65px;
+        line-height: 65px
+    }
+}
+
+@media (max-width: 330px) {
+    
+    h1 {
+        font-size: 55px;
+        line-height: 55px;
+    }    
+}
