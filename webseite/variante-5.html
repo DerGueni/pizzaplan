@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><!-- Vorschau, vor Live-Gang entfernen -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng</title>
+<meta name="description" content="Gabriel's – Café, Pizzeria und Ristorante im Centrum 12, Postbauer-Heng. Pizza, Pasta, Salate und Klassiker aus dem Ofen. Online oder telefonisch bestellen und selbst abholen.">
+<meta name="theme-color" content="#2f3b1f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gabriel's – Café · Pizzeria · Ristorante">
+<meta property="og:description" content="Pizza, Pasta und italienische Küche im Centrum 12, Postbauer-Heng. Online oder telefonisch bestellen und abholen.">
+<meta property="og:image" content="fotos/theke.jpg">
+<meta property="og:locale" content="de_DE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232f3b1f'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-size='36' font-style='italic' fill='%23d9a537'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papier:#f6f2e9; --papier2:#ede6d6; --tinte:#1e2416; --olive:#2f3b1f; --olive2:#45552e;
+  --ocker:#c8901f; --ocker-dunkel:#8a5f0c; --grau:#5a5e4f; --linie:#d6ccb6; --rot:#9b2c0c;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif; --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --kopf:56px; --leiste:52px;
+}
+@media(min-width:900px){:root{--kopf:68px}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--kopf) + 8px)}
+body{margin:0;background:var(--papier);color:var(--tinte);font:400 16px/1.55 var(--sans);overflow-x:hidden}
+body.gesperrt{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ocker);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+@media(min-width:768px){.wrap{padding:0 32px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:8px;top:-60px;background:var(--olive);color:#fff;padding:8px 14px;z-index:90}
+.skip:focus{top:8px}
+.ico{width:18px;height:18px;flex:none}
+
+/* Kopfleiste (haftend) */
+.kopf{position:sticky;top:0;z-index:30;background:rgba(246,242,233,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--linie)}
+.kopf .wrap{display:flex;align-items:center;gap:12px;height:var(--kopf)}
+.signet{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
+.signet img{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--linie);object-fit:cover;flex:none}
+.signet b{font:600 20px/1 var(--serif);letter-spacing:-.01em;white-space:nowrap}
+.signet small{display:none;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ocker-dunkel);margin-top:3px;white-space:nowrap}
+.kopf nav{margin-left:auto;display:none;gap:22px}
+.kopf nav a{text-decoration:none;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--olive2);padding:6px 0;border-bottom:2px solid transparent}
+.kopf nav a:hover{border-color:var(--ocker);color:var(--tinte)}
+.kopf .tel{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-weight:700;text-decoration:none;background:var(--olive);color:var(--papier);padding:8px 14px;border-radius:999px;font-size:15px;white-space:nowrap}
+.kopf .tel:hover{background:var(--tinte)}
+.menue-knopf{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--olive);background:transparent;color:var(--olive);cursor:pointer;flex:none}
+.menue-knopf:hover{background:var(--olive);color:var(--papier)}
+@media(max-width:380px){.kopf .tel span{display:none}.kopf .tel{padding:10px}}
+@media(min-width:900px){
+  .signet span{display:flex;flex-direction:column}.signet small{display:block}
+  .kopf nav{display:flex}.kopf .tel{margin-left:8px}.menue-knopf{display:none}
+}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:var(--olive);color:var(--papier);min-height:540px;display:flex;align-items:flex-end}
+.hero-bild{position:absolute;inset:0;margin:0}
+.hero-bild img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform-origin:60% 50%;animation:heranzoomen 22s ease-out both}
+@keyframes heranzoomen{from{transform:scale(1)}to{transform:scale(1.12)}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(28,36,16,.97) 0%,rgba(38,49,22,.9) 45%,rgba(47,59,31,.45) 78%,rgba(47,59,31,.15) 100%)}
+.hero .wrap{position:relative;z-index:1;width:100%}
+.hero-text{padding:140px 0 28px;max-width:660px}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#e2c47f;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+.kicker::before{content:"";width:28px;height:2px;background:var(--ocker);flex:none}
+h1{font:400 clamp(58px,16vw,156px)/.88 var(--serif);letter-spacing:-.035em;margin:0 0 6px;color:var(--papier)}
+h1 em{font-style:italic;color:#f0d79a}
+h1 small{display:block;font:italic 400 clamp(20px,4.5vw,30px)/1.2 var(--serif);letter-spacing:0;color:#e8e3d3;margin-bottom:6px}
+.lead{font-size:17px;max-width:34em;margin:14px 0 16px;color:#ece7d8}
+.status{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:15px;padding:7px 14px 7px 12px;border-radius:999px;background:rgba(246,242,233,.14);color:var(--papier);border:1px solid rgba(246,242,233,.25);margin:0}
+.status i{width:10px;height:10px;border-radius:50%;background:#c9bfa6;flex:none}
+.status.offen{background:#e3ead2;color:#26330f;border-color:#e3ead2}
+.status.offen i{background:#4f7a1c;box-shadow:0 0 0 4px rgba(79,122,28,.18)}
+.knoepfe{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:700;font-size:15px;padding:12px 20px;border-radius:999px;border:2px solid var(--olive);background:transparent;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-voll{background:var(--olive);color:var(--papier)}
+.btn-voll:hover{background:var(--tinte);border-color:var(--tinte)}
+.btn-rand{color:var(--olive)}
+.btn-rand:hover{background:var(--olive);color:var(--papier)}
+.btn-ocker{background:var(--ocker);border-color:var(--ocker);color:var(--tinte)}
+.btn-ocker:hover{background:#dba53a;border-color:#dba53a}
+.btn-breit{width:100%}
+.hero .btn-voll{background:var(--papier);border-color:var(--papier);color:var(--olive)}
+.hero .btn-voll:hover{background:#fff;border-color:#fff}
+.hero .btn-rand{border-color:rgba(246,242,233,.8);color:var(--papier)}
+.hero .btn-rand:hover{background:var(--papier);color:var(--olive)}
+@media(max-width:420px){.btn{padding:10px 15px}}
+.abholen{margin:16px 0 0;font-size:15px;color:#e8e3d3;display:flex;gap:8px;align-items:flex-start}
+.abholen svg{width:18px;height:18px;color:#f0d79a;flex:none;margin-top:2px}
+.abholen a{color:#f0d79a;font-weight:700;white-space:nowrap}
+@media(min-width:900px){
+  .hero{min-height:min(calc(100vh - var(--kopf)),780px);align-items:center}
+  .hero::after{background:linear-gradient(90deg,rgba(28,36,16,.96) 0%,rgba(38,49,22,.88) 34%,rgba(47,59,31,.35) 66%,rgba(47,59,31,.05) 100%)}
+  .hero-text{padding:80px 0}
+}
+
+/* Bestellen: Empfehlungen + Ablauf */
+.bestellen{padding:52px 0 8px}
+.titel-gross{font:400 clamp(44px,9vw,96px)/.9 var(--serif);letter-spacing:-.03em;margin:0;color:var(--olive)}
+.titel-gross em{color:var(--ocker-dunkel)}
+.unterzeile{margin:8px 0 0;font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ocker-dunkel)}
+.ablauf{list-style:none;margin:20px 0 26px;padding:0;display:grid;gap:8px;counter-reset:s}
+.ablauf li{counter-increment:s;display:flex;gap:12px;align-items:baseline;font-size:15px;color:#33382a}
+.ablauf li::before{content:counter(s);font:italic 600 22px/1 var(--serif);color:var(--ocker);width:18px;flex:none}
+@media(min-width:768px){.ablauf{grid-template-columns:repeat(3,1fr);gap:24px;border-top:1px solid var(--linie);border-bottom:1px solid var(--linie);padding:16px 0}}
+.empf{display:grid;gap:14px}
+@media(min-width:900px){.empf{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:28px;align-items:stretch}}
+.feature{background:var(--olive);color:var(--papier);position:relative;overflow:hidden;padding:26px 22px;display:grid;gap:10px 26px;align-items:center}
+@media(min-width:600px){.feature{grid-template-columns:auto 1fr;padding:36px 36px}}
+.feature .zahl{font:italic 400 clamp(84px,16vw,170px)/.8 var(--serif);color:var(--ocker);letter-spacing:-.05em}
+.feature .label{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#e2c47f;margin:0 0 6px}
+.feature h3{font:400 clamp(34px,5.5vw,58px)/1 var(--serif);margin:0 0 8px;letter-spacing:-.02em}
+.feature h3 em{color:#f0d79a}
+.feature p{margin:0;font-size:16px;color:#e8e3d3}
+.feature .unten{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:16px}
+.feature .preisgross{font:600 28px/1 var(--serif);color:#f0d79a;margin-right:6px}
+.feature .btn-rand{border-color:rgba(246,242,233,.7);color:var(--papier)}
+.feature .btn-rand:hover{background:var(--papier);color:var(--olive)}
+.feature .muster{position:absolute;right:-70px;top:-70px;width:280px;height:280px;opacity:.12;pointer-events:none}
+.empf-liste{list-style:none;margin:0;padding:0;display:grid;align-content:start}
+#h-empf{font:700 14px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ocker-dunkel);margin:6px 0 4px}
+#empf-liste.gerichte{grid-template-columns:minmax(0,1fr)!important}
+
+/* Collage */
+.casa{padding:56px 0 10px}
+.casa-kopf{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin-bottom:18px}
+.casa-kopf .unterzeile{margin:0}
+.collage{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:8px}
+.collage .c-hoch{grid-row:1/3}
+.collage .c-quer,.collage .c-pizza{aspect-ratio:4/3}
+.collage .c-text{grid-column:1/3;padding:8px 0 0}
+.c-text p{margin:0;font:italic 400 19px/1.4 var(--serif);color:var(--olive)}
+.c-text p small{display:block;font:500 15px/1.5 var(--sans);font-style:normal;color:var(--grau);margin-top:6px}
+@media(min-width:768px){
+  .collage{grid-template-columns:5fr 4fr 3fr;gap:18px}
+  .collage .c-hoch{grid-row:1/3;grid-column:1}
+  .collage .c-quer{grid-column:2/4;aspect-ratio:16/9}
+  .collage .c-pizza{grid-column:2;aspect-ratio:1/1}
+  .collage .c-text{grid-column:3;align-self:end;padding:0 0 4px}
+  .c-text p{font-size:23px}
+}
+.foto{position:relative;margin:0;overflow:hidden;background:var(--papier2);min-height:0}
+.foto button{all:unset;display:block;width:100%;height:100%;cursor:zoom-in;position:relative}
+.foto button:focus-visible{outline:3px solid var(--ocker);outline-offset:-3px}
+.foto img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.foto button:hover img{transform:scale(1.04)}
+.foto figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;font:italic 400 14px/1.3 var(--serif);color:#fff;background:linear-gradient(0deg,rgba(20,26,12,.8),transparent);pointer-events:none}
+@media(min-width:768px){.foto figcaption{font-size:16px;padding:30px 16px 12px}}
+
+/* Speisekarte */
+.karte{padding:52px 0 20px}
+.abschnitt-kopf{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 30px;margin-bottom:6px}
+.legende{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--grau);margin:0;padding:0;list-style:none}
+.legende li{display:flex;align-items:center;gap:6px}
+.katnav{position:sticky;top:var(--kopf);z-index:20;background:rgba(246,242,233,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--linie);margin-top:18px}
+.katnav ul{list-style:none;margin:0 auto;padding:0 16px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;max-width:1240px;-webkit-overflow-scrolling:touch}
+.katnav ul::-webkit-scrollbar{display:none}
+@media(min-width:768px){.katnav ul{padding:0 32px}}
+.katnav a{display:block;white-space:nowrap;text-decoration:none;font-weight:600;font-size:15px;padding:11px 11px;color:var(--grau);border-bottom:3px solid transparent}
+.katnav a:hover{color:var(--tinte);border-color:var(--linie)}
+.katnav a.aktiv{color:var(--olive);border-color:var(--ocker)}
+.karte-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
+@media(min-width:1100px){.karte-layout{grid-template-columns:minmax(0,1fr) 340px}}
+.hinweise{display:grid;gap:8px;margin:20px 0 0}
+.hinweis{display:flex;gap:10px;align-items:center;background:var(--papier2);border-left:4px solid var(--olive2);padding:9px 14px;margin:0;font-size:15px}
+.hinweis b{white-space:nowrap}
+.kat{padding-top:34px;scroll-margin-top:44px} /* zusätzlich zu scroll-padding-top (Kopfleiste) = Höhe der Kategorie-Leiste */
+.kat-kopf{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:0 12px;border-bottom:2px solid var(--tinte);padding-bottom:8px;margin-bottom:2px}
+.kat-ico{width:46px;height:46px;border-radius:50%;background:var(--olive);color:#f0d79a;display:flex;align-items:center;justify-content:center;align-self:center}
+.kat-ico svg{width:26px;height:26px}
+.kat-kopf h3{font:400 clamp(32px,6vw,56px)/1 var(--serif);letter-spacing:-.025em;margin:0;color:var(--olive)}
+.kat-kopf h3 em{font-style:italic}
+.kat-kopf p{margin:2px 0 0;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ocker-dunkel)}
+.kat-kopf .anz{font:italic 400 15px var(--serif);color:var(--grau);white-space:nowrap}
+.gerichte{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr)}
+@media(min-width:768px) and (max-width:1099px),(min-width:1240px){.gerichte{grid-template-columns:1fr 1fr;column-gap:40px}}
+.gericht{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr) auto 36px;column-gap:8px;padding:10px 0;border-bottom:1px solid var(--linie);align-items:center}
+.gericht:hover{background:linear-gradient(90deg,rgba(200,144,31,.08),transparent)}
+.gericht .nr{font:italic 400 15px/1 var(--serif);color:var(--ocker-dunkel);align-self:start;padding-top:4px}
+.g-mitte{min-width:0}
+.g-open{all:unset;cursor:pointer;font:600 18px/1.25 var(--serif)}
+.g-open::after{content:"";position:absolute;inset:0;z-index:1}
+.g-open:focus-visible{outline:none}
+.g-open:focus-visible::after{outline:3px solid var(--ocker);outline-offset:-2px}
+.gericht .txt{font-size:15px;line-height:1.4;color:var(--grau);margin:2px 0 0}
+.gericht .preis{font:600 16px/1 var(--sans);white-space:nowrap;font-variant-numeric:tabular-nums}
+.plus{position:relative;z-index:2;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--olive);background:var(--papier);color:var(--olive);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:background .15s,color .15s,transform .15s}
+.plus svg{width:18px;height:18px}
+.plus:hover{background:var(--olive);color:var(--papier)}
+.plus.ok{background:var(--ocker);border-color:var(--ocker);color:var(--tinte);transform:scale(1.1)}
+.gericht.haus{background:#f1e6c9;padding-left:6px;padding-right:6px;margin:0 -6px}
+.tag{display:inline-block;vertical-align:2px;font:700 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:3px;margin-left:6px;white-space:nowrap}
+.tag-veg{background:#dfe8cc;color:#2c4210}
+.tag-scharf{background:#f3d4c6;color:#7a2408}
+.tag-neu{background:var(--ocker);color:var(--tinte)}
+.tag-haus{background:var(--olive);color:#f0d79a}
+.karte-fuss{margin:26px 0 0;font-size:15px;color:var(--grau)}
+
+/* Warenkorb: PC Seitenleiste, Handy Tafel von unten */
+.korb{background:#fff;border:1px solid var(--linie);display:flex;flex-direction:column}
+.korb-kopf{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-bottom:1px solid var(--linie)}
+.korb-kopf h2{font:400 28px/1 var(--serif);margin:0;color:var(--olive)}
+.korb-kopf h2 em{color:var(--ocker-dunkel)}
+.korb-zu{display:none}
+.korb-inhalt{padding:4px 18px;overflow:auto;flex:1 1 auto;min-height:0}
+.korb-leer{color:var(--grau);font-size:15px;padding:14px 0;margin:0}
+.korb-leer b{display:block;font:italic 400 20px var(--serif);color:var(--olive);margin-bottom:4px}
+.pos{list-style:none;margin:0;padding:0}
+.pos li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:12px 0;border-bottom:1px solid var(--linie)}
+.pos .p-name{font:600 16px/1.25 var(--serif)}
+.pos .p-name small{font:500 13px var(--sans);color:var(--ocker-dunkel);margin-right:4px}
+.pos .p-extra{grid-column:1/3;font-size:14px;color:var(--grau);margin:0}
+.pos .p-preis{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pos .p-menge{grid-column:1/3;display:flex;align-items:center;gap:8px}
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--linie);border-radius:999px}
+.stepper button{width:34px;height:32px;border:0;background:none;cursor:pointer;font-size:19px;font-weight:700;color:var(--olive);border-radius:999px}
+.stepper button:hover{background:var(--papier2)}
+.stepper output,.stepper span{min-width:26px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.korb-fuss{padding:14px 18px 18px;border-top:1px solid var(--linie);display:grid;gap:10px}
+.summe{display:flex;justify-content:space-between;align-items:baseline;font-weight:700}
+.summe span:last-child{font:600 24px var(--serif);color:var(--olive)}
+.korb-fuss small{color:var(--grau);font-size:14px}
+@media(min-width:1100px){.korb-spalte{position:relative}.korb{position:sticky;top:calc(var(--kopf) + 64px);max-height:calc(100vh - var(--kopf) - 84px);margin-top:20px}}
+@media(max-width:1099px){
+  .korb-spalte{display:contents}
+  .korb{position:fixed;left:0;right:0;bottom:0;z-index:70;max-height:86vh;border:0;border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(20,26,12,.3);transform:translateY(105%);visibility:hidden;transition:transform .28s ease,visibility 0s .28s;padding-bottom:env(safe-area-inset-bottom)}
+  .korb.offen{transform:none;visibility:visible;transition:transform .28s ease}
+  .korb-zu{display:inline-flex}
+}
+.zu{width:40px;height:40px;border-radius:50%;border:1px solid var(--linie);background:var(--papier);cursor:pointer;align-items:center;justify-content:center;font-size:24px;line-height:1;display:inline-flex;flex:none}
+.zu:hover{background:var(--papier2)}
+
+/* Bildband */
+.band{position:relative;overflow:hidden;min-height:340px;display:flex;align-items:center;color:var(--papier);margin-top:56px}
+.band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.6s ease-out}
+.band.sichtbar img{transform:scale(1)}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,36,16,.88),rgba(47,59,31,.55) 60%,rgba(47,59,31,.35))}
+.band .wrap{position:relative;z-index:1;width:100%;padding-top:50px;padding-bottom:50px}
+.band blockquote{margin:0;font:400 clamp(46px,10vw,124px)/.92 var(--serif);letter-spacing:-.03em}
+.band blockquote em{color:#f0d79a}
+.band blockquote::before{content:"„";display:block;font-size:.6em;line-height:.5;color:var(--ocker)}
+.band p{margin:16px 0 0;font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#e2c47f}
+@media(min-width:900px){.band{min-height:min(78vh,640px)}}
+
+/* Einblicke */
+.einblicke{padding:44px 0 6px}
+.h2-klein{font:400 clamp(34px,6vw,48px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 16px;color:var(--olive)}
+.h2-klein em{color:var(--ocker-dunkel)}
+.h2-klein span{font-size:.55em;color:var(--grau);font-style:italic}
+.fotos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(min-width:1024px){.fotos{grid-template-columns:repeat(4,1fr);gap:18px}}
+.fotos .foto{aspect-ratio:4/3}
+@media(max-width:767px){.fotos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:0 16px 4px;scroll-padding:0 16px;gap:10px}.fotos::-webkit-scrollbar{display:none}.fotos li{flex:0 0 72%;scroll-snap-align:start}}
+
+/* Info */
+.info{padding:56px 0 50px;border-top:1px solid var(--linie);margin-top:40px}
+.info-grid{display:grid;gap:40px}
+@media(min-width:900px){.info-grid{grid-template-columns:1fr 1.25fr 1fr;gap:48px}}
+.info .h2-klein{margin-bottom:16px}
+.info section{scroll-margin-top:10px}
+.h2-klein .paar{display:inline-block}
+.zeiten{width:100%;border-collapse:collapse;font-size:16px}
+.zeiten th,.zeiten td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--linie);font-weight:500}
+.zeiten td{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(min-width:900px) and (max-width:1099px){.zeiten{font-size:15px}.zeiten th,.zeiten td{padding:8px 4px}}
+.zeiten tr.heute{background:var(--olive);color:var(--papier)}
+.zeiten tr.heute th{font-weight:700}
+.zeiten tr.heute th::after{content:" · heute";font-weight:400;color:#f0d79a}
+.fassade{aspect-ratio:16/9;margin:0 0 16px}
+.adresse{font-style:normal;font-size:18px;line-height:1.5;margin:0 0 6px}
+.adresse strong{font:600 22px var(--serif)}
+.draussen{font-size:15px;color:var(--grau);margin:0 0 16px}
+.kontaktliste{list-style:none;padding:0;margin:0 0 16px}
+.kontaktliste li{border-bottom:1px solid var(--linie)}
+.kontaktliste a{display:flex;align-items:center;gap:12px;padding:12px 2px;text-decoration:none;font-weight:600;overflow-wrap:anywhere}
+.kontaktliste a:hover{color:var(--ocker-dunkel)}
+.kontaktliste svg{width:20px;height:20px;color:var(--olive2);flex:none}
+.kontaktliste small{display:block;font-weight:500;color:var(--grau);font-size:14px}
+
+/* Fuß */
+.fuss{background:var(--tinte);color:#d9d4c3;padding:40px 0 30px;font-size:15px}
+.fuss-grid{display:grid;gap:26px}
+@media(min-width:768px){.fuss-grid{grid-template-columns:auto 1fr 1fr;gap:48px;align-items:start}}
+.fuss .logo{width:76px;height:76px;border-radius:50%;background:#f6f2e9;object-fit:cover}
+.fuss h2{font:400 22px var(--serif);color:#f0d79a;margin:0 0 8px}
+.fuss p{margin:0 0 4px}
+.fuss a{color:#f6f2e9}
+.fuss a:hover{color:#f0d79a}
+.fuss details{margin-top:4px}
+.fuss summary{cursor:pointer;font-weight:700;color:#f6f2e9;display:inline-block;padding:2px 0}
+.fuss summary:hover{color:#f0d79a}
+.fuss details p{margin-top:10px;color:#bdb8a6;max-width:40em}
+.fuss .klein{margin-top:30px;padding-top:16px;border-top:1px solid #3a4130;color:#9e9a8a;font-size:14px}
+
+/* Handy-Leiste + Warenkorb-Leiste */
+.unten-fest{position:fixed;left:0;right:0;bottom:0;z-index:40;padding-bottom:env(safe-area-inset-bottom);background:var(--olive);box-shadow:0 -4px 18px rgba(30,36,22,.18)}
+.korbleiste{display:none;width:100%;border:0;background:var(--ocker);color:var(--tinte);font-weight:700;font-size:15px;height:46px;padding:0 16px;cursor:pointer;align-items:center;justify-content:space-between;gap:10px}
+.korbleiste:hover{background:#dba53a}
+.korbleiste span:last-child{display:inline-flex;align-items:center;gap:6px}
+body.hat-korb .korbleiste{display:flex}
+.leiste{display:grid;grid-template-columns:repeat(3,1fr)}
+.leiste a,.leiste button{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--papier);text-decoration:none;font-weight:700;font-size:15px;height:var(--leiste);border:0;background:none;cursor:pointer;position:relative}
+.leiste > * + *{border-left:1px solid rgba(246,242,233,.18)}
+.leiste a:hover,.leiste button:hover{background:var(--olive2)}
+.leiste svg{width:18px;height:18px;color:#f0d79a}
+.zahl-punkt{min-width:20px;height:20px;border-radius:999px;background:var(--ocker);color:var(--tinte);font-size:12px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
+.zahl-punkt:empty{display:none}
+body{padding-bottom:var(--leiste)}
+body.hat-korb{padding-bottom:calc(var(--leiste) + 46px)}
+@media(min-width:1100px){.unten-fest{display:none}body,body.hat-korb{padding-bottom:0}}
+
+/* Fenster (Gericht, Kasse), Menü-Tafel, Hintergrund */
+.schleier{position:fixed;inset:0;z-index:60;background:rgba(18,22,12,.55);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s}
+.schleier.an{opacity:1;visibility:visible;transition:opacity .2s}
+.fenster{position:fixed;z-index:80;left:0;right:0;bottom:0;max-height:92vh;background:var(--papier);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(20,26,12,.3);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.fenster[hidden]{display:none}
+@media(min-width:700px){.fenster{left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 48px));max-height:88vh;border-radius:6px}}
+.f-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 18px 12px;border-bottom:1px solid var(--linie)}
+.f-kopf h2{font:400 30px/1.05 var(--serif);margin:0;color:var(--olive)}
+.f-kopf h2 small{display:block;font:700 13px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ocker-dunkel);margin-bottom:4px}
+.f-kopf p{margin:6px 0 0;color:var(--grau);font-size:15px}
+.f-inhalt{padding:14px 18px;overflow:auto;flex:1 1 auto;min-height:0}
+.f-fuss{padding:12px 18px 16px;border-top:1px solid var(--linie);display:flex;align-items:center;gap:12px}
+.f-fuss .btn{flex:1}
+.f-reihe{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px}
+.f-reihe b{font-size:15px}
+fieldset{border:0;margin:0 0 14px;padding:0;min-width:0}
+legend{font-weight:700;font-size:15px;padding:0;margin:0 0 8px}
+legend small{font-weight:500;color:var(--grau)}
+.zutaten{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+@media(min-width:500px){.zutaten{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.zutaten label{display:flex;align-items:center;gap:8px;font-size:15px;padding:5px 0;cursor:pointer;min-width:0}
+.zutaten input{width:18px;height:18px;accent-color:var(--olive);flex:none;margin:0}
+.feld{display:grid;gap:4px;margin:0 0 12px}
+.feld label{font-weight:700;font-size:15px}
+.feld input,.feld select,.feld textarea{font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid #b8ad93;border-radius:6px;background:#fff;color:var(--tinte);width:100%}
+.feld textarea{min-height:64px;resize:vertical}
+.feld input:focus,.feld select:focus,.feld textarea:focus{outline:none;border-color:var(--olive);box-shadow:0 0 0 3px rgba(200,144,31,.35)}
+.feld [aria-invalid="true"]{border-color:var(--rot);background:#fdf3ef}
+.fehler{color:var(--rot);font-size:14px;font-weight:600;margin:0}
+.fehler:empty{display:none}
+.kasse-liste{margin:0 0 14px;padding:10px 12px;background:var(--papier2);font-size:15px;list-style:none}
+.kasse-liste li{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.kasse-liste li span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.bezahl{display:flex;gap:8px;align-items:center;font-size:15px;color:#33382a;margin:0 0 4px}
+.demo{background:#e6eef3;border-left:4px solid #2f6a8a;padding:10px 12px;font-size:15px;color:#1b3a4a;margin:12px 0 0}
+.danke{text-align:center;padding:14px 18px}
+.danke .gross{font:400 44px/1 var(--serif);color:var(--olive);margin:6px 0 10px}
+.danke .gross em{color:var(--ocker-dunkel)}
+.danke dl{display:grid;grid-template-columns:auto auto;justify-content:center;gap:4px 14px;margin:14px 0;text-align:left;font-size:16px}
+.danke dt{color:var(--grau)}
+.danke dd{margin:0;font-weight:700}
+.menue{position:fixed;z-index:80;top:0;right:0;bottom:0;width:min(320px,86vw);background:var(--olive);color:var(--papier);padding:16px 22px 22px;display:flex;flex-direction:column;gap:6px;transform:translateX(105%);visibility:hidden;transition:transform .25s ease,visibility 0s .25s}
+.menue.offen{transform:none;visibility:visible;transition:transform .25s ease}
+.menue .zu{align-self:flex-end;background:transparent;border-color:rgba(246,242,233,.4);color:var(--papier)}
+.menue nav a{display:block;font:400 30px/1.2 var(--serif);text-decoration:none;padding:8px 0;border-bottom:1px solid rgba(246,242,233,.15)}
+.menue nav a:hover{color:#f0d79a}
+.menue .btn{margin-top:14px}
+.menue .btn-rand{border-color:rgba(246,242,233,.7);color:var(--papier)}
+.toast{position:fixed;left:50%;bottom:calc(var(--leiste) + 60px);transform:translate(-50%,20px);z-index:95;background:var(--tinte);color:var(--papier);padding:10px 16px;border-radius:999px;font-weight:600;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px);text-align:center}
+.toast.an{opacity:1;transform:translate(-50%,0)}
+@media(min-width:1100px){.toast{bottom:28px}.zu.korb-zu{display:none}}
+body.gesperrt .toast{opacity:0}
+
+/* Bildansicht */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(18,22,12,.94);display:flex;align-items:center;justify-content:center;padding:56px 12px 20px;cursor:zoom-out}
+.lb[hidden]{display:none}
+.lb figure{margin:0;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center}
+.lb img{max-width:100%;max-height:calc(100vh - 120px);object-fit:contain;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+.lb figcaption{color:#e8e3d3;font:italic 400 16px/1.4 var(--serif);margin-top:10px;text-align:center}
+.lb .zu{position:absolute;top:10px;right:10px;background:rgba(246,242,233,.1);border-color:rgba(246,242,233,.4);color:var(--papier)}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}.band img{transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#karte">Zur Speisekarte springen</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-tel" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 22s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-karte" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3zM8 8h7M8 12h7M8 16h4"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 5h18v14H3z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="m3 6 9 7 9-7"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v7h4v-7h3l.5-4h-3.5V8.8c0-.5.3-.8.5-.8z"/></symbol>
+  <symbol id="i-tuete" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-menue" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="i-pfeil" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6"/></symbol>
+  <!-- Kategorie-Symbole -->
+  <symbol id="k-antipasti" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="15" rx="9" ry="4"/><circle cx="9" cy="11" r="2.2"/><circle cx="14.5" cy="10.5" r="2.2"/><path d="M12 6c1-2 3-2.5 4-2"/></g></symbol>
+  <symbol id="k-insalata" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 12c-1-3 1-6 4-7 1 3-1 6-4 7zM13 12c0-3 2-5 5-5 0 3-2 5-5 5z"/></g></symbol>
+  <symbol id="k-pizza" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 3.5 5.5a17 17 0 0 1 17 0z"/><path d="M5.3 8.5a13 13 0 0 1 13.4 0"/><circle cx="11" cy="11" r="1.2"/><circle cx="13.5" cy="15" r="1.1"/><circle cx="14.5" cy="10.5" r=".9"/></g></symbol>
+  <symbol id="k-pasta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18a9 6 0 0 1-18 0z"/><path d="M7 13c0-3 2-4 4-3s3 3 6 0M9 10V3M12 10V3M15 9V3"/></g></symbol>
+  <symbol id="k-forno" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V11a7 7 0 0 1 14 0v9"/><path d="M9 20v-5a3 3 0 0 1 6 0v5"/><path d="M11 6c0-1 1-1.5 1-2.5M14 6.5c0-1 1-1.5 1-2.5"/></g></symbol>
+  <symbol id="k-imbiss" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15a9 9 0 0 1 18 0z"/><path d="M5 15c.5 1 1.5 1 2 0s1.5-1 2 0 1.5 1 2 0 1.5-1 2 0 1.5 1 2 0 1.5-1 2 0"/></g></symbol>
+  <symbol id="k-carne" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c3-4 7-5 11-5 3 0 5 2 7 5-2 3-4 5-7 5-4 0-8-1-11-5z"/><path d="M20 12l2-3v6z"/><circle cx="7" cy="11" r=".8"/></g></symbol>
+  <symbol id="k-kinder" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></g></symbol>
+</svg>
+
+<header class="kopf">
+  <div class="wrap">
+    <a class="signet" href="#top" aria-label="Gabriel's, zum Seitenanfang">
+      <img src="assets/logo.png" alt="" width="38" height="38">
+      <span><b>Gabriel's</b><small data-g="zusatz"></small></span>
+    </a>
+    <nav aria-label="Hauptnavigation">
+      <a href="#karte">Speisekarte</a>
+      <a href="#bestellen">Bestellen</a>
+      <a href="#einblicke">Einblicke</a>
+      <a href="#zeiten">Öffnungszeiten</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="tel" data-g="tellink" href="#" aria-label="Anrufen"><svg class="ico" aria-hidden="true"><use href="#i-tel"/></svg><span data-g="telefon"></span></a>
+    <button class="menue-knopf" type="button" id="menue-auf" aria-label="Menü öffnen" aria-controls="menue" aria-expanded="false"><svg class="ico" aria-hidden="true"><use href="#i-menue"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="h-titel">
+    <figure class="hero-bild"><img src="fotos/theke.jpg" alt="Theke von Gabriel's mit Kaffeemaschine, gerahmtem Porträt an der Wand und Blick in die Küche" width="2400" height="1351" fetchpriority="high"></figure>
+    <div class="wrap">
+      <div class="hero-text">
+        <p class="kicker" data-g="zusatz"></p>
+        <h1 id="h-titel"><small>Willkommen bei</small><em>Gabriel's</em></h1>
+        <p class="lead">Italienische Küche mitten in <span data-g="ort"></span>: Pizza, Pasta, Salate und Klassiker aus dem Ofen – frisch zubereitet.</p>
+        <p class="status" id="status" role="status"><i aria-hidden="true"></i><span>Öffnungszeiten werden geladen</span></p>
+        <div class="knoepfe">
+          <a class="btn btn-ocker" href="#bestellen"><svg aria-hidden="true"><use href="#i-tuete"/></svg>Online bestellen</a>
+          <a class="btn btn-voll" data-g="tellink" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+          <a class="btn btn-rand" data-g="route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+        </div>
+        <p class="abholen"><svg aria-hidden="true"><use href="#i-karte"/></svg><span>Online oder telefonisch bestellen und selbst abholen. Tisch reservieren: <a data-g="tellink" href="#"><span data-g="telefon"></span></a></span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bestellen" id="bestellen" aria-labelledby="h-bestellen">
+    <div class="wrap">
+      <h2 class="titel-gross" id="h-bestellen">Da <em>asporto</em></h2>
+      <p class="unterzeile">Bestellen und abholen</p>
+      <ol class="ablauf">
+        <li>Gerichte wählen – mit „+“ direkt in den Warenkorb oder antippen für Extras.</li>
+        <li>Name, Telefon und Abholzeit angeben.</li>
+        <li>Zur gewählten Zeit abholen – Bezahlung bei Abholung.</li>
+      </ol>
+      <div class="empf" id="empfehlungen">
+        <article class="feature" id="haus" hidden>
+          <svg class="muster" viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#f0d79a" stroke-width="1.5"><circle cx="100" cy="100" r="96"/><circle cx="100" cy="100" r="76"/><circle cx="100" cy="100" r="56"/><path d="M100 4v192M4 100h192M32 32l136 136M168 32 32 168"/></g></svg>
+          <div class="zahl" aria-hidden="true" id="haus-nr"></div>
+          <div>
+            <p class="label">Die Hausspezialität</p>
+            <h3>Pizza <em id="haus-name"></em></h3>
+            <p id="haus-text"></p>
+            <div class="unten">
+              <span class="preisgross" id="haus-preis"></span>
+              <button class="btn btn-ocker" type="button" id="haus-add"><svg aria-hidden="true"><use href="#i-plus"/></svg>In den Warenkorb</button>
+              <button class="btn btn-rand" type="button" id="haus-open">Mit Extras</button>
+            </div>
+          </div>
+        </article>
+        <div>
+          <ul class="empf-liste gerichte" id="empf-liste" aria-labelledby="h-empf"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="casa" aria-labelledby="h-casa">
+    <div class="wrap">
+      <div class="casa-kopf"><h2 class="titel-gross" id="h-casa">La <em>Casa</em></h2><p class="unterzeile">Unser Lokal im Centrum 12</p></div>
+      <div class="collage">
+        <figure class="foto c-hoch"><button type="button" data-zoom aria-label="Bild vergrößern: Die Theke"><img src="fotos/bar-hoch.jpg" alt="Beleuchtete Theke mit Barhockern, an der Wand das gerahmte Porträt, im Hintergrund die Küche" width="1351" height="2400" loading="lazy"></button><figcaption>Die Theke mit dem gerahmten Porträt</figcaption></figure>
+        <figure class="foto c-quer"><button type="button" data-zoom aria-label="Bild vergrößern: Der Gastraum"><img src="fotos/gastraum.jpg" alt="Gastraum mit Holztischen, Kerzen, Weinregal-Säulen und einem Weinfass" width="2400" height="1351" loading="lazy"></button><figcaption>Der Gastraum</figcaption></figure>
+        <figure class="foto c-pizza"><button type="button" data-zoom aria-label="Bild vergrößern: Margherita"><img src="assets/pizza.jpg" alt="Pizza Margherita mit goldbraunem Rand, von oben auf hellem Holztisch" width="1600" height="1524" loading="lazy"></button><figcaption>Margherita</figcaption></figure>
+        <div class="c-text"><p>Warmes Holz, Kerzenlicht und das gerahmte Porträt über der Theke.<small>Café, Pizzeria und Ristorante unter einem Dach – zum Hiersein oder vorbestellt zum Abholen.</small></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="karte" id="karte" aria-labelledby="h-karte">
+    <div class="wrap">
+      <div class="abschnitt-kopf">
+        <div><h2 class="titel-gross" id="h-karte">La <em>Carta</em></h2><p class="unterzeile">Unsere Speisekarte</p></div>
+        <ul class="legende" aria-label="Kennzeichen">
+          <li><span class="tag tag-veg">veg</span> vegetarisch</li>
+          <li><span class="tag tag-scharf">scharf</span> scharf</li>
+          <li><span class="tag tag-neu">neu</span> neu</li>
+          <li><span class="tag tag-haus">Haus</span> Hausspezialität</li>
+        </ul>
+      </div>
+    </div>
+    <nav class="katnav" aria-label="Kategorien der Speisekarte"><ul id="katnav"></ul></nav>
+    <div class="wrap karte-layout">
+      <div>
+        <div class="hinweise">
+          <p class="hinweis" id="hinweis"><b>+ 1 €</b><span>Jede weitere Zutat 1 € Aufpreis.</span></p>
+          <p class="hinweis"><b>Allergene</b><span>Allergene und Zusatzstoffe: Bitte fragen Sie unser Personal.</span></p>
+        </div>
+        <div id="kategorien"></div>
+        <p class="karte-fuss">Lieber telefonisch? Unter <a data-g="tellink" href="#"><strong data-g="telefon"></strong></a> vorbestellen und abholen.</p>
+      </div>
+      <div class="korb-spalte">
+        <aside class="korb" id="korb" aria-labelledby="h-korb">
+          <div class="korb-kopf">
+            <h2 id="h-korb">Il <em>carrello</em> <span class="sr">Warenkorb</span></h2>
+            <button class="zu korb-zu" type="button" data-zu aria-label="Warenkorb schließen">×</button>
+          </div>
+          <div class="korb-inhalt" id="korb-inhalt"></div>
+          <div class="korb-fuss">
+            <div class="summe"><span>Summe</span><span id="korb-summe">0,00 €</span></div>
+            <button class="btn btn-voll btn-breit" type="button" id="zur-kasse">Zur Kasse</button>
+            <small>Nur Abholung · Bezahlung bei Abholung</small>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-label="Willkommen">
+    <img src="fotos/gastraum-fass.jpg" alt="" width="2400" height="1351" loading="lazy">
+    <div class="wrap">
+      <blockquote><em>Benvenuti</em><br>da Gabriel's</blockquote>
+      <p><span data-g="strasse"></span> · <span data-g="ort"></span></p>
+    </div>
+  </section>
+
+  <section class="einblicke" id="einblicke" aria-labelledby="h-einblicke">
+    <div class="wrap">
+      <h2 class="h2-klein" id="h-einblicke">Uno <em>sguardo</em> <span class="paar">· <span>Einblicke</span></span></h2>
+      <ul class="fotos">
+        <li><figure class="foto"><button type="button" data-zoom aria-label="Bild vergrößern: Die lange Theke"><img src="fotos/theke-lang.jpg" alt="Lange Theke mit LED-Lamellen und Barhockern, dahinter Flaschenregal und gerahmtes Porträt" width="2400" height="1351" loading="lazy"></button><figcaption>Die lange Theke</figcaption></figure></li>
+        <li><figure class="foto"><button type="button" data-zoom aria-label="Bild vergrößern: Blick zur Küche"><img src="fotos/raum-hoch.jpg" alt="Blick entlang der Theke zur Küche und zum Weinfass" width="1351" height="2400" loading="lazy"></button><figcaption>Blick zur Küche</figcaption></figure></li>
+        <li><figure class="foto"><button type="button" data-zoom aria-label="Bild vergrößern: Theke und Küche mit Pizzaofen"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine und Blick in die Küche mit Pizzaofen" width="2400" height="1351" loading="lazy"></button><figcaption>Theke und Küche mit Pizzaofen</figcaption></figure></li>
+        <li><figure class="foto"><button type="button" data-zoom aria-label="Bild vergrößern: Gastraum mit Weinfass"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinfass, Weinregal-Säulen und Holztischen mit Kerzen" width="2400" height="1351" loading="lazy"></button><figcaption>Gastraum mit Weinfass</figcaption></figure></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="info" aria-label="Öffnungszeiten, Anfahrt und Kontakt">
+    <div class="wrap info-grid">
+      <section id="zeiten" aria-labelledby="h-zeiten">
+        <h2 class="h2-klein" id="h-zeiten">Orari <span class="paar">· <span>Öffnungszeiten</span></span></h2>
+        <table class="zeiten"><caption class="sr">Öffnungszeiten nach Wochentag</caption><tbody id="zeiten-tab"></tbody></table>
+      </section>
+      <section id="anfahrt" aria-labelledby="h-anfahrt">
+        <h2 class="h2-klein" id="h-anfahrt">Dove <span class="paar">· <span>So finden Sie uns</span></span></h2>
+        <figure class="foto fassade"><button type="button" data-zoom aria-label="Bild vergrößern: Die Fassade am Abend"><img src="fotos/fassade.jpg" alt="Fassade von Gabriel's am Abend: beleuchtetes Lokal, rotes Schild Café, Gabriel's, Pizzeria, Ristorante und Tische vor dem Eingang" width="2400" height="1351" loading="lazy"></button><figcaption>Die Fassade am Abend</figcaption></figure>
+        <address class="adresse"><strong data-g="name"></strong><br><span data-g="strasse"></span><br><span data-g="plzOrt"></span></address>
+        <p class="draussen" id="draussen" hidden>Mit Tischen draußen vor dem Lokal.</p>
+        <a class="btn btn-voll" data-g="route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>In Google Maps öffnen</a>
+      </section>
+      <section id="kontakt" aria-labelledby="h-kontakt">
+        <h2 class="h2-klein" id="h-kontakt">Contatto <span class="paar">· <span>Kontakt</span></span></h2>
+        <ul class="kontaktliste">
+          <li><a data-g="tellink" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg><span><span data-g="telefon"></span><small>Anrufen, vorbestellen, Tisch reservieren</small></span></a></li>
+          <li><a data-g="maillink" href="#"><svg aria-hidden="true"><use href="#i-mail"/></svg><span><span data-g="mail"></span><small>E-Mail schreiben</small></span></a></li>
+          <li><a data-g="facebook" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-fb"/></svg><span>Facebook<small>Neuigkeiten auf unserer Seite</small></span></a></li>
+        </ul>
+        <a class="btn btn-rand" data-g="tellink" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Tisch reservieren</a>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="fuss">
+  <div class="wrap">
+    <div class="fuss-grid">
+      <img class="logo" src="assets/logo.png" alt="Signet von Gabriel's: Porträtzeichnung einer Frau" width="76" height="76" loading="lazy">
+      <div>
+        <h2>Impressum</h2>
+        <p><strong data-g="name"></strong> · <span data-g="zusatz"></span></p>
+        <p>Inhaber: <span data-g="inhaber"></span></p>
+        <p><span data-g="strasse"></span>, <span data-g="plzOrt"></span></p>
+        <p>Telefon: <a data-g="tellink" href="#"><span data-g="telefon"></span></a></p>
+        <p>E-Mail: <a data-g="maillink" href="#"><span data-g="mail"></span></a></p>
+        <p>Steuernummer: <span data-g="ustId"></span></p>
+      </div>
+      <div>
+        <h2>Rechtliches</h2>
+        <details>
+          <summary>Datenschutz</summary>
+          <p>Platzhalter: Diese Seite setzt keine Cookies und verwendet keine Analysewerkzeuge. Der Warenkorb wird nur in Ihrem Browser gespeichert. Schriften werden über Google Fonts geladen. Beim Anklicken von Telefon-, E-Mail-, Karten- oder Facebook-Links werden die jeweiligen Anbieter aufgerufen. Die vollständige Datenschutzerklärung wird vor Veröffentlichung ergänzt.</p>
+        </details>
+      </div>
+    </div>
+    <p class="klein">© <span id="jahr"></span> <span data-g="name"></span> · <span data-g="ort"></span></p>
+  </div>
+</footer>
+
+<div class="unten-fest">
+  <button class="korbleiste" type="button" id="korbleiste" aria-controls="korb"><span id="korbleiste-text"></span><span>Warenkorb <svg class="ico" aria-hidden="true"><use href="#i-pfeil"/></svg></span></button>
+  <nav class="leiste" aria-label="Schnellzugriff">
+    <a data-g="tellink" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+    <a data-g="route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+    <button type="button" id="leiste-korb" aria-controls="korb"><svg aria-hidden="true"><use href="#i-tuete"/></svg>Warenkorb <span class="zahl-punkt" id="leiste-zahl"></span></button>
+  </nav>
+</div>
+
+<div class="schleier" id="schleier"></div>
+
+<div class="menue" id="menue" role="dialog" aria-modal="true" aria-label="Menü">
+  <button class="zu" type="button" data-zu aria-label="Menü schließen">×</button>
+  <nav aria-label="Menü">
+    <a href="#karte">Speisekarte</a>
+    <a href="#bestellen">Bestellen</a>
+    <a href="#einblicke">Einblicke</a>
+    <a href="#zeiten">Öffnungszeiten</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
+  <a class="btn btn-ocker" data-g="tellink" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+  <a class="btn btn-rand" data-g="tellink" href="#">Tisch reservieren</a>
+</div>
+
+<div class="fenster" id="gericht-fenster" role="dialog" aria-modal="true" aria-labelledby="gf-titel" hidden>
+  <div class="f-kopf">
+    <div><h2 id="gf-titel"><small id="gf-nr"></small><span id="gf-name"></span></h2><p id="gf-text"></p></div>
+    <button class="zu" type="button" data-zu aria-label="Fenster schließen">×</button>
+  </div>
+  <div class="f-inhalt">
+    <div class="f-reihe"><b>Menge</b><span class="stepper"><button type="button" id="gf-minus" aria-label="Weniger">−</button><output id="gf-menge" aria-live="polite">1</output><button type="button" id="gf-plus" aria-label="Mehr">+</button></span></div>
+    <fieldset><legend>Zusatzzutaten <small>(je + 1,00 €)</small></legend><div class="zutaten" id="gf-zutaten"></div></fieldset>
+    <div class="feld"><label for="gf-anm">Anmerkung</label><input id="gf-anm" maxlength="120" placeholder="z. B. gut durchgebacken" autocomplete="off"></div>
+  </div>
+  <div class="f-fuss"><button class="btn btn-voll" type="button" id="gf-add">In den Warenkorb · <span id="gf-preis"></span></button></div>
+</div>
+
+<div class="fenster" id="kasse" role="dialog" aria-modal="true" aria-labelledby="k-titel" hidden>
+  <div class="f-kopf">
+    <div><h2 id="k-titel"><small>Bestellung zur Abholung</small>Kasse</h2></div>
+    <button class="zu" type="button" data-zu aria-label="Kasse schließen">×</button>
+  </div>
+  <form class="f-inhalt" id="kasse-form" novalidate>
+    <p class="fehler" id="f-warenkorb" role="alert"></p>
+    <ul class="kasse-liste" id="kasse-liste"></ul>
+    <div class="feld"><label for="k-name">Name</label><input id="k-name" name="name" autocomplete="name" aria-describedby="f-name"><p class="fehler" id="f-name"></p></div>
+    <div class="feld"><label for="k-tel">Telefon <small>(für Rückfragen)</small></label><input id="k-tel" name="telefon" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="f-telefon"><p class="fehler" id="f-telefon"></p></div>
+    <div class="feld"><label for="k-zeit">Abholzeit</label><select id="k-zeit" name="zeit" aria-describedby="f-zeit"></select><p class="fehler" id="f-zeit"></p></div>
+    <div class="feld"><label for="k-hinweis">Hinweis <small>(freiwillig)</small></label><textarea id="k-hinweis" name="hinweis" maxlength="300"></textarea></div>
+    <div class="summe"><span>Summe</span><span id="kasse-summe"></span></div>
+    <p class="bezahl"><svg class="ico" aria-hidden="true"><use href="#i-tuete"/></svg>Bezahlung bei Abholung</p>
+    <button class="btn btn-ocker btn-breit" type="submit" style="margin-top:10px">Bestellung absenden</button>
+  </form>
+  <div class="f-inhalt danke" id="danke" hidden tabindex="-1">
+    <p class="unterzeile">Grazie!</p>
+    <p class="gross">Bestellung <em id="d-nummer"></em></p>
+    <dl><dt>Abholung</dt><dd id="d-zeit"></dd><dt>Name</dt><dd id="d-name"></dd><dt>Summe</dt><dd id="d-summe"></dd><dt>Bezahlung</dt><dd>bei Abholung</dd></dl>
+    <p class="demo" id="d-demo" hidden><b>Entwurf</b> – diese Bestellung wird noch nicht übertragen. In der fertigen Seite geht sie direkt an die Pizzeria.</p>
+    <button class="btn btn-voll btn-breit" type="button" data-zu style="margin-top:14px">Schließen</button>
+  </div>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Bildansicht" hidden>
+  <button class="zu" type="button" data-zu aria-label="Bildansicht schließen">×</button>
+  <figure><img alt=""><figcaption></figcaption></figure>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/karte.js"></script>
+<script src="assets/bestellung.js"></script>
+<script>
+(function () {
+  var G = window.GABRIELS, B = window.BESTELLUNG;
+  if (!G) return;
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function alle(sel, fn, wurzel) { Array.prototype.forEach.call((wurzel || document).querySelectorAll(sel), fn); }
+  function svgUse(id, cls) { var ns = "http://www.w3.org/2000/svg", s = document.createElementNS(ns, "svg"), u = document.createElementNS(ns, "use"); u.setAttribute("href", "#" + id); s.appendChild(u); s.setAttribute("aria-hidden", "true"); if (cls) s.setAttribute("class", cls); return s; }
+
+  /* Stammdaten einsetzen */
+  ["name", "ort", "strasse", "plzOrt", "telefon", "mail", "inhaber", "ustId", "zusatz"].forEach(function (k) {
+    alle('[data-g="' + k + '"]', function (n) { n.textContent = G[k] || ""; });
+  });
+  alle('[data-g="tellink"]', function (a) { a.href = G.telefonLink; });
+  alle('[data-g="maillink"]', function (a) { a.href = "mailto:" + G.mail; });
+  alle('[data-g="route"]', function (a) { a.href = G.karteLink; });
+  alle('[data-g="facebook"]', function (a) { a.href = G.facebook; });
+  $("jahr").textContent = new Date().getFullYear();
+  if (G.terrasse) $("draussen").hidden = false;
+  if (G.hinweis) document.querySelector("#hinweis span").textContent = G.hinweis;
+
+  /* Schema.org aus den Stammdaten */
+  var TAGE = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+  var EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  try {
+    var ld = {
+      "@context": "https://schema.org", "@type": "Restaurant", name: G.name, alternateName: "Gabriel's – " + (G.zusatz || ""),
+      servesCuisine: ["Italienisch", "Pizza"], telephone: G.telefonLink.replace("tel:", ""), email: G.mail,
+      image: "fotos/fassade.jpg", logo: "assets/logo.png", sameAs: [G.facebook], acceptsReservations: true,
+      address: { "@type": "PostalAddress", streetAddress: G.strasse, postalCode: G.plzOrt.split(" ")[0], addressLocality: G.ort, addressCountry: "DE" },
+      openingHoursSpecification: G.zeiten.map(function (z) { return { "@type": "OpeningHoursSpecification", dayOfWeek: z.von.map(function (d) { return EN[d]; }), opens: z.auf, closes: z.zu }; }),
+      hasMenu: { "@type": "Menu", name: "Speisekarte", hasMenuSection: G.karte.map(function (k) {
+        return { "@type": "MenuSection", name: k.titel + " – " + k.untertitel, hasMenuItem: k.gerichte.map(function (g) {
+          return { "@type": "MenuItem", name: g.name, description: g.text, offers: { "@type": "Offer", price: g.preis.toFixed(2), priceCurrency: "EUR" } };
+        }) };
+      }) }
+    };
+    var sc = document.createElement("script"); sc.type = "application/ld+json"; sc.textContent = JSON.stringify(ld); document.head.appendChild(sc);
+  } catch (e) { /* nur Zusatzinformation */ }
+
+  /* Live-Anzeige geöffnet */
+  function zeitFuer(tag) { for (var i = 0; i < G.zeiten.length; i++) if (G.zeiten[i].von.indexOf(tag) >= 0) return G.zeiten[i]; return null; }
+  function status() {
+    var jetzt = new Date(), hm = ("0" + jetzt.getHours()).slice(-2) + ":" + ("0" + jetzt.getMinutes()).slice(-2);
+    var box = $("status"), txt = "", heute = zeitFuer(jetzt.getDay());
+    if (G.offen(jetzt)) { box.classList.add("offen"); txt = "Jetzt geöffnet · bis " + heute.zu + " Uhr"; }
+    else {
+      box.classList.remove("offen");
+      if (heute && hm < heute.auf) txt = "Heute ab " + heute.auf + " Uhr geöffnet";
+      else for (var d = 1; d <= 7; d++) { var z = zeitFuer((jetzt.getDay() + d) % 7); if (z) { txt = (d === 1 ? "Morgen" : TAGE[(jetzt.getDay() + d) % 7]) + " ab " + z.auf + " Uhr geöffnet"; break; } }
+    }
+    box.querySelector("span").textContent = txt;
+  }
+  status(); setInterval(status, 60000);
+
+  /* Öffnungszeiten je Wochentag */
+  var heuteTag = new Date().getDay();
+  [1, 2, 3, 4, 5, 6, 0].forEach(function (t) {
+    var z = zeitFuer(t), tr = el("tr");
+    if (t === heuteTag) { tr.className = "heute"; tr.setAttribute("aria-current", "date"); }
+    var th = el("th", null, TAGE[t]); th.scope = "row";
+    tr.appendChild(th); tr.appendChild(el("td", null, z ? z.zeit : "Ruhetag"));
+    $("zeiten-tab").appendChild(tr);
+  });
+
+  /* ---------- Ebenen: Fenster, Tafeln, Bildansicht (Zurück-Taste schließt zuerst) ---------- */
+  var stapel = [];
+  function istModal() { return stapel.length > 0; }
+  function sperre() {
+    var modal = stapel.length > 0;
+    document.body.classList.toggle("gesperrt", modal);
+    $("schleier").classList.toggle("an", stapel.some(function (e) { return e.schleier; }));
+  }
+  function oeffne(ebene) {
+    ebene.vorher = document.activeElement;
+    stapel.push(ebene);
+    ebene.zeigen();
+    try { history.pushState({ ebene: stapel.length }, ""); } catch (e) {}
+    sperre();
+    setTimeout(function () { var f = ebene.el.querySelector("[data-fokus]") || ebene.el.querySelector("button, a[href], input, select, textarea"); if (f) f.focus(); }, 30);
+  }
+  function weg() {
+    var e = stapel.pop(); if (!e) return;
+    e.verbergen(); sperre();
+    if (e.vorher && document.contains(e.vorher)) try { e.vorher.focus({ preventScroll: true }); } catch (x) {}
+  }
+  function schliesse() {
+    if (!stapel.length) return;
+    if (history.state && history.state.ebene === stapel.length) history.back(); else weg();
+  }
+  window.addEventListener("popstate", function (ev) {
+    var soll = (ev.state && ev.state.ebene) || 0;
+    while (stapel.length > soll) weg();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!stapel.length) return;
+    var top = stapel[stapel.length - 1];
+    if (e.key === "Escape") { e.preventDefault(); schliesse(); }
+    if (e.key === "Tab") {
+      var f = Array.prototype.filter.call(top.el.querySelectorAll("button, a[href], input, select, textarea, [tabindex='0']"), function (n) { return !n.disabled && n.offsetParent !== null; });
+      if (!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+  $("schleier").addEventListener("click", schliesse);
+  alle("[data-zu]", function (b) { b.addEventListener("click", schliesse); });
+  function ebeneFenster(id) {
+    var n = $(id);
+    return { el: n, schleier: true, zeigen: function () { n.hidden = false; }, verbergen: function () { n.hidden = true; } };
+  }
+  function ebeneTafel(id, knopf) {
+    var n = $(id);
+    return { el: n, schleier: true,
+      zeigen: function () { n.classList.add("offen"); if (knopf) knopf.setAttribute("aria-expanded", "true"); },
+      verbergen: function () { n.classList.remove("offen"); if (knopf) knopf.setAttribute("aria-expanded", "false"); } };
+  }
+
+  /* Menü-Tafel */
+  $("menue-auf").addEventListener("click", function () { oeffne(ebeneTafel("menue", $("menue-auf"))); });
+  alle("#menue nav a", function (a) {
+    a.addEventListener("click", function (ev) {
+      ev.preventDefault(); var ziel = a.getAttribute("href");
+      schliesse(); setTimeout(function () { var t = document.querySelector(ziel); if (t) t.scrollIntoView(); }, 80);
+    });
+  });
+
+  /* ---------- Speisekarte aus karte.js ---------- */
+  function tag(cls, txt, lang) { var s = el("span", "tag tag-" + cls, txt); s.title = lang; s.setAttribute("aria-label", lang); return s; }
+  function zeile(k, i) {
+    var g = k.gerichte[i], key = B ? B.schluessel(k.id, i) : "";
+    var item = el("li", "gericht" + (g.haus ? " haus" : ""));
+    var nr = el("span", "nr", g.nr || "");
+    if (g.nr) nr.setAttribute("aria-label", "Nummer " + g.nr);
+    item.appendChild(nr);
+    var mitte = el("div", "g-mitte");
+    var open = el("button", "g-open", g.name); open.type = "button"; open.dataset.open = key;
+    open.setAttribute("aria-label", g.name + ", " + G.preis(g.preis) + " – Details und Extras");
+    mitte.appendChild(open);
+    if (g.veg) mitte.appendChild(tag("veg", "veg", "vegetarisch"));
+    if (g.scharf) mitte.appendChild(tag("scharf", "scharf", "scharf"));
+    if (g.neu) mitte.appendChild(tag("neu", "neu", "neu"));
+    if (g.haus) mitte.appendChild(tag("haus", "Haus", "Hausspezialität"));
+    if (g.text) mitte.appendChild(el("p", "txt", g.text));
+    item.appendChild(mitte);
+    item.appendChild(el("span", "preis", G.preis(g.preis)));
+    var plus = el("button", "plus"); plus.type = "button"; plus.dataset.add = key;
+    plus.setAttribute("aria-label", g.name + " in den Warenkorb legen");
+    plus.appendChild(svgUse("i-plus"));
+    item.appendChild(plus);
+    return item;
+  }
+  var nav = $("katnav"), ziel = $("kategorien");
+  G.karte.forEach(function (k) {
+    var li = el("li"), a = el("a", null, k.titel);
+    a.href = "#kat-" + k.id; a.dataset.id = k.id;
+    li.appendChild(a); nav.appendChild(li);
+    var sec = el("section", "kat"); sec.id = "kat-" + k.id; sec.setAttribute("aria-labelledby", "kh-" + k.id);
+    var kopf = el("div", "kat-kopf"), ico = el("span", "kat-ico");
+    ico.appendChild(svgUse(document.getElementById("k-" + k.id) ? "k-" + k.id : "k-pizza"));
+    var mitte = el("div"), h3 = el("h3"); h3.id = "kh-" + k.id;
+    h3.appendChild(el("em", null, k.titel)); mitte.appendChild(h3); mitte.appendChild(el("p", null, k.untertitel));
+    kopf.appendChild(ico); kopf.appendChild(mitte);
+    kopf.appendChild(el("span", "anz", k.gerichte.length + (k.gerichte.length === 1 ? " Gericht" : " Gerichte")));
+    sec.appendChild(kopf);
+    var ul = el("ul", "gerichte");
+    k.gerichte.forEach(function (g, i) { ul.appendChild(zeile(k, i)); });
+    sec.appendChild(ul); ziel.appendChild(sec);
+  });
+
+  /* Empfehlungen: Hausspezialität + Neu + zwei Klassiker (nur vorhandene Daten) */
+  function finde(pruef) { for (var a = 0; a < G.karte.length; a++) for (var b = 0; b < G.karte[a].gerichte.length; b++) if (pruef(G.karte[a].gerichte[b], G.karte[a])) return { k: G.karte[a], i: b, g: G.karte[a].gerichte[b] }; return null; }
+  var haus = finde(function (g) { return g.haus; });
+  if (haus) {
+    $("haus").hidden = false;
+    $("haus-nr").textContent = haus.g.nr ? "N° " + haus.g.nr : "";
+    $("haus-name").textContent = haus.g.name;
+    $("haus-text").textContent = haus.g.text;
+    $("haus-preis").textContent = G.preis(haus.g.preis);
+    $("haus-add").dataset.add = B ? B.schluessel(haus.k.id, haus.i) : "";
+    $("haus-open").dataset.open = $("haus-add").dataset.add;
+  }
+  var empf = [finde(function (g) { return g.neu; }),
+              finde(function (g, k) { return k.id === "pizza" && g.name === "Vincenzo"; }),
+              finde(function (g, k) { return k.id === "pizza" && g.name === "Calzone"; })].filter(Boolean);
+  var eh = el("h3", null, "Unsere Empfehlungen"); eh.id = "h-empf";
+  $("empf-liste").parentNode.insertBefore(eh, $("empf-liste"));
+  empf.forEach(function (t) { $("empf-liste").appendChild(zeile(t.k, t.i)); });
+
+  /* Aktive Kategorie beim Scrollen */
+  var links = nav.querySelectorAll("a"), secs = ziel.querySelectorAll(".kat"), aktiv = null;
+  function markiere() {
+    var grenze = nav.getBoundingClientRect().bottom + 20, id = null;
+    for (var i = 0; i < secs.length; i++) if (secs[i].getBoundingClientRect().top <= grenze) id = secs[i].id.slice(4);
+    if (!id) id = G.karte[0].id;
+    if (id === aktiv) return; aktiv = id;
+    for (var j = 0; j < links.length; j++) {
+      var an = links[j].dataset.id === id;
+      links[j].classList.toggle("aktiv", an);
+      if (an) { links[j].setAttribute("aria-current", "true"); var l = links[j]; nav.scrollTo({ left: Math.max(0, l.offsetLeft - (nav.clientWidth - l.offsetWidth) / 2), behavior: "smooth" }); }
+      else links[j].removeAttribute("aria-current");
+    }
+  }
+  var wartet = false;
+  window.addEventListener("scroll", function () { if (!wartet) { wartet = true; requestAnimationFrame(function () { wartet = false; markiere(); }); } }, { passive: true });
+  markiere();
+
+  /* Bildband sanft heranzoomen */
+  var band = document.querySelector(".band");
+  if (band && "IntersectionObserver" in window) new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { band.classList.add("sichtbar"); o.disconnect(); } }, { threshold: .25 }).observe(band);
+  else if (band) band.classList.add("sichtbar");
+
+  /* Bildansicht */
+  var lb = $("lb"), lbImg = lb.querySelector("img"), lbCap = lb.querySelector("figcaption");
+  alle("[data-zoom]", function (btn) {
+    btn.addEventListener("click", function () {
+      var img = btn.querySelector("img"), cap = btn.parentNode.querySelector("figcaption");
+      lbImg.src = img.currentSrc || img.src; lbImg.alt = img.alt; lbCap.textContent = cap ? cap.textContent : "";
+      oeffne({ el: lb, schleier: false, zeigen: function () { lb.hidden = false; }, verbergen: function () { lb.hidden = true; } });
+    });
+  });
+  lb.addEventListener("click", function (e) { if (!e.target.closest("[data-zu]")) schliesse(); });
+
+  /* ---------- Bestellung ---------- */
+  if (!B) return;
+  var toastT;
+  function toast(t) { var n = $("toast"); n.textContent = t; n.classList.add("an"); clearTimeout(toastT); toastT = setTimeout(function () { n.classList.remove("an"); }, 2200); }
+  function gerichtZu(key) { var t = String(key).split(":"), k = G.karte.filter(function (x) { return x.id === t[0]; })[0]; return k ? { k: k, g: k.gerichte[+t[1]] } : null; }
+
+  /* „+“: direkt hinzufügen */
+  document.addEventListener("click", function (e) {
+    var add = e.target.closest("[data-add]");
+    if (add) {
+      B.hinzu(add.dataset.add, [], "");
+      var t = gerichtZu(add.dataset.add);
+      toast((t ? t.g.name : "Gericht") + " liegt im Warenkorb");
+      add.classList.add("ok"); setTimeout(function () { add.classList.remove("ok"); }, 600);
+      return;
+    }
+    var op = e.target.closest("[data-open]");
+    if (op) gerichtFenster(op.dataset.open);
+  });
+
+  /* Gericht-Fenster: Menge, Zusatzzutaten, Anmerkung */
+  var gf = { key: null, menge: 1 };
+  B.zutaten.forEach(function (z, i) {
+    var lab = el("label"), cb = el("input"); cb.type = "checkbox"; cb.value = z; cb.id = "z" + i;
+    lab.appendChild(cb); lab.appendChild(document.createTextNode(z)); $("gf-zutaten").appendChild(lab);
+  });
+  function gfPreis() {
+    var t = gerichtZu(gf.key); if (!t) return;
+    var n = $("gf-zutaten").querySelectorAll("input:checked").length;
+    $("gf-preis").textContent = G.preis((t.g.preis + n * B.aufpreis) * gf.menge);
+    $("gf-menge").textContent = gf.menge;
+  }
+  function gerichtFenster(key) {
+    var t = gerichtZu(key); if (!t) return;
+    gf.key = key; gf.menge = 1;
+    $("gf-nr").textContent = (t.g.nr ? "Nr. " + t.g.nr + " · " : "") + t.k.titel;
+    $("gf-name").textContent = t.g.name; $("gf-text").textContent = (t.g.text ? t.g.text + " · " : "") + G.preis(t.g.preis);
+    alle("input", function (c) { c.checked = false; }, $("gf-zutaten"));
+    $("gf-anm").value = "";
+    gfPreis();
+    oeffne(ebeneFenster("gericht-fenster"));
+  }
+  $("gf-zutaten").addEventListener("change", gfPreis);
+  $("gf-minus").addEventListener("click", function () { gf.menge = Math.max(1, gf.menge - 1); gfPreis(); });
+  $("gf-plus").addEventListener("click", function () { gf.menge = Math.min(30, gf.menge + 1); gfPreis(); });
+  $("gf-add").addEventListener("click", function () {
+    var ex = Array.prototype.map.call($("gf-zutaten").querySelectorAll("input:checked"), function (c) { return c.value; });
+    for (var i = 0; i < gf.menge; i++) B.hinzu(gf.key, ex, $("gf-anm").value);
+    var t = gerichtZu(gf.key);
+    schliesse(); toast(gf.menge + "× " + t.g.name + " liegt im Warenkorb");
+  });
+
+  /* Warenkorb zeichnen */
+  var korb = $("korb"), breit = window.matchMedia("(min-width:1100px)");
+  function zeichne(inh) {
+    inh = inh || B.inhalt();
+    var box = $("korb-inhalt"); box.textContent = "";
+    if (!inh.anzahl) {
+      var p = el("p", "korb-leer"); p.appendChild(el("b", null, "Noch leer")); p.appendChild(document.createTextNode("Tippen Sie bei einem Gericht auf „+“."));
+      box.appendChild(p);
+    } else {
+      var ul = el("ul", "pos");
+      inh.positionen.forEach(function (p) {
+        var li = el("li"), n = el("span", "p-name");
+        if (p.nr) n.appendChild(el("small", null, "Nr. " + p.nr));
+        n.appendChild(document.createTextNode(p.name));
+        li.appendChild(n); li.appendChild(el("span", "p-preis", G.preis(p.gesamt)));
+        var extra = [];
+        if (p.extras.length) extra.push("+ " + p.extras.join(", "));
+        if (p.anmerkung) extra.push("„" + p.anmerkung + "“");
+        if (extra.length) li.appendChild(el("p", "p-extra", extra.join(" · ")));
+        var m = el("div", "p-menge"), st = el("span", "stepper");
+        var minus = el("button", null, p.menge === 1 ? "×" : "−"); minus.type = "button"; minus.setAttribute("aria-label", p.menge === 1 ? p.name + " entfernen" : "Eine " + p.name + " weniger");
+        var plus = el("button", null, "+"); plus.type = "button"; plus.setAttribute("aria-label", "Eine " + p.name + " mehr");
+        minus.addEventListener("click", function () { B.menge(p.position, p.menge - 1); });
+        plus.addEventListener("click", function () { B.menge(p.position, p.menge + 1); });
+        st.appendChild(minus); st.appendChild(el("span", null, p.menge)); st.appendChild(plus);
+        m.appendChild(st); m.appendChild(el("small", null, "je " + G.preis(p.einzel)));
+        li.appendChild(m); ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    }
+    $("korb-summe").textContent = G.preis(inh.summe);
+    $("zur-kasse").disabled = !inh.anzahl;
+    $("zur-kasse").style.opacity = inh.anzahl ? "" : ".5";
+    $("korbleiste-text").textContent = inh.anzahl + (inh.anzahl === 1 ? " Artikel · " : " Artikel · ") + G.preis(inh.summe);
+    $("leiste-zahl").textContent = inh.anzahl || "";
+    document.body.classList.toggle("hat-korb", inh.anzahl > 0);
+  }
+  B.beiAenderung(zeichne); zeichne();
+  function korbAuf() {
+    if (breit.matches) { korb.scrollIntoView({ block: "nearest" }); $("zur-kasse").focus(); return; }
+    oeffne(ebeneTafel("korb"));
+  }
+  $("korbleiste").addEventListener("click", korbAuf);
+  $("leiste-korb").addEventListener("click", korbAuf);
+
+  /* Kasse */
+  var zeitenListe = [];
+  function feldFehler(f) {
+    ["name", "telefon", "zeit", "warenkorb"].forEach(function (k) {
+      $("f-" + k).textContent = f[k] || "";
+      var inp = { name: "k-name", telefon: "k-tel", zeit: "k-zeit" }[k];
+      if (inp) { if (f[k]) $(inp).setAttribute("aria-invalid", "true"); else $(inp).removeAttribute("aria-invalid"); }
+    });
+  }
+  function kasseFuellen() {
+    var inh = B.inhalt(), ul = $("kasse-liste"); ul.textContent = "";
+    inh.positionen.forEach(function (p) {
+      var li = el("li"); li.appendChild(el("span", null, p.menge + "× " + p.name + (p.extras.length ? " + " + p.extras.join(", ") : "")));
+      li.appendChild(el("span", null, G.preis(p.gesamt))); ul.appendChild(li);
+    });
+    ul.hidden = !inh.anzahl;
+    $("kasse-summe").textContent = G.preis(inh.summe);
+    var sel = $("k-zeit"), alt = sel.value; sel.textContent = "";
+    zeitenListe = B.abholzeiten();
+    var leer = el("option", null, zeitenListe.length ? "Bitte wählen" : "Derzeit keine Abholzeit verfügbar"); leer.value = ""; sel.appendChild(leer);
+    zeitenListe.forEach(function (z) { var o = el("option", null, z.text); o.value = z.wert; sel.appendChild(o); });
+    if (alt) sel.value = alt;
+  }
+  $("zur-kasse").addEventListener("click", function () {
+    if (!B.inhalt().anzahl) return;
+    kasseFuellen(); feldFehler({});
+    $("kasse-form").hidden = false; $("danke").hidden = true;
+    oeffne(ebeneFenster("kasse"));
+  });
+  ["k-name", "k-tel", "k-zeit"].forEach(function (id) {
+    $(id).addEventListener("input", function () { $(id).removeAttribute("aria-invalid"); $("f-" + { "k-name": "name", "k-tel": "telefon", "k-zeit": "zeit" }[id]).textContent = ""; });
+  });
+  $("kasse-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var daten = { name: $("k-name").value.trim(), telefon: $("k-tel").value.trim(), zeit: $("k-zeit").value, hinweis: $("k-hinweis").value.trim() };
+    var zeitText = ($("k-zeit").selectedOptions[0] || {}).textContent || daten.zeit;
+    var r = B.absenden(daten);
+    if (!r.ok) {
+      feldFehler(r.fehler || {});
+      var erst = r.fehler.name ? "k-name" : r.fehler.telefon ? "k-tel" : r.fehler.zeit ? "k-zeit" : null;
+      if (erst) $(erst).focus();
+      return;
+    }
+    feldFehler({});
+    $("d-nummer").textContent = r.nummer; $("d-zeit").textContent = zeitText;
+    $("d-name").textContent = daten.name; $("d-summe").textContent = G.preis(r.summe);
+    $("d-demo").hidden = !r.demo;
+    $("kasse-form").hidden = true; $("danke").hidden = false; $("danke").focus();
+    $("k-hinweis").value = "";
+    /* Warenkorb-Tafel am Handy darunter schließen lassen wir offen; sie zeigt jetzt „leer“ */
+  });
+})();
+</script>
+</body>
+</html>

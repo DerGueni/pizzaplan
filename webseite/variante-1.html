@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><!-- Vorschau, vor Live-Gang entfernen -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng</title>
+<meta name="description" content="Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng: Pizza, Pasta, Salate und Klassiker aus dem Ofen. Online oder telefonisch vorbestellen und abholen. Centrum 12, Tel. 09188 541.">
+<meta name="theme-color" content="#f6efe2">
+<meta property="og:type" content="restaurant.restaurant">
+<meta property="og:title" content="Gabriel's – Café · Pizzeria · Ristorante">
+<meta property="og:description" content="Pizza, Pasta und Salate in Postbauer-Heng. Online oder telefonisch vorbestellen und abholen.">
+<meta property="og:image" content="fotos/gastraum.jpg">
+<meta property="og:locale" content="de_DE">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23f6efe2' stroke='%23a4472a' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%233d6a3a' stroke-width='2' stroke-dasharray='3 4'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-weight='700' font-size='32' fill='%23a4472a'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Gabriel's – Café · Pizzeria · Ristorante",
+  "alternateName": "Pizzeria Gabriel's",
+  "url": "https://www.pizza-gabriels.de/",
+  "image": "https://www.pizza-gabriels.de/fotos/fassade.jpg",
+  "servesCuisine": ["Italienisch", "Pizza", "Pasta"],
+  "telephone": "+49 9188 541",
+  "email": "cafegabriels95@gmail.com",
+  "acceptsReservations": "True",
+  "hasMenu": "https://www.pizza-gabriels.de/#karte",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Centrum 12",
+    "postalCode": "92353",
+    "addressLocality": "Postbauer-Heng",
+    "addressCountry": "DE"
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "16:00", "closes": "22:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "12:00", "closes": "22:00" }
+  ]
+}
+</script>
+<style>
+:root{
+  --papier:#f6efe2; --papier2:#efe4d0; --karte:#fbf7ef;
+  --tinte:#2b231d; --tinte2:#5a4c40;
+  --terra:#a4472a; --terra-d:#863620;
+  --basil:#3d6a3a; --linie:#d9c8ad;
+  --rot:#9b2c1a;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --max:1120px; --kopf:58px;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html.gesperrt,html.gesperrt body{overflow:hidden}
+body{margin:0;background:var(--papier);color:var(--tinte);font:400 16px/1.5 var(--sans);overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:var(--terra)}
+a:hover{color:var(--terra-d)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--basil);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--tinte);color:#fff;padding:8px 12px;z-index:200}
+.skip:focus{left:8px}
+.unsichtbar{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.1;margin:0}
+.zier{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--terra);margin:0 auto 6px}
+.zier::before,.zier::after{content:"";height:1px;width:48px;background:currentColor;opacity:.6}
+.zier svg{width:18px;height:18px}
+svg.ic{width:18px;height:18px;flex:none}
+
+/* Kopfleiste */
+.kopf{position:sticky;top:0;z-index:50;background:rgba(246,239,226,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--linie)}
+.kopf .wrap{display:flex;align-items:center;gap:12px;height:var(--kopf)}
+.marke{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--tinte);text-decoration:none;white-space:nowrap;margin-right:auto}
+.marke img{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:50% 30%;border:1px solid var(--linie);background:#fff;filter:brightness(1.04) contrast(1.12)}
+.marke:hover{color:var(--terra)}
+.kopf nav.haupt{display:none;gap:20px}
+.kopf nav.haupt a{color:var(--tinte2);text-decoration:none;font-weight:600;font-size:15px;padding:4px 0;border-bottom:2px solid transparent}
+.kopf nav.haupt a:hover{color:var(--terra);border-color:var(--terra)}
+.kbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;min-width:40px;padding:0 12px;border-radius:999px;border:1.5px solid var(--terra);background:transparent;color:var(--terra);font-weight:700;font-size:15px;text-decoration:none;cursor:pointer;white-space:nowrap;position:relative}
+.kbtn:hover{background:var(--terra);color:#fff}
+.kbtn.voll{background:var(--terra);color:#fff}
+.kbtn.voll:hover{background:var(--terra-d);border-color:var(--terra-d)}
+.kbtn .txt{display:none}
+.kbtn.menue{border-color:var(--linie);color:var(--tinte)}
+.kbtn.menue:hover{background:var(--papier2);color:var(--tinte)}
+.zahl{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--basil);color:#fff;font:700 12px/20px var(--sans);text-align:center}
+.zahl[hidden]{display:none}
+#kopf-korb{display:none}
+
+/* Hero */
+.hero{text-align:center;position:relative;overflow:hidden;padding-bottom:44px}
+.hero-bild{position:relative;height:min(64vw,440px);overflow:hidden;background:#3a2a20}
+.hero-bild .par,.band .par{position:absolute;left:0;right:0;top:-10%;bottom:-10%;will-change:transform}
+.hero-bild img,.band img{width:100%;height:100%;object-fit:cover}
+.hero-bild img{animation:heranzoomen 26s ease-out both}
+@keyframes heranzoomen{from{transform:scale(1.14)}to{transform:scale(1)}}
+.hero-bild::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(120,60,30,.10) 0%,rgba(246,239,226,0) 45%,rgba(246,239,226,.7) 80%,var(--papier) 100%)}
+.hero-inhalt{position:relative;margin-top:-6px}
+.logo{width:min(190px,48vw);height:auto;margin:0 auto;mix-blend-mode:multiply;filter:brightness(1.04) contrast(1.12)}
+.hero .zusatz{font:700 13px/1.3 var(--sans);letter-spacing:2.5px;text-transform:uppercase;color:var(--basil);margin:8px 0 4px}
+.hero .ort{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--terra);margin:4px 0 0}
+.hero h1{font-size:clamp(42px,9vw,74px);letter-spacing:.5px}
+.hero .lead{max-width:34em;margin:14px auto 0;color:var(--tinte2);font-size:17px}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:6px 14px;border:1px solid var(--linie);border-radius:999px;background:var(--karte);font-weight:600;font-size:15px}
+.status i{width:10px;height:10px;border-radius:50%;background:var(--terra);flex:none}
+.status.auf i{background:var(--basil);box-shadow:0 0 0 4px rgba(61,106,58,.18)}
+.knoepfe{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:999px;font:600 16px var(--sans);text-decoration:none;border:1.5px solid var(--terra);color:var(--terra);background:transparent;cursor:pointer;transition:background .15s,color .15s,transform .15s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:hover{background:var(--terra);color:#fff;transform:translateY(-1px)}
+.btn.voll{background:var(--terra);color:#fff}
+.btn.voll:hover{background:var(--terra-d);border-color:var(--terra-d)}
+.btn.gruen{background:var(--basil);border-color:var(--basil);color:#fff}
+.btn.gruen:hover{background:#2f5530;border-color:#2f5530}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.abhol{margin-top:14px;font-size:15px;color:var(--tinte2)}
+.abhol a{font-weight:600}
+
+/* Abschnitte */
+section,.box{scroll-margin-top:calc(var(--kopf) + 12px)}
+.abschnitt{padding:48px 0}
+.abschnitt h2{font-size:clamp(34px,6vw,46px);text-align:center}
+.abschnitt .unter{text-align:center;color:var(--tinte2);margin:6px 0 0;font-style:italic;font-family:var(--serif);font-size:20px}
+
+/* Einblicke */
+.einblicke{padding-top:8px}
+.fotos{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fotos li{display:flex;flex-direction:column;min-width:0}
+.fotos .breit{grid-column:1/-1}
+.rahmen{display:block;flex:1;width:100%;padding:6px;background:var(--karte);border:1px solid var(--linie);box-shadow:0 10px 24px -18px rgba(60,35,20,.55);cursor:zoom-in;position:relative;transition:border-color .2s,box-shadow .2s}
+.rahmen .innen{display:block;position:relative;height:100%;overflow:hidden;outline:1px solid var(--linie);outline-offset:3px}
+.rahmen img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.fotos .breit .innen,.anfahrt-bild .innen{aspect-ratio:16/9}
+.fotos .hoch .innen{aspect-ratio:3/4}
+.rahmen:hover{border-color:var(--terra);box-shadow:0 16px 30px -16px rgba(60,35,20,.6)}
+.rahmen:hover img{transform:scale(1.04)}
+.cap{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--tinte2);text-align:center;margin:7px 4px 0;line-height:1.25}
+
+/* Bildband */
+.band{position:relative;margin:0;height:clamp(220px,40vw,500px);overflow:hidden;background:#3a2a20}
+.band button{position:absolute;inset:0;width:100%;padding:0;border:0;background:none;cursor:zoom-in;display:block}
+.band::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(43,35,29,0) 55%,rgba(43,35,29,.55) 100%);box-shadow:inset 0 0 0 10px rgba(246,239,226,.9),inset 0 0 0 11px var(--linie)}
+.band figcaption{position:absolute;left:28px;bottom:22px;color:#fff;font-family:var(--serif);font-style:italic;font-size:24px;pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.5);z-index:1}
+
+/* Speisekarte */
+.karte-bg{background:var(--papier2);border-top:1px solid var(--linie);border-bottom:1px solid var(--linie)}
+.pizza-rund{position:relative;width:120px;aspect-ratio:1;margin:0 auto 18px}
+.pizza-rund img{width:100%;height:100%;object-fit:cover;border-radius:50%;box-shadow:0 14px 30px -14px rgba(60,35,20,.5)}
+.pizza-rund::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:1.5px dashed var(--basil);opacity:.6}
+.schritte{list-style:none;margin:20px auto 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;max-width:760px;scroll-margin-top:calc(var(--kopf) + 16px)}
+.schritte li{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--tinte2)}
+.schritte b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--terra);color:#fff;font:700 14px var(--sans);flex:none}
+.empf-kopf{text-align:center;margin:30px 0 0}
+.empf-kopf h3{font-size:30px}
+.empf{list-style:none;margin:14px -16px 0;padding:4px 16px 12px;display:grid;grid-auto-flow:column;grid-auto-columns:min(78%,290px);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.empf li{scroll-snap-align:start;display:flex}
+.ekarte{flex:1;display:flex;flex-direction:column;background:var(--karte);border:1px solid var(--linie);padding:16px 16px 14px;position:relative;box-shadow:0 10px 24px -20px rgba(60,35,20,.6)}
+.ekarte::before{content:"";position:absolute;inset:5px;border:1px solid var(--linie);pointer-events:none;opacity:.7}
+.ekarte .lbl{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--terra)}
+.ekarte .lbl svg{width:16px;height:16px}
+.ekarte h4{font-family:var(--serif);font-size:26px;font-weight:700;margin:6px 0 2px;line-height:1.1}
+.ekarte p{margin:0;color:var(--tinte2);font-size:15px;flex:1}
+.ekarte .fuss{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.ekarte .fuss b{font-size:18px;font-variant-numeric:tabular-nums}
+.ekarte .btn{padding:8px 14px;font-size:15px;position:relative;z-index:1}
+.katnav{position:sticky;top:var(--kopf);z-index:20;background:rgba(239,228,208,.97);backdrop-filter:blur(4px);border-bottom:1px solid var(--linie);border-top:1px solid var(--linie);margin-top:22px}
+.katnav ul{list-style:none;margin:0 auto;padding:8px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;max-width:var(--max);-webkit-overflow-scrolling:touch}
+.katnav ul::-webkit-scrollbar{display:none}
+.katnav a{display:flex;align-items:center;gap:6px;white-space:nowrap;padding:6px 13px;border-radius:999px;text-decoration:none;color:var(--tinte2);font-weight:600;font-size:15px;border:1px solid transparent}
+.katnav a svg{width:16px;height:16px}
+.katnav a:hover{border-color:var(--linie);color:var(--terra)}
+.katnav a.aktiv{background:var(--terra);color:#fff}
+.papier{background:var(--karte);border:1px solid var(--linie);box-shadow:0 1px 0 #fff inset,0 10px 30px -22px rgba(60,35,20,.4);margin:24px auto 0;padding:8px 16px 22px;max-width:var(--max);position:relative}
+.papier::before{content:"";position:absolute;inset:6px;border:1px solid var(--linie);pointer-events:none;opacity:.7}
+.hinweis{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;padding:10px 14px;background:#e8efe2;border-left:3px solid var(--basil);color:#2c4a2a;font-size:15px}
+.hinweis + .hinweis{margin-top:8px}
+.hinweis svg{flex:none;margin-top:3px;width:18px;height:18px;color:var(--basil)}
+.legende{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;color:var(--tinte2);margin:12px 0 0}
+.legende span{display:inline-flex;align-items:center;gap:5px}
+.kat{padding-top:30px;scroll-margin-top:calc(var(--kopf) + 60px)}
+.kat-kopf{display:flex;flex-direction:column;align-items:center;text-align:center}
+.kat-sym{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--terra);color:var(--terra);display:flex;align-items:center;justify-content:center;background:var(--papier);margin-bottom:6px;box-shadow:0 0 0 4px var(--karte),0 0 0 5px var(--linie)}
+.kat-sym svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.katnav svg,.lbl svg.ks{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.kat h3{font-size:32px}
+.kat .ut{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-style:italic;color:var(--terra);font-size:18px;margin-top:2px}
+.kat .ut::before,.kat .ut::after{content:"";width:28px;height:1px;background:var(--linie)}
+.gerichte{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:1fr;column-gap:44px}
+.gericht{display:flex;align-items:flex-start;gap:8px;border-bottom:1px dotted var(--linie)}
+.gericht:last-child{border-bottom:0}
+.g-auf{flex:1;min-width:0;text-align:left;background:none;border:0;padding:9px 0 9px;cursor:pointer;border-radius:4px}
+.zeile{display:flex;align-items:baseline;gap:6px}
+.nr{flex:none;min-width:2.1em;font-size:13px;font-weight:700;color:var(--terra);font-variant-numeric:tabular-nums}
+.name{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.15;min-width:0}
+.marken{display:inline-flex;gap:3px;margin-left:4px;vertical-align:2px}
+.lead-punkte{flex:1 1 1em;min-width:1em;border-bottom:2px dotted var(--linie);transform:translateY(-4px)}
+.preis{flex:none;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.text{display:block;margin:1px 0 0 calc(2.1em * 13 / 16 + 6px);color:var(--tinte2);font-size:15px;line-height:1.35}
+.plus{flex:none;width:36px;height:36px;margin-top:8px;border-radius:50%;border:1.5px solid var(--terra);background:transparent;color:var(--terra);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s}
+.plus svg{width:18px;height:18px}
+.plus:hover{background:var(--terra);color:#fff}
+.g-auf:hover .name{color:var(--terra)}
+.k{display:inline-flex;align-items:center;justify-content:center;height:18px;min-width:18px;padding:0 5px;border-radius:9px;font:700 11px/1 var(--sans);letter-spacing:.3px}
+.k.veg{background:#e1ecd9;color:#2c5129}
+.k.scharf{background:#f6dcd2;color:#8a2f17}
+.k.neu{background:var(--basil);color:#fff}
+.k.haus{background:var(--terra);color:#fff}
+.k svg{width:12px;height:12px}
+
+/* Info */
+.info{display:grid;grid-template-columns:1fr;gap:20px;margin-top:26px}
+.box{background:var(--karte);border:1px solid var(--linie);padding:22px 20px;border-radius:4px;min-width:0}
+.box h3{font-size:28px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.box h3 svg{width:22px;height:22px;color:var(--terra);flex:none}
+.zeiten{width:100%;border-collapse:collapse;font-size:16px}
+.zeiten td{padding:9px 8px;border-bottom:1px dotted var(--linie)}
+.zeiten td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.zeiten tr.heute td{background:#f1e2d6;font-weight:700;color:var(--terra-d)}
+.zeiten tr.heute td:first-child::after{content:"heute";margin-left:8px;font:700 11px var(--sans);text-transform:uppercase;letter-spacing:.6px;background:var(--terra);color:#fff;padding:2px 6px;border-radius:8px;vertical-align:2px}
+address{font-style:normal;font-size:17px;line-height:1.6}
+.box .btn{margin-top:14px}
+.anfahrt-bild{margin:0 0 14px}
+.anfahrt-bild .cap{text-align:left;margin-left:2px}
+.kontakt{list-style:none;padding:0;margin:0}
+.kontakt li{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dotted var(--linie);min-width:0}
+.kontakt li:last-child{border:0}
+.kontakt svg{width:18px;height:18px;color:var(--basil);flex:none}
+.kontakt a{text-decoration:none;font-weight:600;overflow-wrap:anywhere}
+.kontakt a:hover{text-decoration:underline}
+.klein{font-size:15px;color:var(--tinte2);margin:12px 0 0}
+
+/* Fuß */
+footer{background:var(--tinte);color:#e9dfcf;padding:36px 0 30px;font-size:15px}
+footer h2{font-size:26px;color:#fff;margin-bottom:8px}
+footer a{color:#f0b49b}
+footer a:hover{color:#fff}
+.fuss-grid{display:grid;grid-template-columns:1fr;gap:22px}
+footer details{margin-top:6px}
+footer summary{cursor:pointer;color:#f0b49b;font-weight:600}
+footer details p{color:#d6cbb9;max-width:46em}
+.copy{margin-top:24px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);color:#bdb2a1;font-size:14px}
+
+/* Handy-Leiste */
+.leiste{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:1fr 1fr 1.3fr;background:var(--tinte);border-top:2px solid var(--terra);padding-bottom:env(safe-area-inset-bottom)}
+.leiste a,.leiste button{display:flex;align-items:center;justify-content:center;gap:6px;height:50px;color:#fff;text-decoration:none;font-weight:600;font-size:15px;background:none;border:0;cursor:pointer;white-space:nowrap;min-width:0;padding:0 6px}
+.leiste > * + *{border-left:1px solid rgba(255,255,255,.14)}
+.leiste svg{width:18px;height:18px;flex:none}
+.leiste .korb-knopf.gefuellt{background:var(--terra)}
+body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
+
+/* Ebenen: Schleier, Tafeln, Fenster */
+.schleier{position:fixed;inset:0;z-index:80;background:rgba(43,35,29,.5);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.schleier.an{opacity:1;visibility:visible}
+.tafel{position:fixed;z-index:90;left:0;right:0;bottom:0;max-height:90vh;max-height:90dvh;display:flex;flex-direction:column;background:var(--karte);border-top:3px solid var(--terra);border-radius:16px 16px 0 0;box-shadow:0 -20px 40px -20px rgba(0,0,0,.4);transform:translateY(105%);visibility:hidden;transition:transform .28s ease,visibility .28s}
+.tafel.offen{transform:none;visibility:visible}
+.tafel-kopf{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--linie)}
+.tafel-kopf h2{font-size:28px;flex:1;min-width:0}
+.zu{width:40px;height:40px;border-radius:50%;border:1px solid var(--linie);background:var(--papier);cursor:pointer;font-size:22px;line-height:1;flex:none}
+.zu:hover{border-color:var(--terra);color:var(--terra)}
+.tafel-inhalt{overflow-y:auto;padding:14px 16px;flex:1;overscroll-behavior:contain}
+.tafel-fuss{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--linie);background:var(--papier)}
+.summe{display:flex;justify-content:space-between;align-items:baseline;font-size:18px;margin-bottom:10px}
+.summe b{font-size:22px;font-variant-numeric:tabular-nums}
+.tafel-fuss .btn{width:100%}
+.zur{background:none;border:0;color:var(--terra);font-weight:600;cursor:pointer;padding:6px 0;text-decoration:underline}
+
+/* Warenkorb */
+.pos{list-style:none;margin:0;padding:0}
+.pos li{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:10px 0;border-bottom:1px dotted var(--linie)}
+.pos .pn{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.2}
+.pos .pn small{font:700 12px var(--sans);color:var(--terra);margin-right:4px}
+.pos .pe{grid-column:1;font-size:14px;color:var(--tinte2)}
+.pos .pg{font-weight:700;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--linie);border-radius:999px;background:var(--papier)}
+.stepper button{width:36px;height:34px;border:0;background:none;cursor:pointer;font-size:20px;color:var(--terra);border-radius:999px}
+.stepper button:hover{background:var(--papier2)}
+.stepper output,.stepper span{min-width:26px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.leer{text-align:center;color:var(--tinte2);padding:24px 0}
+.leer svg{width:40px;height:40px;color:var(--linie);margin:0 auto 8px}
+
+/* Formular */
+.feld{margin-bottom:14px}
+.feld label{display:block;font-weight:600;margin-bottom:4px}
+.feld input,.feld select,.feld textarea{width:100%;font:400 16px var(--sans);color:var(--tinte);padding:10px 12px;border:1.5px solid var(--linie);border-radius:8px;background:#fff}
+.feld textarea{min-height:70px;resize:vertical}
+.feld input:focus,.feld select:focus,.feld textarea:focus{border-color:var(--basil);outline:none;box-shadow:0 0 0 3px rgba(61,106,58,.2)}
+.feld [aria-invalid="true"]{border-color:var(--rot);background:#fff7f4}
+.fehler{display:block;color:var(--rot);font-size:15px;margin-top:4px;font-weight:600}
+.fehler:empty{display:none}
+.zahlung{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#e8efe2;border-left:3px solid var(--basil);font-size:15px;color:#2c4a2a;margin:4px 0 6px}
+.zahlung svg{flex:none;width:18px;height:18px;margin-top:2px}
+.demo{padding:12px 14px;background:#fbeee2;border:1px dashed var(--terra);color:var(--terra-d);font-size:15px;margin-top:14px}
+.danke{text-align:center;padding:8px 0}
+.danke .haken{width:60px;height:60px;border-radius:50%;background:var(--basil);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.danke .haken svg{width:30px;height:30px}
+.danke h3{font-size:30px}
+.danke dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;text-align:left;max-width:320px;margin:16px auto 0;font-size:16px}
+.danke dt{color:var(--tinte2)}
+.danke dd{margin:0;font-weight:700}
+
+/* Gericht-Fenster */
+.zutaten{border:0;padding:0;margin:0 0 14px}
+.zutaten legend{font-weight:600;margin-bottom:6px;padding:0}
+.zutaten .liste{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.zutaten label{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:15px;cursor:pointer;min-width:0}
+.zutaten input{width:18px;height:18px;accent-color:var(--terra);flex:none}
+.zutaten small{color:var(--tinte2);margin-left:auto;white-space:nowrap}
+@media (max-width:479px){.zutaten small{display:none}}
+.dlg-text{color:var(--tinte2);margin:0 0 14px}
+.mengezeile{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-weight:600}
+
+/* Menü */
+.menue-tafel .tafel-inhalt a.nl{display:flex;align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px dotted var(--linie);text-decoration:none;color:var(--tinte);font-family:var(--serif);font-size:24px;font-weight:600}
+.menue-tafel .tafel-inhalt a.nl:hover{color:var(--terra)}
+.menue-tafel .btn{width:100%;margin-top:10px}
+
+/* Hinweis-Toast */
+.toast{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom));z-index:70;transform:translate(-50%,20px);opacity:0;visibility:hidden;display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:10px 12px 10px 16px;background:var(--tinte);color:#fff;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.3);transition:transform .25s,opacity .25s,visibility .25s;font-size:15px}
+.toast.an{transform:translate(-50%,0);opacity:1;visibility:visible}
+.toast span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast button{flex:none;background:var(--terra);color:#fff;border:0;border-radius:999px;padding:6px 12px;font-weight:700;cursor:pointer}
+
+/* Bildansicht */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(30,22,17,.95);display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;cursor:zoom-out}
+.lb.offen{display:flex}
+.lb img{max-width:100%;max-height:calc(100vh - 110px);object-fit:contain;border:6px solid var(--karte);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.lb p{color:#f3e8d6;font-family:var(--serif);font-style:italic;font-size:21px;margin:12px 0 0;text-align:center}
+.lb .zu{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.35);color:#fff;border-color:#f3e8d6}
+
+@media (min-width:480px){.kbtn.tel .txt{display:inline}}
+@media (min-width:720px){
+  .info{grid-template-columns:repeat(2,1fr)}
+  .info .box:first-child{grid-column:1/-1}
+  .fuss-grid{grid-template-columns:1.2fr 1fr}
+  .papier{padding:14px 36px 34px}
+  .fotos{gap:16px}
+  .empf{grid-auto-flow:row;grid-template-columns:repeat(2,1fr);overflow:visible;margin:14px 0 0;padding:4px 0 0}
+  .tafel{left:50%;right:auto;width:560px;transform:translate(-50%,105%)}
+  .tafel.offen{transform:translate(-50%,0)}
+}
+@media (min-width:1000px){
+  :root{--kopf:68px}
+  .leiste,.toast{bottom:24px}
+  .leiste{display:none}
+  body{padding-bottom:0}
+  .toast{bottom:24px}
+  .kopf nav.haupt{display:flex}
+  #kopf-korb{display:inline-flex}
+  .kbtn .txt{display:inline}
+  .kbtn.menue{display:none}
+  .marke img{width:44px;height:44px}
+  .hero{text-align:left;min-height:min(86vh,760px);display:flex;align-items:center;padding:64px 0}
+  .hero-bild{position:absolute;inset:0;height:auto}
+  .hero-bild::after{background:linear-gradient(90deg,var(--papier) 0%,rgba(246,239,226,.96) 30%,rgba(246,239,226,.78) 46%,rgba(246,239,226,.12) 70%,rgba(246,239,226,0) 100%),linear-gradient(180deg,rgba(246,239,226,0) 80%,var(--papier) 100%)}
+  .hero-inhalt{margin-top:0;width:100%}
+  .hero-text{max-width:600px}
+  .hero .kopfteil{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+  .logo{width:180px;margin:0}
+  .hero .lead{margin-left:0}
+  .knoepfe{justify-content:flex-start}
+  .gerichte{grid-template-columns:1fr 1fr}
+  .info{grid-template-columns:repeat(3,1fr)}
+  .info .box:first-child{grid-column:auto}
+  .papier{margin-left:16px;margin-right:16px}
+  .empf{grid-template-columns:repeat(4,1fr)}
+  .fotos{grid-template-columns:2fr 1fr 1fr;gap:20px}
+  .fotos .breit{grid-column:1}
+  .fotos .hoch{grid-row:span 2}
+  .fotos .hoch .rahmen{position:relative}
+  .fotos .hoch .innen{position:absolute;inset:6px;height:auto;aspect-ratio:auto}
+  .cap{font-size:18px}
+  /* PC: Warenkorb als Seitenleiste rechts */
+  .tafel{left:auto;right:0;top:0;bottom:0;width:430px;max-height:none;border-radius:0;border-top:0;border-left:3px solid var(--terra);transform:translateX(105%)}
+  .tafel.offen{transform:none}
+  .tafel.mitte{top:50%;bottom:auto;right:auto;left:50%;width:520px;max-height:88vh;border-left:0;border-top:3px solid var(--terra);border-radius:10px;transform:translate(-50%,-46%);opacity:0;transition:transform .22s,opacity .22s,visibility .22s}
+  .tafel.mitte.offen{transform:translate(-50%,-50%);opacity:1}
+}
+@media (min-width:1152px){.papier{margin-left:auto;margin-right:auto}}
+@media (hover:hover){.gericht:hover{background:linear-gradient(90deg,transparent,rgba(239,228,208,.55) 30%,rgba(239,228,208,.55) 70%,transparent)}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}.hero-bild img{animation:none}.rahmen:hover img{transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#karte">Zur Speisekarte springen</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-tel" viewBox="0 0 24 24"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></symbol>
+  <symbol id="i-karte" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM9 9h6M9 13h6M9 17h3"/></symbol>
+  <symbol id="i-korb" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" d="M5 8h14l-1.3 11.2a1 1 0 0 1-1 .8H7.3a1 1 0 0 1-1-.8zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-menue" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-haken" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-uhr" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.5H16l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21z"/></symbol>
+  <symbol id="i-blatt" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4C10 4 4 9 4 16c0 1.4.3 2.6.8 3.6C6 15 9 11.5 14 9c-4 3-6.5 6.5-7.6 11 1 .3 2 .4 3 .4C16 20.4 20 14 20 4z"/></symbol>
+  <symbol id="i-chili" viewBox="0 0 24 24"><path fill="currentColor" d="M15 6c1.7-.3 3 .6 3.5 2.2.8 2.7-1.6 7.4-6.6 10.4-3.3 2-6.6 2.6-8.4 1.9 3.7-1.2 7-4.6 8.5-9.2.7-2.3 1.4-4.9 3-5.3zM16 5c0-1.6.8-2.6 2.4-3l.4 1c-1 .3-1.6.9-1.7 2.1z"/></symbol>
+  <symbol id="i-stern" viewBox="0 0 24 24"><path fill="currentColor" d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-geld" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <!-- Kategorie-Symbole -->
+  <symbol id="c-antipasti" viewBox="0 0 24 24"><ellipse cx="9" cy="14.5" rx="4" ry="5.3" transform="rotate(-30 9 14.5)"/><path d="M11.5 9.5C13.5 6.5 16.5 4.5 20 4"/><ellipse cx="17" cy="10" rx="2.4" ry="3.4" transform="rotate(40 17 10)"/></symbol>
+  <symbol id="c-insalata" viewBox="0 0 24 24"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 12c0-3 2-6 5-7M12.5 12c1-3 3-5 6-5"/></symbol>
+  <symbol id="c-pizza" viewBox="0 0 24 24"><path d="M12 21 3.2 6.2a15 15 0 0 1 17.6 0z"/><path d="M4.6 8.6a12 12 0 0 1 14.8 0"/><circle cx="10" cy="11.5" r="1.2"/><circle cx="14.2" cy="12.5" r="1.2"/><circle cx="12" cy="16" r="1"/></symbol>
+  <symbol id="c-pasta" viewBox="0 0 24 24"><path d="M6 3v5a2.5 2.5 0 0 0 5 0V3M8.5 3v18"/><path d="M14 9c3-1 6 0 6 2s-3 3-5 2.5M14 14c3-.5 6 .5 6 2.5S17 20 14.5 19"/></symbol>
+  <symbol id="c-forno" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="8" rx="2"/><path d="M1.5 13H3M21 13h1.5M8 8c0-1.6 1-1.6 1-3.2M12 8c0-1.6 1-1.6 1-3.2M16 8c0-1.6 1-1.6 1-3.2"/></symbol>
+  <symbol id="c-imbiss" viewBox="0 0 24 24"><path d="M3 16a9 9 0 0 1 18 0z"/><path d="M4.5 16c.7-1 1.3 1 2 0s1.3 1 2 0 1.3 1 2 0 1.3 1 2 0 1.3 1 2 0 1.3 1 2 0 1.3 1 2 0"/></symbol>
+  <symbol id="c-carne" viewBox="0 0 24 24"><path d="M2.5 12c3-4 8-6 12.5-3l5-3v12l-5-3c-4.5 3-9.5 1-12.5-3z"/><circle cx="8" cy="11.2" r=".9"/></symbol>
+  <symbol id="c-kinder" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 0 0 7 0"/><path d="M9 9.8v.4M15 9.8v.4"/></symbol>
+</svg>
+
+<header class="kopf">
+  <div class="wrap">
+    <a class="marke" href="#start" aria-label="Gabriel's – zum Seitenanfang"><img src="assets/logo.png" alt="" width="480" height="480">Gabriel's</a>
+    <nav class="haupt" aria-label="Hauptnavigation">
+      <a href="#karte">Speisekarte</a><a href="#bestellen">Bestellen</a><a href="#einblicke">Einblicke</a><a href="#zeiten">Öffnungszeiten</a><a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="kbtn tel voll" data-tel href="#" aria-label="Anrufen"><svg class="ic" aria-hidden="true"><use href="#i-tel"/></svg><span class="txt" data-telnr></span></a>
+    <button class="kbtn" id="kopf-korb" type="button" data-korb aria-label="Warenkorb öffnen"><svg class="ic" aria-hidden="true"><use href="#i-korb"/></svg><span class="txt">Warenkorb</span><span class="zahl" data-zahl hidden></span></button>
+    <button class="kbtn menue" type="button" id="menue-knopf" aria-label="Menü öffnen" aria-controls="menue" aria-expanded="false"><svg class="ic" aria-hidden="true"><use href="#i-menue"/></svg></button>
+  </div>
+</header>
+
+<main id="start">
+  <section class="hero" aria-labelledby="titel">
+    <div class="hero-bild"><div class="par"><img src="fotos/gastraum.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen und Kerzen" width="2400" height="1351" fetchpriority="high"></div></div>
+    <div class="wrap hero-inhalt">
+      <div class="hero-text">
+        <div class="kopfteil">
+          <img class="logo" src="assets/logo.png" alt="Logo von Gabriel's: Zeichnung eines Frauenporträts" width="480" height="480">
+          <div>
+            <p class="zusatz" id="zusatz"></p>
+            <h1 id="titel">Pizzeria Gabriel's</h1>
+            <p class="ort" id="ort"></p>
+          </div>
+        </div>
+        <p class="lead">Italienische Küche mitten im Ort – Pizza, Pasta, Salate und Klassiker aus dem Ofen. Online oder telefonisch vorbestellen und abholen.</p>
+        <div class="status" id="status" role="status"><i aria-hidden="true"></i><span></span></div>
+        <div class="knoepfe">
+          <a class="btn voll" href="#karte"><svg aria-hidden="true"><use href="#i-korb"/></svg>Jetzt bestellen</a>
+          <a class="btn" data-tel href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+          <a class="btn" data-route href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+        </div>
+        <p class="abhol">Nur Abholung, keine Lieferung · <a data-tel href="#">Tisch reservieren</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt einblicke" id="einblicke" aria-labelledby="einblicke-titel">
+    <div class="wrap">
+      <div class="zier" aria-hidden="true"><svg><use href="#i-blatt"/></svg></div>
+      <h2 id="einblicke-titel">Einblicke</h2>
+      <p class="unter">Theke, Bar und Gastraum</p>
+      <ul class="fotos">
+        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/theke.jpg" data-text="Theke – das Porträt aus unserem Logo hängt auch an der Wand" aria-label="Bild vergrößern: Theke"><span class="innen"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine, dem gerahmten Porträt an der Wand und Blick in die Küche mit Pizzaofen" width="2400" height="1351" loading="lazy"></span></button><p class="cap">Theke – das Porträt aus unserem Logo hängt auch an der Wand</p></li>
+        <li class="hoch"><button class="rahmen" type="button" data-gross="fotos/bar-hoch.jpg" data-text="Bar" aria-label="Bild vergrößern: Bar"><span class="innen"><img src="fotos/bar-hoch.jpg" alt="Bar mit beleuchteter Theke und Barhockern" width="1351" height="2400" loading="lazy"></span></button><p class="cap">Bar</p></li>
+        <li class="hoch"><button class="rahmen" type="button" data-gross="fotos/raum-hoch.jpg" data-text="Theke und Gastraum" aria-label="Bild vergrößern: Theke und Gastraum"><span class="innen"><img src="fotos/raum-hoch.jpg" alt="Blick entlang der Theke in den Gastraum" width="1351" height="2400" loading="lazy"></span></button><p class="cap">Theke und Gastraum</p></li>
+        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/gastraum-fass.jpg" data-text="Gastraum" aria-label="Bild vergrößern: Gastraum"><span class="innen"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen, Kerzen und einem Weinfass" width="2400" height="1351" loading="lazy"></span></button><p class="cap">Gastraum</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="abschnitt karte-bg" id="karte" aria-labelledby="karte-titel">
+    <div class="wrap">
+      <div class="pizza-rund"><img src="assets/pizza.jpg" alt="Pizza von oben auf einem hellen Holzbrett" width="1600" height="1524" loading="lazy"></div>
+      <h2 id="karte-titel">Speisekarte</h2>
+      <p class="unter">Online vorbestellen und abholen</p>
+      <ol class="schritte" id="bestellen" aria-label="So bestellen Sie">
+        <li><b>1</b>Gerichte auswählen</li>
+        <li><b>2</b>Abholzeit wählen</li>
+        <li><b>3</b>Abholen und vor Ort bezahlen</li>
+      </ol>
+      <div class="empf-kopf"><h3>Unsere Empfehlungen</h3></div>
+      <ul class="empf" id="empf"></ul>
+    </div>
+    <nav class="katnav" aria-label="Kategorien der Speisekarte"><ul id="katnav"></ul></nav>
+    <div class="papier">
+      <p class="hinweis"><svg aria-hidden="true"><use href="#i-plus"/></svg><span>Jede weitere Zutat 1 € Aufpreis – im Bestellfenster einfach mit auswählen.</span></p>
+      <p class="hinweis"><svg aria-hidden="true"><use href="#i-info"/></svg><span>Allergene und Zusatzstoffe: Bitte fragen Sie unser Personal.</span></p>
+      <p class="legende" aria-label="Zeichenerklärung">
+        <span><b class="k veg" aria-hidden="true"><svg><use href="#i-blatt"/></svg></b>vegetarisch</span>
+        <span><b class="k scharf" aria-hidden="true"><svg><use href="#i-chili"/></svg></b>scharf</span>
+        <span><b class="k neu" aria-hidden="true">Neu</b>neu auf der Karte</span>
+        <span><b class="k haus" aria-hidden="true"><svg><use href="#i-stern"/></svg></b>Hausspezialität</span>
+      </p>
+      <div id="speisen"></div>
+    </div>
+  </section>
+
+  <figure class="band">
+    <div class="par"><img src="fotos/theke-lang.jpg" alt="Lange Theke mit beleuchteten Lamellen" width="2400" height="1351" loading="lazy"></div>
+    <button type="button" data-gross="fotos/theke-lang.jpg" data-text="Theke" aria-label="Bild vergrößern: Theke"></button>
+    <figcaption>Theke</figcaption>
+  </figure>
+
+  <section class="abschnitt" aria-label="Öffnungszeiten, Anfahrt und Kontakt">
+    <div class="wrap">
+      <div class="zier" aria-hidden="true"><svg><use href="#i-blatt"/></svg></div>
+      <h2>Besuchen Sie uns</h2>
+      <div class="info">
+        <div class="box" id="anfahrt">
+          <h3><svg aria-hidden="true"><use href="#i-route"/></svg>So finden Sie uns</h3>
+          <figure class="anfahrt-bild"><button class="rahmen" type="button" data-gross="fotos/fassade.jpg" data-text="So finden Sie uns" aria-label="Bild vergrößern: Fassade"><span class="innen"><img src="fotos/fassade.jpg" alt="Fassade bei Nacht mit beleuchtetem Lokal, Tischen draußen und rotem Schild" loading="lazy"></span></button></figure>
+          <address id="adresse"></address>
+          <p class="klein" id="terrasse" hidden>Tische gibt es auch draußen vor dem Lokal.</p>
+          <a class="btn" data-route href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>In Google Maps öffnen</a>
+        </div>
+        <div class="box" id="zeiten">
+          <h3><svg aria-hidden="true"><use href="#i-uhr"/></svg>Öffnungszeiten</h3>
+          <table class="zeiten"><tbody id="zeiten-tab"></tbody></table>
+          <p class="klein">Abholbestellungen sind während der Öffnungszeiten möglich.</p>
+        </div>
+        <div class="box" id="kontakt">
+          <h3><svg aria-hidden="true"><use href="#i-tel"/></svg>Kontakt</h3>
+          <ul class="kontakt">
+            <li><svg aria-hidden="true"><use href="#i-tel"/></svg><a data-tel href="#"></a></li>
+            <li><svg aria-hidden="true"><use href="#i-mail"/></svg><a id="mail" href="#"></a></li>
+            <li><svg aria-hidden="true"><use href="#i-fb"/></svg><a id="fb" href="#" target="_blank" rel="noopener">Gabriel's auf Facebook</a></li>
+          </ul>
+          <a class="btn" data-tel href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Tisch reservieren</a>
+          <p class="klein">Reservierungen und Bestellungen nehmen wir gerne telefonisch entgegen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fuss-grid">
+      <div>
+        <h2>Impressum</h2>
+        <p id="impressum"></p>
+      </div>
+      <div>
+        <h2>Datenschutz</h2>
+        <details>
+          <summary>Datenschutzhinweise anzeigen</summary>
+          <p>Diese Seite setzt keine Cookies und verwendet keine Analysewerkzeuge. Ihr Warenkorb wird nur in Ihrem Browser gespeichert. Schriften werden von Google Fonts geladen; dabei wird Ihre IP-Adresse an Google übermittelt. Beim Klick auf „Route“ oder „Facebook“ verlassen Sie diese Seite und es gelten die Bestimmungen des jeweiligen Anbieters. Platzhaltertext – die vollständige Datenschutzerklärung folgt.</p>
+        </details>
+      </div>
+    </div>
+    <p class="copy" id="copy"></p>
+  </div>
+</footer>
+
+<nav class="leiste" aria-label="Schnellzugriff">
+  <a data-tel href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+  <a data-route href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+  <button type="button" class="korb-knopf" data-korb><svg aria-hidden="true"><use href="#i-korb"/></svg><span id="leiste-korb">Warenkorb</span></button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span></span><button type="button" data-korb>Warenkorb</button></div>
+
+<div class="schleier" id="schleier"></div>
+
+<!-- Menü (Handy) -->
+<div class="tafel menue-tafel" id="menue" role="dialog" aria-modal="true" aria-labelledby="menue-titel">
+  <div class="tafel-kopf"><h2 id="menue-titel">Menü</h2><button class="zu" type="button" data-zu aria-label="Menü schließen">×</button></div>
+  <div class="tafel-inhalt">
+    <a class="nl" href="#karte">Speisekarte</a>
+    <a class="nl" href="#bestellen">Bestellen</a>
+    <a class="nl" href="#einblicke">Einblicke</a>
+    <a class="nl" href="#zeiten">Öffnungszeiten</a>
+    <a class="nl" href="#anfahrt">Anfahrt</a>
+    <a class="nl" href="#kontakt">Kontakt</a>
+    <a class="btn voll" data-tel href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+    <a class="btn" data-tel href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Tisch reservieren</a>
+  </div>
+</div>
+
+<!-- Gericht-Fenster -->
+<div class="tafel mitte" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-titel">
+  <div class="tafel-kopf"><h2 id="dlg-titel"></h2><button class="zu" type="button" data-zu aria-label="Fenster schließen">×</button></div>
+  <div class="tafel-inhalt">
+    <p class="dlg-text" id="dlg-text"></p>
+    <div class="mengezeile"><span>Menge</span><span class="stepper"><button type="button" id="dlg-minus" aria-label="Menge verringern">−</button><output id="dlg-menge" aria-live="polite">1</output><button type="button" id="dlg-plus" aria-label="Menge erhöhen">+</button></span></div>
+    <fieldset class="zutaten" id="dlg-zutaten"><legend>Zusatzzutaten (je 1,00 €)</legend><div class="liste" id="dlg-liste"></div></fieldset>
+    <div class="feld"><label for="dlg-anm">Anmerkung</label><input id="dlg-anm" maxlength="120" placeholder="z. B. ohne Zwiebeln" autocomplete="off"></div>
+  </div>
+  <div class="tafel-fuss"><button class="btn voll" type="button" id="dlg-hinzu"></button></div>
+</div>
+
+<!-- Warenkorb / Kasse -->
+<div class="tafel" id="korb" role="dialog" aria-modal="true" aria-labelledby="korb-titel">
+  <div class="tafel-kopf"><h2 id="korb-titel">Warenkorb</h2><button class="zu" type="button" data-zu aria-label="Warenkorb schließen">×</button></div>
+  <div class="tafel-inhalt">
+    <div id="ansicht-korb">
+      <ul class="pos" id="pos"></ul>
+      <p class="hinweis"><svg aria-hidden="true"><use href="#i-info"/></svg><span>Nur Abholung – keine Lieferung. Bezahlung bei Abholung.</span></p>
+    </div>
+    <form id="ansicht-kasse" novalidate hidden>
+      <button type="button" class="zur" id="zurueck-korb">← zurück zum Warenkorb</button>
+      <div class="feld"><label for="k-name">Name</label><input id="k-name" name="name" autocomplete="name" aria-describedby="f-name"><span class="fehler" id="f-name"></span></div>
+      <div class="feld"><label for="k-tel">Telefon für Rückfragen</label><input id="k-tel" name="telefon" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="f-telefon"><span class="fehler" id="f-telefon"></span></div>
+      <div class="feld"><label for="k-zeit">Abholzeit</label><select id="k-zeit" name="zeit" aria-describedby="f-zeit"></select><span class="fehler" id="f-zeit"></span></div>
+      <div class="feld"><label for="k-hinweis">Hinweis (freiwillig)</label><textarea id="k-hinweis" name="hinweis" maxlength="300"></textarea></div>
+      <p class="zahlung"><svg aria-hidden="true"><use href="#i-geld"/></svg><span>Bezahlung bei Abholung.</span></p>
+      <span class="fehler" id="f-warenkorb"></span>
+    </form>
+    <div id="ansicht-fertig" class="danke" hidden tabindex="-1"></div>
+  </div>
+  <div class="tafel-fuss" id="korb-fuss">
+    <div class="summe"><span id="summe-text">Summe</span><b id="summe">0,00 €</b></div>
+    <button class="btn voll" type="button" id="korb-weiter">Zur Kasse</button>
+  </div>
+</div>
+
+<!-- Bildansicht -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Bildansicht">
+  <button class="zu" type="button" aria-label="Bildansicht schließen">×</button>
+  <img alt="">
+  <p></p>
+</div>
+
+<script src="assets/karte.js"></script>
+<script src="assets/bestellung.js"></script>
+<script>
+(function () {
+  var G = window.GABRIELS, B = window.BESTELLUNG;
+  if (!G) return;
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var reduziert = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  /* ---------- Stammdaten ---------- */
+  $("#zusatz").textContent = G.zusatz || "";
+  $("#ort").textContent = G.strasse + " · " + G.plzOrt;
+  $$("[data-tel]").forEach(function (a) { a.href = G.telefonLink; if (!a.textContent.trim() && !a.children.length) a.textContent = G.telefon; });
+  $$("[data-telnr]").forEach(function (s) { s.textContent = G.telefon; });
+  $$("[data-route]").forEach(function (a) { a.href = G.karteLink; });
+  $("#mail").href = "mailto:" + G.mail; $("#mail").textContent = G.mail;
+  $("#fb").href = G.facebook;
+  $("#adresse").innerHTML = esc(G.name) + "<br>" + esc(G.strasse) + "<br>" + esc(G.plzOrt);
+  if (G.terrasse) $("#terrasse").hidden = false;
+  $("#impressum").innerHTML = esc(G.name) + (G.zusatz ? " – " + esc(G.zusatz) : "") + "<br>Inhaber: " + esc(G.inhaber) + "<br>" + esc(G.strasse) + ", " + esc(G.plzOrt) +
+    "<br>Telefon: <a href=\"" + esc(G.telefonLink) + "\">" + esc(G.telefon) + "</a>" +
+    "<br>E-Mail: <a href=\"mailto:" + esc(G.mail) + "\">" + esc(G.mail) + "</a>" +
+    "<br>Steuernummer: " + esc(G.ustId);
+  $("#copy").textContent = "© " + new Date().getFullYear() + " " + G.name + " · " + G.ort;
+
+  /* ---------- Öffnungsstatus ---------- */
+  function zeitFuer(tag) { for (var i = 0; i < G.zeiten.length; i++) if (G.zeiten[i].von.indexOf(tag) >= 0) return G.zeiten[i]; return null; }
+  var TAGE = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+  function status() {
+    var d = new Date(), el = $("#status"), txt = "";
+    var hm = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+    var z = zeitFuer(d.getDay());
+    if (G.offen(d)) { txt = "Jetzt geöffnet · bis " + z.zu + " Uhr"; el.classList.add("auf"); }
+    else {
+      el.classList.remove("auf");
+      if (z && hm < z.auf) txt = "Heute ab " + z.auf + " Uhr geöffnet";
+      else for (var i = 1; i <= 7; i++) {
+        var t = (d.getDay() + i) % 7, n = zeitFuer(t);
+        if (n) { txt = "Geschlossen · " + (i === 1 ? "morgen" : TAGE[t]) + " ab " + n.auf + " Uhr geöffnet"; break; }
+      }
+    }
+    el.querySelector("span").textContent = txt;
+  }
+  status(); setInterval(status, 60000);
+  var heute = new Date().getDay();
+  $("#zeiten-tab").innerHTML = G.zeiten.map(function (z) {
+    return "<tr" + (z.von.indexOf(heute) >= 0 ? " class=\"heute\"" : "") + "><td>" + esc(z.tage) + "</td><td>" + esc(z.zeit) + "</td></tr>";
+  }).join("");
+
+  /* ---------- Speisekarte ---------- */
+  var VERSTECKT = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)";
+  var marke = {
+    veg: '<b class="k veg" title="vegetarisch"><svg aria-hidden="true"><use href="#i-blatt"/></svg><span style="' + VERSTECKT + '">vegetarisch</span></b>',
+    scharf: '<b class="k scharf" title="scharf"><svg aria-hidden="true"><use href="#i-chili"/></svg><span style="' + VERSTECKT + '">scharf</span></b>',
+    neu: '<b class="k neu" title="Neu">Neu</b>',
+    haus: '<b class="k haus" title="Hausspezialität"><svg aria-hidden="true"><use href="#i-stern"/></svg><span style="' + VERSTECKT + '">Hausspezialität</span></b>'
+  };
+  function sym(id) { return '<svg aria-hidden="true"><use href="#c-' + id + '"/></svg>'; }
+  function markenVon(g) { return ["veg", "scharf", "neu", "haus"].filter(function (x) { return g[x]; }).map(function (x) { return marke[x]; }).join(""); }
+  var GERICHT = {}; /* schluessel -> {kat, g} */
+  G.karte.forEach(function (k) { k.gerichte.forEach(function (g, i) { GERICHT[B.schluessel(k.id, i)] = { kat: k, g: g }; }); });
+
+  $("#katnav").innerHTML = G.karte.map(function (k) { return '<li><a href="#kat-' + k.id + '" data-kat="' + k.id + '">' + sym(k.id) + esc(k.titel) + "</a></li>"; }).join("");
+  $("#speisen").innerHTML = G.karte.map(function (k) {
+    return '<section class="kat" id="kat-' + k.id + '" aria-labelledby="h-' + k.id + '"><div class="kat-kopf"><span class="kat-sym">' + sym(k.id) + '</span><h3 id="h-' + k.id + '">' + esc(k.titel) + '</h3><span class="ut">' + esc(k.untertitel) + '</span></div><ul class="gerichte">' +
+      k.gerichte.map(function (g, i) {
+        var s = B.schluessel(k.id, i), m = markenVon(g);
+        return '<li class="gericht"><button type="button" class="g-auf" data-auf="' + s + '" aria-label="' + esc(g.name) + ', ' + G.preis(g.preis) + ' – auswählen"><span class="zeile"><span class="nr">' + (g.nr ? esc(g.nr) : "") + '</span><span class="name">' + esc(g.name) +
+          (m ? '<span class="marken">' + m + "</span>" : "") + '</span><span class="lead-punkte" aria-hidden="true"></span><span class="preis">' + G.preis(g.preis) +
+          '</span></span><span class="text">' + esc(g.text) + '</span></button><button type="button" class="plus" data-plus="' + s + '" aria-label="' + esc(g.name) + ' in den Warenkorb"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></li>';
+      }).join("") + "</ul></section>";
+  }).join("");
+
+  /* Empfehlungen (nur vorhandene Gerichte) */
+  function finde(kat, name) { var k = G.karte.filter(function (x) { return x.id === kat; })[0]; if (!k) return null; for (var i = 0; i < k.gerichte.length; i++) if (k.gerichte[i].name === name) return B.schluessel(kat, i); return null; }
+  var EMPF = [["pizza", "Gabriel's"], ["antipasti", "Caprese"], ["pizza", "Vincenzo"], ["pizza", "Calzone"]];
+  $("#empf").innerHTML = EMPF.map(function (e) { return finde(e[0], e[1]); }).filter(Boolean).map(function (s) {
+    var t = GERICHT[s], g = t.g;
+    var lbl = g.haus ? '<svg aria-hidden="true"><use href="#i-stern"/></svg>Hausspezialität' : g.neu ? '<svg aria-hidden="true"><use href="#i-blatt"/></svg>Neu auf der Karte' : '<svg class="ks" aria-hidden="true"><use href="#c-' + t.kat.id + '"/></svg>' + esc(t.kat.untertitel);
+    return '<li><article class="ekarte"><span class="lbl">' + lbl + '</span><h4>' + (g.nr ? '<span class="unsichtbar">Nr. ' + esc(g.nr) + " </span>" : "") + esc(g.name) + '</h4><p>' + esc(g.text) + '</p><div class="fuss"><b>' + G.preis(g.preis) + '</b><button type="button" class="btn" data-auf="' + s + '" aria-label="' + esc(g.name) + ' auswählen"><svg aria-hidden="true"><use href="#i-plus"/></svg>Auswählen</button></div></article></li>';
+  }).join("");
+
+  /* aktive Kategorie */
+  var links = $$("#katnav a"), ul = $("#katnav"), aktiv = null, kats = $$(".kat");
+  function setze(id) {
+    if (id === aktiv) return; aktiv = id;
+    links.forEach(function (a) {
+      var an = a.getAttribute("data-kat") === id;
+      a.classList.toggle("aktiv", an);
+      if (an) { a.setAttribute("aria-current", "true"); ul.scrollTo({ left: a.offsetLeft - ul.clientWidth / 2 + a.offsetWidth / 2, behavior: reduziert ? "auto" : "smooth" }); }
+      else a.removeAttribute("aria-current");
+    });
+  }
+  function pruefeKat() {
+    var grenze = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--kopf"), 10) + 90, id = kats[0].id.slice(4);
+    kats.forEach(function (s) { if (s.getBoundingClientRect().top <= grenze) id = s.id.slice(4); });
+    setze(id);
+  }
+  window.addEventListener("scroll", pruefeKat, { passive: true }); pruefeKat();
+
+  /* ---------- Ebenen (Fenster/Tafeln) mit Zurück-Taste ---------- */
+  var ebenen = [], danach = null, schleier = $("#schleier");
+  function fokusierbar(el) { return $$('a[href],button:not([disabled]),input,select,textarea,[tabindex="0"]', el).filter(function (x) { return x.offsetParent !== null && !x.closest("[hidden]"); }); }
+  function oeffne(el, opt) {
+    opt = opt || {};
+    ebenen.push({ el: el, fokus: document.activeElement, zu: opt.zu });
+    el.classList.add("offen");
+    if (el.id !== "lb") schleier.classList.add("an");
+    document.documentElement.classList.add("gesperrt");
+    try { history.pushState({ ebene: ebenen.length }, ""); } catch (e) {}
+    setTimeout(function () { var f = opt.fokus || fokusierbar(el)[0]; if (f) f.focus({ preventScroll: true }); }, 60);
+  }
+  function weg() {
+    var e = ebenen.pop(); if (!e) return;
+    e.el.classList.remove("offen");
+    if (e.zu) e.zu();
+    if (!ebenen.length) { schleier.classList.remove("an"); document.documentElement.classList.remove("gesperrt"); }
+    if (e.fokus && e.fokus.focus && document.contains(e.fokus)) e.fokus.focus({ preventScroll: true });
+  }
+  var schliesst = false; /* verhindert doppeltes history.back() bei schnellem Doppelklick */
+  function schliessen(dann) {
+    if (!ebenen.length) { if (dann) dann(); return; }
+    if (schliesst) return;
+    danach = dann || null;
+    if (history.state && history.state.ebene) { schliesst = true; history.back(); } else { weg(); laufDanach(); }
+  }
+  function laufDanach() { if (danach) { var f = danach; danach = null; setTimeout(f, 30); } }
+  window.addEventListener("popstate", function () { schliesst = false; if (ebenen.length) weg(); laufDanach(); });
+  schleier.addEventListener("click", function () { schliessen(); });
+  $$("[data-zu]").forEach(function (b) { b.addEventListener("click", function () { schliessen(); }); });
+  document.addEventListener("keydown", function (e) {
+    if (!ebenen.length) return;
+    if (e.key === "Escape") { e.preventDefault(); schliessen(); return; }
+    if (e.key === "Tab") {
+      var f = fokusierbar(ebenen[ebenen.length - 1].el); if (!f.length) return;
+      var a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+      else if (f.indexOf(document.activeElement) < 0) { e.preventDefault(); a.focus(); }
+    }
+  });
+
+  /* Menü */
+  var mk = $("#menue-knopf");
+  mk.addEventListener("click", function () { mk.setAttribute("aria-expanded", "true"); oeffne($("#menue"), { zu: function () { mk.setAttribute("aria-expanded", "false"); } }); });
+  $$("#menue a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault(); var ziel = document.querySelector(a.getAttribute("href"));
+      schliessen(function () { if (ziel) ziel.scrollIntoView({ behavior: reduziert ? "auto" : "smooth" }); });
+    });
+  });
+
+  /* Bildansicht */
+  var lb = $("#lb");
+  $$("[data-gross]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var img = b.querySelector("img") || b.parentNode.querySelector("img");
+      $("img", lb).src = b.getAttribute("data-gross"); $("img", lb).alt = img ? img.alt : "";
+      $("p", lb).textContent = b.getAttribute("data-text");
+      oeffne(lb, { zu: function () { $("img", lb).removeAttribute("src"); } });
+    });
+  });
+  lb.addEventListener("click", function () { schliessen(); });
+
+  /* ---------- Toast ---------- */
+  var toast = $("#toast"), toastUhr;
+  function melde(t) { $("span", toast).textContent = t; toast.classList.add("an"); clearTimeout(toastUhr); toastUhr = setTimeout(function () { toast.classList.remove("an"); }, 3200); }
+
+  /* ---------- Gericht-Fenster ---------- */
+  var MIT_ZUTATEN = ["pizza", "pasta", "forno", "imbiss", "insalata"];
+  var dlg = $("#dlg"), aktuell = null, dMenge = 1;
+  $("#dlg-liste").innerHTML = B.zutaten.map(function (z, i) {
+    return '<label><input type="checkbox" value="' + esc(z) + '" id="z' + i + '"><span>' + esc(z) + '</span><small>+' + G.preis(B.aufpreis) + '</small></label>';
+  }).join("");
+  function dPreis() {
+    var t = GERICHT[aktuell]; if (!t) return;
+    var n = $$("#dlg-liste input:checked").length;
+    $("#dlg-hinzu").innerHTML = '<svg aria-hidden="true"><use href="#i-korb"/></svg>In den Warenkorb · ' + G.preis((t.g.preis + n * B.aufpreis) * dMenge);
+    $("#dlg-menge").textContent = dMenge;
+  }
+  function oeffneGericht(s) {
+    var t = GERICHT[s]; if (!t) return;
+    aktuell = s; dMenge = 1;
+    $("#dlg-titel").innerHTML = (t.g.nr ? '<span style="font:700 14px var(--sans);color:var(--terra);margin-right:6px">Nr. ' + esc(t.g.nr) + "</span>" : "") + esc(t.g.name);
+    $("#dlg-text").textContent = t.g.text + " · " + G.preis(t.g.preis);
+    $$("#dlg-liste input").forEach(function (c) { c.checked = false; });
+    $("#dlg-zutaten").hidden = MIT_ZUTATEN.indexOf(t.kat.id) < 0;
+    $("#dlg-anm").value = "";
+    dPreis();
+    oeffne(dlg, { fokus: $("#dlg-hinzu") });
+  }
+  $("#dlg-liste").addEventListener("change", dPreis);
+  $("#dlg-minus").addEventListener("click", function () { if (dMenge > 1) { dMenge--; dPreis(); } });
+  $("#dlg-plus").addEventListener("click", function () { if (dMenge < 30) { dMenge++; dPreis(); } });
+  $("#dlg-hinzu").addEventListener("click", function () {
+    var ex = $$("#dlg-liste input:checked").map(function (c) { return c.value; }), anm = $("#dlg-anm").value, s = aktuell, n = dMenge;
+    for (var i = 0; i < n; i++) B.hinzu(s, ex, anm);
+    schliessen(function () { melde(n + "× " + GERICHT[s].g.name + " im Warenkorb"); });
+  });
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-auf]"); if (a) { oeffneGericht(a.getAttribute("data-auf")); return; }
+    var p = e.target.closest("[data-plus]"); if (p) { var s = p.getAttribute("data-plus"); B.hinzu(s, [], ""); melde(GERICHT[s].g.name + " im Warenkorb"); return; }
+    var k = e.target.closest("[data-korb]"); if (k) { toast.classList.remove("an"); oeffneKorb(); }
+  });
+
+  /* ---------- Warenkorb und Kasse ---------- */
+  var korb = $("#korb"), ansicht = "korb";
+  function zeige(v) {
+    ansicht = v;
+    $("#ansicht-korb").hidden = v !== "korb"; $("#ansicht-kasse").hidden = v !== "kasse"; $("#ansicht-fertig").hidden = v !== "fertig";
+    $("#korb-fuss").hidden = v === "fertig" && false;
+    $("#korb-titel").textContent = v === "kasse" ? "Kasse" : v === "fertig" ? "Bestellt" : "Warenkorb";
+    zeichne(B.inhalt());
+  }
+  function oeffneKorb() { zeige("korb"); oeffne(korb, { zu: function () { if (ansicht === "fertig") zeige("korb"); } }); }
+  function zeichne(inh) {
+    var leer = !inh.anzahl;
+    $$("[data-zahl]").forEach(function (z) { z.hidden = leer; z.textContent = inh.anzahl; });
+    var lk = $("#leiste-korb"), kn = lk.parentNode;
+    lk.textContent = leer ? "Warenkorb" : inh.anzahl + (inh.anzahl === 1 ? " Artikel" : " Artikel") + " · " + G.preis(inh.summe);
+    kn.classList.toggle("gefuellt", !leer);
+    kn.setAttribute("aria-label", leer ? "Warenkorb öffnen (leer)" : "Warenkorb öffnen: " + lk.textContent);
+    $("#kopf-korb").setAttribute("aria-label", kn.getAttribute("aria-label"));
+    $("#pos").innerHTML = leer ? '<li class="leer" style="display:block"><svg aria-hidden="true"><use href="#i-korb"/></svg>Ihr Warenkorb ist noch leer.<br><a href="#karte" data-zur-karte>Zur Speisekarte</a></li>' :
+      inh.positionen.map(function (p) {
+        return '<li><div><div class="pn">' + (p.nr ? "<small>Nr. " + esc(p.nr) + "</small>" : "") + esc(p.name) + '</div>' +
+          (p.extras.length ? '<div class="pe">+ ' + esc(p.extras.join(", ")) + "</div>" : "") +
+          (p.anmerkung ? '<div class="pe"><i>„' + esc(p.anmerkung) + '“</i></div>' : "") +
+          '<div class="pe">je ' + G.preis(p.einzel) + '</div></div><div class="pg">' + G.preis(p.gesamt) + '</div>' +
+          '<div><span class="stepper"><button type="button" data-pos="' + p.position + '" data-d="-1" aria-label="' + esc(p.name) + ': eins weniger">−</button><span aria-label="Menge">' + p.menge + '</span><button type="button" data-pos="' + p.position + '" data-d="1" aria-label="' + esc(p.name) + ': eins mehr">+</button></span></div></li>';
+      }).join("");
+    $("#summe").textContent = G.preis(inh.summe);
+    $("#summe-text").textContent = leer ? "Summe" : "Summe (" + inh.anzahl + " Artikel)";
+    var w = $("#korb-weiter");
+    if (ansicht === "fertig") { $("#korb-fuss .summe").hidden = true; w.disabled = false; w.textContent = "Schließen"; }
+    else { $("#korb-fuss .summe").hidden = false; w.disabled = leer; w.textContent = ansicht === "kasse" ? "Bestellung absenden" : "Zur Kasse"; }
+  }
+  B.beiAenderung(zeichne);
+  zeichne(B.inhalt());
+  $("#pos").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-pos]");
+    if (b) { var pos = +b.getAttribute("data-pos"), p = B.inhalt().positionen.filter(function (x) { return x.position === pos; })[0]; if (p) B.menge(pos, p.menge + +b.getAttribute("data-d")); return; }
+    if (e.target.closest("[data-zur-karte]")) { e.preventDefault(); schliessen(function () { $("#karte").scrollIntoView(); }); }
+  });
+  function zeitenFuellen() {
+    var sel = $("#k-zeit"), alt = sel.value, z = B.abholzeiten();
+    sel.innerHTML = '<option value="">Bitte wählen …</option>' + z.map(function (x) { return '<option value="' + esc(x.text) + '">' + esc(x.text) + "</option>"; }).join("");
+    if (!z.length) sel.innerHTML = '<option value="">Derzeit keine Abholzeit – bitte anrufen</option>';
+    if (alt) sel.value = alt;
+  }
+  var FELDER = { name: "#k-name", telefon: "#k-tel", zeit: "#k-zeit" };
+  function fehlerZeigen(f) {
+    Object.keys(FELDER).forEach(function (k) { $(FELDER[k]).setAttribute("aria-invalid", f[k] ? "true" : "false"); $("#f-" + k).textContent = f[k] || ""; });
+    $("#f-warenkorb").textContent = f.warenkorb || "";
+  }
+  Object.keys(FELDER).forEach(function (k) { $(FELDER[k]).addEventListener("input", function () { if ($("#f-" + k).textContent) { $(FELDER[k]).setAttribute("aria-invalid", "false"); $("#f-" + k).textContent = ""; } }); });
+  $("#zurueck-korb").addEventListener("click", function () { zeige("korb"); $("#korb-weiter").focus(); });
+  $("#korb-weiter").addEventListener("click", function () {
+    if (ansicht === "korb") { zeitenFuellen(); fehlerZeigen({}); zeige("kasse"); setTimeout(function () { $("#k-name").focus(); }, 30); }
+    else if (ansicht === "kasse") absenden();
+    else schliessen();
+  });
+  $("#ansicht-kasse").addEventListener("submit", function (e) { e.preventDefault(); absenden(); });
+  function absenden() {
+    var daten = { name: $("#k-name").value.trim(), telefon: $("#k-tel").value.trim(), zeit: $("#k-zeit").value, hinweis: $("#k-hinweis").value.trim() };
+    var r = B.absenden(daten);
+    if (!r.ok) {
+      fehlerZeigen(r.fehler || {});
+      var erst = ["name", "telefon", "zeit"].filter(function (k) { return r.fehler && r.fehler[k]; })[0];
+      if (erst) $(FELDER[erst]).focus();
+      return;
+    }
+    fehlerZeigen({});
+    $("#ansicht-fertig").innerHTML = '<div class="haken"><svg aria-hidden="true"><use href="#i-haken"/></svg></div><h3>Vielen Dank, ' + esc(daten.name) + '!</h3>' +
+      '<dl><dt>Bestellnummer</dt><dd>' + esc(r.nummer) + '</dd><dt>Abholung</dt><dd>' + esc(daten.zeit) + '</dd><dt>Summe</dt><dd>' + G.preis(r.summe) + '</dd><dt>Bezahlung</dt><dd>bei Abholung</dd></dl>' +
+      '<p class="klein">Abholung bei ' + esc(G.name) + ", " + esc(G.strasse) + ". Fragen? <a href=\"" + esc(G.telefonLink) + "\">" + esc(G.telefon) + "</a></p>" +
+      (r.demo ? '<p class="demo"><b>Entwurf</b> – diese Bestellung wird noch nicht übertragen. Auf der fertigen Seite geht sie direkt an die Pizzeria.</p>' : "");
+    $("#k-hinweis").value = "";
+    zeige("fertig");
+    $("#ansicht-fertig").focus();
+  }
+
+  /* ---------- Parallaxe nur am PC ---------- */
+  var mq = window.matchMedia("(min-width:1000px) and (prefers-reduced-motion:no-preference)");
+  var pars = $$(".par"), wartet = false;
+  function rechne() {
+    wartet = false;
+    pars.forEach(function (p) {
+      if (!mq.matches) { p.style.transform = ""; return; }
+      var r = p.parentNode.getBoundingClientRect();
+      if (r.bottom < -100 || r.top > innerHeight + 100) return;
+      var max = r.height * 0.09, v = Math.max(-max, Math.min(max, (r.top + r.height / 2 - innerHeight / 2) * -0.1));
+      p.style.transform = "translate3d(0," + v.toFixed(1) + "px,0)";
+    });
+  }
+  function anstoss() { if (!wartet) { wartet = true; requestAnimationFrame(rechne); } }
+  window.addEventListener("scroll", anstoss, { passive: true });
+  window.addEventListener("resize", anstoss);
+  rechne();
+})();
+</script>
+</body>
+</html>

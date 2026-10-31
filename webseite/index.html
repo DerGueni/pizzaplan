@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neue Webseite – Pizzeria Gabriel's</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Fünf Entwürfe für die neue Webseite der Pizzeria Gabriel's in Postbauer-Heng.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23c8553d'/%3E%3Ccircle cx='32' cy='32' r='22' fill='%23f3d9a4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --grund: #f7f3ec; --karte: #ffffff; --text: #26221e; --leise: #6c645b; --linie: #e6ded2; --akzent: #b8462e; --gruen: #4c6b3c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--grund); color: var(--text); font: 16px/1.55 Inter, system-ui, sans-serif; }
+  .rahmen { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 40px 0 20px; display: flex; gap: 20px; align-items: center; }
+  header img { width: 84px; height: 84px; flex: none; }
+  h1 { font-family: Fraunces, Georgia, serif; font-size: clamp(28px, 5vw, 44px); line-height: 1.1; margin: 0 0 6px; }
+  header p { margin: 0; color: var(--leise); }
+  .it { color: var(--leise); font-style: italic; font-size: 14px; }
+  .raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin: 18px 0 36px; }
+  .entwurf { background: var(--karte); border: 1px solid var(--linie); border-radius: 14px; overflow: hidden;
+             display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s; }
+  .entwurf:hover { box-shadow: 0 12px 30px rgba(60,40,20,.12); transform: translateY(-2px); }
+  .entwurf .bild { aspect-ratio: 16 / 10; background: #ddd center top / cover no-repeat; border-bottom: 1px solid var(--linie); display: block; }
+  .entwurf .inhalt { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .entwurf h2 { font-family: Fraunces, Georgia, serif; font-size: 21px; margin: 0; }
+  .entwurf h2 span { color: var(--akzent); }
+  .entwurf p { margin: 0; color: var(--leise); font-size: 15px; flex: 1; }
+  .knoepfe { display: flex; gap: 8px; margin-top: 8px; }
+  .knoepfe a { flex: 1; text-align: center; text-decoration: none; padding: 9px 10px; border-radius: 9px; font-weight: 600; font-size: 15px; }
+  .pc { background: var(--text); color: #fff; }
+  .pc:hover { background: #000; }
+  .handy { border: 1px solid var(--text); color: var(--text); }
+  .handy:hover { background: var(--text); color: #fff; }
+  a:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+  section.text { background: var(--karte); border: 1px solid var(--linie); border-radius: 14px; padding: 18px 20px; margin-bottom: 18px; }
+  section.text h2 { font-family: Fraunces, Georgia, serif; font-size: 22px; margin: 0 0 8px; }
+  section.text ul { margin: 0; padding-left: 20px; }
+  section.text li { margin: 3px 0; }
+  .zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .zwei { grid-template-columns: 1fr; } header { padding-top: 24px; } header img { width: 60px; height: 60px; } }
+  footer { color: var(--leise); font-size: 14px; padding: 10px 0 40px; }
+</style>
+</head>
+<body>
+<div class="rahmen">
+  <header>
+    <img src="assets/logo.png" alt="Porträtzeichnung, Erkennungszeichen der Pizzeria Gabriel's">
+    <div>
+      <h1>Pizzeria Gabriel's – fünf Entwürfe für die neue Webseite</h1>
+      <p>Alle fünf sind fertige Seiten mit der kompletten Speisekarte. Jeweils am PC oder in der Handy-Ansicht ansehen.</p>
+      <p class="it">Cinque proposte per il nuovo sito – da guardare sul computer o sul telefono.</p>
+    </div>
+  </header>
+
+  <div class="raster" id="raster"></div>
+
+  <div class="zwei">
+    <section class="text">
+      <h2>Was neu ist</h2>
+      <ul>
+        <li><b>Online bestellen zur Abholung:</b> Warenkorb, Extra-Zutaten, Wunsch-Abholzeit nach den Öffnungszeiten</li>
+        <li>Mit einem Tipp anrufen, Tisch reservieren oder die Route starten</li>
+        <li>Echte Fotos vom Lokal, professionell aufbereitet, mit Großansicht</li>
+        <li>Speisekarte mit Empfehlungen, Kennzeichen vegetarisch, scharf, neu, Hausspezialität</li>
+        <li>Anzeige „Jetzt geöffnet“ in Echtzeit, Impressum vollständig</li>
+        <li>Für Google gut lesbar (Adresse, Öffnungszeiten, Speisekarte)</li>
+      </ul>
+    </section>
+    <section class="text">
+      <h2>Zu den Fotos</h2>
+      <ul>
+        <li>Theke, Gastraum und Fassade: eure Fotos, Personen entfernt, Licht und Farben aufbereitet, mit Signatur</li>
+        <li>Bitte prüfen, ob alles so stimmt wie im Lokal</li>
+        <li>Was noch schön wäre: 5–8 Gerichte von oben bei Tageslicht und ein Foto vom Team</li>
+      </ul>
+      <p class="it">Le foto del locale sono state ritoccate (persone rimosse, luce migliorata). Mancano solo alcune foto dei piatti.</p>
+    </section>
+  </div>
+  <section class="text">
+    <h2>Auf der alten Seite aufgefallen</h2>
+    <ul>
+      <li>Pizza Margherita steht einmal mit 12,50 € und auf der Unterseite mit 8,00 € – im Entwurf steht 12,50 €</li>
+      <li>Doppelte Nummern: 29 (Vincenzo und Garnele), 64 (Scampi und Chicken Crossies) – bitte prüfen</li>
+      <li>Pizza Gorgonzola ohne Beschreibung, keine Getränke- und Dessertkarte</li>
+      <li>Die Online-Bestellung ist im Entwurf nur zum Ausprobieren – es wird noch nichts übertragen</li>
+      <li>Schreibweisen vereinheitlicht: Capricciosa, Piccante, Arrabbiata, Cannelloni</li>
+    </ul>
+  </section>
+  <footer>Vorschau – nicht öffentlich, die bisherige Webseite bleibt unverändert. Stand 31.10.2026.</footer>
+</div>
+<script>
+  var ENTWUERFE = [
+    ["Trattoria Klassik", "Warmes Papier, Terrakotta und Basilikum, die Speisekarte wie eine gedruckte Restaurantkarte. Zeitlos und gemütlich."],
+    ["Modern &amp; Dunkel", "Dunkler Grund mit Glutorange, großes Pizzafoto, kräftige Schrift. Zeitgemäß und appetitlich."],
+    ["Frisch & Praktisch", "Hell und aufgeräumt, gebaut fürs Handy: Suche in der Speisekarte, Filter für vegetarisch und scharf."],
+    ["Kreidetafel & Holz", "Die Speisekarte wie die Tafel an der Wand, warme Holztöne, handgeschriebene Überschriften."],
+    ["Editorial Olive", "Olivgrün und Ocker, große Überschriften wie in einem Food-Magazin. Hochwertig und ruhig."]
+  ];
+  var raster = document.getElementById("raster");
+  ENTWUERFE.forEach(function (e, i) {
+    var n = i + 1, d = document.createElement("article");
+    d.className = "entwurf";
+    d.innerHTML = '<a class="bild" href="variante-' + n + '.html" style="background-image:url(assets/vorschau-' + n + '.jpg)" aria-label="Entwurf ' + n + ' öffnen"></a>' +
+      '<div class="inhalt"><h2><span>' + n + '</span> ' + e[0] + '</h2><p>' + e[1] + '</p>' +
+      '<div class="knoepfe"><a class="pc" href="variante-' + n + '.html">Am PC ansehen</a>' +
+      '<a class="handy" href="vorschau.html?v=' + n + '">Handy-Ansicht</a></div></div>';
+    raster.appendChild(d);
+  });
+</script>
+</body>
+</html>

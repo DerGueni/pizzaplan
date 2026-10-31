@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><!-- Vorschau, vor Live-Gang entfernen -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng</title>
+<meta name="description" content="Gabriel's – Café, Pizzeria und Ristorante im Centrum 12 in Postbauer-Heng. Pizza frisch aus dem Ofen, Pasta, Salate. Online zur Abholung bestellen, Öffnungszeiten und Anfahrt.">
+<meta name="theme-color" content="#16171a">
+<meta property="og:type" content="restaurant.restaurant">
+<meta property="og:title" content="Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng">
+<meta property="og:description" content="Pizza frisch aus dem Ofen, Pasta und Salate im Centrum 12. Online bestellen und abholen oder einfach anrufen.">
+<meta property="og:image" content="fotos/theke.jpg">
+<meta property="og:locale" content="de_DE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316171a'/%3E%3Ccircle cx='32' cy='32' r='20' fill='%23ff6a2b'/%3E%3Ccircle cx='32' cy='32' r='15' fill='%23ffb547'/%3E%3Ccircle cx='26' cy='27' r='3.2' fill='%23c1361b'/%3E%3Ccircle cx='38' cy='29' r='3.2' fill='%23c1361b'/%3E%3Ccircle cx='31' cy='38' r='3.2' fill='%23c1361b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#16171a; --bg2:#1d1e22; --card:#222328; --card-h:#292a30; --line:#33343b;
+  --text:#f2eee8; --muted:#b4aea6; --glut:#ff6a2b; --glut2:#ffb547; --glut-d:#e2531a;
+  --veg:#7fcf86; --hot:#ff7b6b; --rot:#ff8a7a;
+  --radius:14px; --maxw:1240px; --kopf:60px;
+  --head:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:124px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.55 var(--body);overflow-x:hidden}
+body.gesperrt{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--glut2);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 16px}
+@media(min-width:768px){.wrap{padding:0 32px}}
+.skip{position:absolute;left:-999px;top:8px;background:var(--glut);color:#16171a;padding:8px 14px;border-radius:8px;font-weight:600;z-index:100}
+.skip:focus{left:12px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3,h4{font-family:var(--head);line-height:1.05;margin:0;letter-spacing:-.01em}
+.eyebrow{font:700 13px/1.2 var(--head);letter-spacing:.18em;text-transform:uppercase;color:var(--glut);margin:0}
+.js-telnr{white-space:nowrap}
+
+/* Knöpfe */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:999px;text-decoration:none;font:700 16px/1 var(--head);letter-spacing:.01em;border:1.5px solid rgba(255,255,255,.35);color:var(--text);background:rgba(22,23,26,.4);cursor:pointer;transition:transform .15s,background .2s,border-color .2s,color .2s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:hover{border-color:var(--glut);background:rgba(255,106,43,.12)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--glut);border-color:var(--glut);color:#16171a}
+.btn.primary:hover{background:var(--glut2);border-color:var(--glut2)}
+.btn.voll{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* Kopfleiste */
+.top{position:fixed;inset:0 0 auto 0;z-index:40;height:var(--kopf);transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+.top.fest{background:rgba(22,23,26,.94);border-color:var(--line);backdrop-filter:blur(10px)}
+.top .wrap{display:flex;align-items:center;gap:16px;height:100%}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto;min-width:0}
+.brand img{width:42px;height:42px;filter:invert(1) drop-shadow(0 1px 3px rgba(0,0,0,.6));object-fit:contain;flex:none}
+.brand b{font:800 19px/1 var(--head);display:block}
+.brand small{display:none;font:600 10.5px/1.2 var(--head);letter-spacing:.14em;text-transform:uppercase;color:var(--glut2);margin-top:3px;white-space:nowrap}
+.top nav{display:none;gap:22px}
+.top nav a{text-decoration:none;font-weight:500;font-size:15px;opacity:.85;padding:6px 0;border-bottom:2px solid transparent;transition:opacity .2s,border-color .2s}
+.top nav a:hover,.top nav a.aktiv{opacity:1;border-color:var(--glut)}
+.kopf-tel,.kopf-korb{display:none;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:15px;min-height:40px;padding:0 15px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:transparent;cursor:pointer;transition:background .2s,border-color .2s}
+.kopf-tel:hover,.kopf-korb:hover{background:rgba(255,255,255,.08);border-color:var(--glut)}
+.kopf-tel svg,.kopf-korb svg{width:17px;height:17px}
+.kopf-korb{background:var(--glut);border-color:var(--glut);color:#16171a}
+.kopf-korb:hover{background:var(--glut2);border-color:var(--glut2)}
+.badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#16171a;color:var(--glut2);font:700 12px/1 var(--body)}
+.badge:empty{display:none}
+.menue-knopf{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(22,23,26,.5);cursor:pointer;font-weight:600;font-size:15px}
+.menue-knopf svg{width:20px;height:20px}
+@media(min-width:440px){.brand small{display:block}}
+@media(min-width:1000px){.top nav{display:flex}.kopf-tel,.kopf-korb{display:inline-flex}.menue-knopf{display:none}}
+
+/* Hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;isolation:isolate;overflow:hidden;background:var(--bg)}
+.hero .foto{position:absolute;inset:0;z-index:-3;overflow:hidden}
+.hero .foto img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform-origin:50% 45%;animation:kenburns 28s ease-in-out infinite alternate;will-change:transform}
+@keyframes kenburns{from{transform:scale(1.02)}to{transform:scale(1.16)}}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:
+  linear-gradient(180deg,rgba(22,23,26,.82) 0%,rgba(22,23,26,.3) 26%,rgba(22,23,26,.6) 58%,var(--bg) 100%),
+  linear-gradient(90deg,rgba(22,23,26,.9) 0%,rgba(22,23,26,.55) 45%,rgba(22,23,26,.1) 85%)}
+.hero::after{content:"";position:absolute;inset:-20%;z-index:-2;pointer-events:none;mix-blend-mode:soft-light;opacity:.9;
+  background:radial-gradient(40% 35% at 30% 75%,rgba(255,106,43,.75),transparent 70%),radial-gradient(35% 30% at 80% 30%,rgba(255,181,71,.45),transparent 70%);
+  animation:glut 14s ease-in-out infinite alternate}
+@keyframes glut{from{transform:translate3d(-4%,2%,0);opacity:.65}to{transform:translate3d(5%,-3%,0);opacity:1}}
+.hero .wrap{padding-top:100px;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+@media(min-width:1000px){.hero .wrap{padding-bottom:48px}}
+.hero h1{font-size:clamp(50px,12vw,128px);font-weight:900;text-transform:uppercase;letter-spacing:-.025em;line-height:.9;margin-top:12px}
+.hero h1 span{display:block;color:var(--glut);font-size:.38em;letter-spacing:.05em;font-weight:800;margin-top:10px}
+.hero p.lead{max-width:30em;font-size:clamp(16px,2vw,19px);color:#e5e0d8;margin:16px 0 0}
+.status{display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:8px 14px 8px 12px;border-radius:999px;background:rgba(22,23,26,.72);border:1px solid var(--line);font-weight:600;font-size:15px;backdrop-filter:blur(6px)}
+.status .dot{width:10px;height:10px;border-radius:50%;background:var(--glut2);flex:none}
+.status.offen .dot{background:#5fd27a;box-shadow:0 0 0 0 rgba(95,210,122,.6);animation:puls 2s infinite}
+@keyframes puls{70%{box-shadow:0 0 0 9px rgba(95,210,122,0)}100%{box-shadow:0 0 0 0 rgba(95,210,122,0)}}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero .unter{margin:16px 0 0;font-size:15px;color:var(--muted)}
+.hero .unter a{color:var(--text);font-weight:600}
+.scroll-hint{position:absolute;left:50%;bottom:18px;width:22px;height:36px;margin-left:-11px;border:2px solid rgba(242,238,232,.5);border-radius:12px;display:none}
+.scroll-hint::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:var(--glut);animation:hint 1.8s ease-in-out infinite}
+@keyframes hint{0%{transform:translateY(0);opacity:1}80%{transform:translateY(12px);opacity:0}100%{opacity:0}}
+@media(min-width:900px){.scroll-hint{display:block}}
+
+/* Abschnitte */
+section{padding:64px 0}
+@media(min-width:768px){section{padding:96px 0}}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:26px}
+.sec-head h2{font-size:clamp(34px,6vw,64px);font-weight:900;text-transform:uppercase;margin-top:10px}
+.sec-head p{margin:0;color:var(--muted);max-width:30em}
+
+/* So bestellen */
+.schritte{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:s}
+@media(min-width:768px){.schritte{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}
+.schritte li{counter-increment:s;display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg2)}
+.schritte li::before{content:counter(s);flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--glut);color:#16171a;font:900 18px/1 var(--head)}
+.schritte b{display:block;font:700 17px/1.2 var(--head)}
+.schritte span{color:var(--muted);font-size:15px}
+
+/* Parallaxe-Bildband */
+.band{position:relative;height:clamp(220px,46vw,520px);overflow:hidden;isolation:isolate;margin:0}
+.band img{position:absolute;left:0;top:-15%;width:100%;height:130%;object-fit:cover;object-position:50% 50%;will-change:transform}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(22,23,26,.15) 22%,rgba(22,23,26,.2) 70%,var(--bg) 100%)}
+.band figcaption{position:absolute;z-index:1;left:0;right:0;bottom:16%;text-align:center;padding:0 16px;font:900 clamp(26px,5.4vw,64px)/1 var(--head);text-transform:uppercase;letter-spacing:-.01em;text-shadow:0 2px 24px rgba(0,0,0,.75)}
+.band figcaption em{font-style:normal;color:var(--glut)}
+
+/* Kategorie-Navigation */
+.catnav{position:sticky;top:var(--kopf);z-index:30;background:rgba(22,23,26,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);border-top:1px solid var(--line)}
+.catnav ul{list-style:none;margin:0 auto;padding:9px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;max-width:var(--maxw)}
+.catnav ul::-webkit-scrollbar{display:none}
+@media(min-width:768px){.catnav ul{padding:10px 32px}}
+.catnav a{display:flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none;font:700 15px/1 var(--head);padding:9px 14px;border-radius:999px;color:var(--muted);border:1px solid var(--line);transition:color .2s,border-color .2s,background .2s}
+.catnav a svg{width:16px;height:16px}
+.catnav a:hover{color:var(--text);border-color:#55565f}
+.catnav a.aktiv{background:var(--glut);border-color:var(--glut);color:#16171a}
+
+/* Karte + Warenkorb-Layout */
+.karte-layout{display:block}
+@media(min-width:1100px){.karte-layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:32px;align-items:start}}
+
+.hinweise{display:grid;gap:8px;margin:20px 0 6px}
+.hinweis{display:flex;gap:10px;align-items:flex-start;margin:0;padding:11px 14px;border-radius:10px;background:var(--bg2);border-left:3px solid var(--glut);font-size:15px;color:#e5e0d8}
+.hinweis svg{width:18px;height:18px;flex:none;color:var(--glut);margin-top:2px}
+.legende{display:flex;flex-wrap:wrap;gap:8px 14px;margin:12px 0 0;font-size:14px;color:var(--muted)}
+
+/* Empfehlungen */
+.empf{margin-top:34px}
+.empf h3{font-size:clamp(24px,3.4vw,32px);font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.empf h3 svg{width:24px;height:24px;color:var(--glut)}
+.empf-reihe{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,72%);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:14px 16px 6px;margin:0 -16px}
+.empf-reihe::-webkit-scrollbar{display:none}
+@media(min-width:768px){.empf-reihe{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;padding:16px 0 0;margin:0}}
+@media(min-width:1300px){.empf-reihe{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.empf-karte{scroll-snap-align:start;position:relative;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:var(--radius);border:1px solid rgba(255,106,43,.45);background:radial-gradient(120% 90% at 100% 0%,rgba(255,106,43,.22),transparent 55%),var(--card);cursor:pointer;transition:transform .2s,border-color .2s}
+.empf-karte:hover{transform:translateY(-3px);border-color:var(--glut)}
+.empf-karte .ico{width:34px;height:34px;color:var(--glut2)}
+.empf-karte .art{font:600 12px/1 var(--head);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.empf-karte h4{font-size:21px;font-weight:800}
+.empf-karte p{margin:0;color:var(--muted);font-size:15px;line-height:1.4;flex:1}
+.empf-karte .fuss{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+.empf-karte .preis{font:800 19px/1 var(--head);color:var(--glut2)}
+.empf-karte .oeffnen{position:absolute;inset:0;border:0;background:transparent;border-radius:var(--radius);cursor:pointer;z-index:0}
+.empf-karte .plus{position:relative;z-index:1}
+
+/* Kategorien */
+.kat{padding-top:38px}
+.kat-kopf{display:flex;align-items:center;gap:14px;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.kat-kopf .kico{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:linear-gradient(140deg,rgba(255,106,43,.25),rgba(255,106,43,.06));border:1px solid rgba(255,106,43,.35);color:var(--glut2)}
+.kat-kopf .kico svg{width:26px;height:26px}
+.kat-kopf h3{font-size:clamp(26px,4vw,38px);font-weight:800;text-transform:uppercase}
+.kat-kopf small{display:block;color:var(--glut);font:600 12.5px/1 var(--head);letter-spacing:.14em;text-transform:uppercase;margin-top:5px}
+.raster{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:768px){.raster{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+
+/* Gericht */
+.gericht{position:relative;display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid rgba(255,255,255,.07)}
+.gericht .oeffnen{flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;padding:12px 0 12px 2px;border:0;background:transparent;text-align:left;cursor:pointer;border-radius:10px}
+.gericht .nr{font:700 13px/1 var(--head);color:var(--glut);min-width:26px;font-variant-numeric:tabular-nums}
+.gericht .name{font:700 17px/1.25 var(--head);min-width:0}
+.gericht .preis{font:800 17px/1 var(--head);white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--glut2)}
+.gericht .txt{grid-column:2/4;color:var(--muted);font-size:15px;line-height:1.4}
+.plus{flex:none;display:grid;place-items:center;width:38px;height:38px;margin-top:8px;border-radius:50%;border:1.5px solid rgba(255,106,43,.6);background:rgba(255,106,43,.1);color:var(--glut2);cursor:pointer;transition:background .2s,color .2s,transform .15s}
+.plus svg{width:18px;height:18px}
+.plus:hover{background:var(--glut);color:#16171a;border-color:var(--glut)}
+.plus:active{transform:scale(.92)}
+.plus.ok{background:#5fd27a;border-color:#5fd27a;color:#16171a}
+.tags{display:inline-flex;flex-wrap:wrap;gap:5px;vertical-align:2px;margin-left:6px}
+.tag{display:inline-flex;align-items:center;gap:3px;font:600 11px/1 var(--body);letter-spacing:.03em;padding:3px 6px;border-radius:5px;border:1px solid;white-space:nowrap}
+.tag.veg{color:var(--veg);border-color:rgba(127,207,134,.45)}
+.tag.scharf{color:var(--hot);border-color:rgba(255,123,107,.5)}
+.tag.neu{color:#16171a;background:var(--glut2);border-color:var(--glut2)}
+.tag.haus{color:#16171a;background:var(--glut);border-color:var(--glut)}
+.tag svg{width:11px;height:11px}
+@media(min-width:768px){
+  .gericht{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:4px 12px 4px 6px;transition:background .2s,border-color .2s,transform .2s}
+  .gericht:hover{background:var(--card-h);border-color:#4a4b53;transform:translateY(-2px)}
+  .gericht.haus{border-color:rgba(255,106,43,.55);background:linear-gradient(160deg,rgba(255,106,43,.14),var(--card) 55%)}
+  .gericht .oeffnen{padding:14px 4px 14px 10px}
+  .gericht .name{font-size:18px}
+  .gericht .txt{margin-top:5px}
+  .plus{margin-top:12px}
+}
+
+/* Warenkorb */
+.korb{display:flex;flex-direction:column;background:var(--bg2);border:1px solid var(--line)}
+.korb-kopf{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.korb-kopf h3{font-size:22px;font-weight:800;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.korb-kopf h3 svg{width:22px;height:22px;color:var(--glut)}
+.korb-liste{list-style:none;margin:0;padding:6px 18px;overflow-y:auto;flex:1;min-height:0}
+.korb-liste li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.korb-liste .kn{font:700 16px/1.25 var(--head)}
+.korb-liste .kn small{color:var(--glut);font-size:12px;margin-right:4px}
+.korb-liste .kx{grid-column:1/3;font-size:14px;color:var(--muted);line-height:1.35}
+.korb-liste .kp{font:700 16px/1.25 var(--head);color:var(--glut2);white-space:nowrap;text-align:right}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;grid-column:1/3;justify-self:start}
+.stepper button{width:38px;height:34px;border:0;background:transparent;cursor:pointer;font:700 18px/1 var(--head);color:var(--text)}
+.stepper button:hover{background:rgba(255,106,43,.15);color:var(--glut2)}
+.stepper output{min-width:30px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.korb-leer{padding:26px 18px;color:var(--muted);text-align:center;font-size:15px}
+.korb-leer svg{width:40px;height:40px;color:#4a4b53;margin:0 auto 10px}
+.korb-fuss{padding:14px 18px 18px;border-top:1px solid var(--line);display:grid;gap:10px}
+.summe{display:flex;justify-content:space-between;align-items:baseline;font:800 20px/1 var(--head)}
+.summe span:last-child{color:var(--glut2)}
+.korb-fuss small{color:var(--muted);font-size:13.5px;text-align:center}
+.x{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:transparent;cursor:pointer;font:500 24px/1 var(--body);color:var(--text);flex:none}
+.x:hover{border-color:var(--glut);color:var(--glut2)}
+
+@media(min-width:1100px){
+  .korb{position:sticky;top:calc(var(--kopf) + 74px);margin-top:20px;border-radius:var(--radius);max-height:calc(100vh - var(--kopf) - 94px)}
+  .korb .x{display:none}
+}
+@media(max-width:1099.98px){
+  .korb{position:fixed;z-index:62;left:0;right:0;bottom:0;max-height:86vh;max-height:86svh;border-radius:18px 18px 0 0;transform:translateY(105%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility .32s;box-shadow:0 -20px 60px rgba(0,0,0,.5);padding-bottom:env(safe-area-inset-bottom)}
+  .korb.auf{transform:none;visibility:visible}
+  .korb-kopf::before{content:"";position:absolute;left:50%;top:6px;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:#4a4b53}
+}
+@media(min-width:768px) and (max-width:1099.98px){
+  .korb{left:auto;top:0;width:400px;max-height:none;border-radius:0;transform:translateX(105%)}
+  .korb-kopf::before{display:none}
+}
+
+/* Abdunkelung */
+.scrim{position:fixed;inset:0;z-index:58;background:rgba(8,8,10,.62);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.scrim.auf{opacity:1;visibility:visible}
+
+/* Fenster (Gericht, Kasse) */
+.dlg{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center;visibility:hidden;pointer-events:none}
+.dlg.auf{visibility:visible;pointer-events:auto}
+.dlg-box{position:relative;width:100%;max-height:92vh;max-height:92svh;display:flex;flex-direction:column;background:var(--bg2);border:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.55);transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom)}
+.dlg.auf .dlg-box{transform:none}
+@media(min-width:768px){
+  .dlg{align-items:center;padding:24px}
+  .dlg-box{max-width:560px;border-radius:18px;transform:translateY(24px) scale(.97);opacity:0;transition:transform .28s,opacity .28s}
+  .dlg.auf .dlg-box{opacity:1}
+}
+.dlg-kopf{display:flex;align-items:flex-start;gap:12px;padding:18px 18px 12px}
+.dlg-kopf > div{flex:1;min-width:0}
+.dlg-kopf h3{font-size:clamp(24px,4vw,30px);font-weight:900;text-transform:uppercase;margin-top:6px}
+.dlg-kopf p.t{margin:6px 0 0;color:var(--muted);font-size:15px}
+.dlg-inhalt{padding:4px 18px 16px;overflow-y:auto;min-height:0;flex:1}
+.dlg-fuss{padding:14px 18px 18px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.feld-zeile{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.feld-zeile b{font:700 16px/1 var(--head)}
+.stepper.gross button{width:46px;height:42px;font-size:22px}
+.stepper.gross output{min-width:36px;font-size:17px}
+fieldset{border:0;margin:14px 0 0;padding:0;min-width:0}
+legend{font:700 16px/1.2 var(--head);padding:0;margin-bottom:10px;display:flex;gap:8px;align-items:baseline;width:100%}
+legend small{font:500 13.5px/1 var(--body);color:var(--muted)}
+.zutaten{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+@media(min-width:480px){.zutaten{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.zutaten label{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:14.5px;cursor:pointer;min-width:0;transition:border-color .2s,background .2s}
+.zutaten label:hover{border-color:#55565f}
+.zutaten input{accent-color:var(--glut);width:17px;height:17px;flex:none;margin:0}
+.zutaten label:has(input:checked){border-color:var(--glut);background:rgba(255,106,43,.12)}
+.zutaten span{min-width:0;overflow-wrap:anywhere}
+.feld{display:grid;gap:6px;margin-top:14px}
+.feld label{font:700 15px/1.2 var(--head)}
+.feld label small{font:400 13.5px var(--body);color:var(--muted)}
+.feld input,.feld select,.feld textarea{width:100%;min-height:46px;padding:10px 12px;border-radius:10px;border:1px solid #44454d;background:var(--bg);color:var(--text);font:400 16px/1.4 var(--body)}
+.feld textarea{min-height:76px;resize:vertical}
+.feld input:focus,.feld select:focus,.feld textarea:focus{outline:none;border-color:var(--glut2);box-shadow:0 0 0 3px rgba(255,181,71,.25)}
+.feld.fehlerhaft input,.feld.fehlerhaft select{border-color:var(--rot)}
+.fehler{margin:0;color:var(--rot);font-size:14px;display:flex;gap:6px;align-items:center}
+.fehler:empty{display:none}
+.kasse-liste{list-style:none;margin:0;padding:0;font-size:15px}
+.kasse-liste li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.1)}
+.kasse-liste li span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.kasse-liste small{display:block;color:var(--muted);font-size:13px}
+.bezahl{display:flex;gap:10px;align-items:center;margin-top:16px;padding:12px 14px;border-radius:10px;background:rgba(255,106,43,.1);border:1px solid rgba(255,106,43,.35);font-size:15px}
+.bezahl svg{width:20px;height:20px;color:var(--glut2);flex:none}
+.demo{margin-top:12px;padding:12px 14px;border-radius:10px;border:1px dashed var(--glut2);color:#ffd9a3;font-size:14.5px;line-height:1.45}
+.danke{text-align:center;padding:10px 18px 4px}
+.danke .haken{width:64px;height:64px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:#5fd27a;color:#16171a}
+.danke .haken svg{width:34px;height:34px}
+.danke h3{font-size:30px;font-weight:900;text-transform:uppercase}
+.danke dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;max-width:360px;margin:18px auto 0;font-size:16px;text-align:left}
+.danke dt{color:var(--muted)}
+.danke dd{margin:0;font-weight:700}
+.danke dd.nr{font:900 22px/1 var(--head);color:var(--glut2);letter-spacing:.04em}
+
+/* Menü-Tafel */
+.menue{position:fixed;z-index:70;top:0;right:0;bottom:0;width:min(340px,88vw);background:var(--bg2);border-left:1px solid var(--line);transform:translateX(105%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s;display:flex;flex-direction:column;padding:12px 18px calc(18px + env(safe-area-inset-bottom))}
+.menue.auf{transform:none;visibility:visible}
+.menue .x{align-self:flex-end}
+.menue ul{list-style:none;margin:8px 0 18px;padding:0}
+.menue li a{display:block;padding:13px 4px;border-bottom:1px solid var(--line);text-decoration:none;font:800 22px/1.1 var(--head);text-transform:uppercase}
+.menue li a:hover{color:var(--glut2)}
+.menue .btn{margin-top:8px}
+
+/* Einblicke */
+.einblicke{padding-top:48px}
+.galerie{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.galerie li{position:relative;min-width:0}
+.galerie .quer{grid-column:span 2}
+.galerie .quer button{aspect-ratio:16/9}
+.galerie .hoch button{aspect-ratio:3/4}
+@media(min-width:900px){
+  .galerie{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  .galerie .hoch{grid-row:span 2}
+  .galerie .hoch button{aspect-ratio:auto;height:100%}
+}
+.galerie button{display:block;width:100%;height:100%;padding:0;border:0;border-radius:var(--radius);overflow:hidden;position:relative;cursor:zoom-in;background:var(--card);text-align:left}
+.galerie img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transition:transform .7s cubic-bezier(.2,.7,.2,1),filter .4s}
+.galerie button::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(22,23,26,.85));pointer-events:none}
+.galerie .cap{position:absolute;z-index:1;left:12px;right:12px;bottom:10px;font:600 14px/1.3 var(--body);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.galerie .lupe{position:absolute;z-index:1;top:10px;right:10px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(22,23,26,.6);opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s}
+.galerie .lupe svg{width:18px;height:18px;color:var(--glut2)}
+.galerie button:hover img,.galerie button:focus-visible img{transform:scale(1.07);filter:saturate(1.1) brightness(1.05)}
+.galerie button:hover .lupe,.galerie button:focus-visible .lupe{opacity:1;transform:none}
+@media(min-width:768px){.galerie .cap{font-size:15px;left:16px;bottom:14px}}
+
+/* Bildansicht */
+.ansicht{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:60px 12px 20px;background:rgba(10,10,12,.95);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;cursor:zoom-out}
+.ansicht.auf{opacity:1;visibility:visible}
+.ansicht img{max-width:100%;max-height:calc(100vh - 150px);max-height:calc(100svh - 150px);width:auto;height:auto;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.6);transform:scale(.96);transition:transform .3s}
+.ansicht.auf img{transform:none}
+.ansicht p{margin:0;max-width:44em;text-align:center;color:#e5e0d8;font-size:15px}
+.ansicht .x,.ansicht .pfeil{position:absolute;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(22,23,26,.7);color:var(--text);cursor:pointer;font:600 24px/1 var(--head)}
+.ansicht .x{top:10px;right:10px}
+.ansicht .pfeil{top:50%;margin-top:-23px}
+.ansicht .zurueck{left:10px}.ansicht .vor{right:10px}
+.ansicht .pfeil:hover{border-color:var(--glut);color:var(--glut2)}
+.ansicht .zaehler{font:700 13px/1 var(--head);letter-spacing:.12em;color:var(--glut)}
+
+/* Infobereich */
+.info{background:var(--bg2);border-top:1px solid var(--line)}
+.info-grid{display:grid;gap:18px}
+@media(min-width:900px){.info-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.box h3{font-size:24px;font-weight:800;text-transform:uppercase;margin:8px 0 14px}
+.zeiten{list-style:none;margin:0;padding:0}
+.zeiten li{display:flex;justify-content:space-between;gap:12px;padding:9px 10px;border-radius:8px;font-size:15px}
+.zeiten li span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}
+.zeiten li.heute{background:rgba(255,106,43,.14);box-shadow:inset 3px 0 0 var(--glut);font-weight:600}
+.zeiten li.heute span:last-child{color:var(--text)}
+.zeiten li.heute span:first-child::after{content:"heute";margin-left:8px;font:700 11px/1 var(--head);letter-spacing:.08em;text-transform:uppercase;color:var(--glut);vertical-align:1px}
+.kontakt{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.kontakt a{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:10px;text-decoration:none;font-size:15px;transition:background .2s;overflow-wrap:anywhere}
+.kontakt a:hover{background:rgba(255,255,255,.06)}
+.kontakt svg{width:20px;height:20px;color:var(--glut);flex:none}
+.kontakt small{display:block;color:var(--muted);font-size:13px}
+
+/* So finden Sie uns */
+.finden{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin-top:22px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--card)}
+@media(min-width:900px){.finden{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}}
+.finden figure{margin:0;position:relative;aspect-ratio:16/9;min-width:0}
+@media(min-width:900px){.finden figure{aspect-ratio:auto;min-height:340px}}
+.finden figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.finden figcaption{position:absolute;left:12px;bottom:10px;right:12px;font-size:13.5px;color:#e5e0d8;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.finden .txt{padding:22px}
+.finden h3{font-size:clamp(24px,3vw,32px);font-weight:900;text-transform:uppercase;margin:8px 0 12px}
+.finden address{font-style:normal;font-size:17px;line-height:1.5}
+.finden ul{list-style:none;padding:0;margin:14px 0 18px;display:grid;gap:8px;color:#e5e0d8;font-size:15px}
+.finden li{display:flex;gap:9px;align-items:flex-start}
+.finden li svg{width:18px;height:18px;color:var(--glut);flex:none;margin-top:2px}
+.finden .btns{margin-top:0}
+
+.abholband{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:22px;border-radius:var(--radius);background:linear-gradient(110deg,var(--glut-d),var(--glut) 60%,var(--glut2));color:#16171a}
+.abholband strong{font:900 clamp(22px,3.4vw,32px)/1.05 var(--head);text-transform:uppercase;display:block}
+.abholband p{margin:4px 0 0;font-weight:500}
+.abholband .btns{margin:0}
+.abholband .btn{background:#16171a;border-color:#16171a;color:var(--text)}
+.abholband .btn:hover{background:#000}
+.abholband .btn.hell{background:transparent;border-color:#16171a;color:#16171a}
+.abholband .btn.hell:hover{background:rgba(0,0,0,.1)}
+
+/* Fußzeile */
+footer{padding:44px 0 40px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.foot{display:grid;gap:22px}
+@media(min-width:768px){.foot{grid-template-columns:auto 1fr;gap:40px}}
+.foot img{width:84px;height:84px;filter:invert(1);opacity:.9;object-fit:contain}
+.foot h4{font:700 13px/1 var(--head);letter-spacing:.16em;text-transform:uppercase;color:var(--text);margin:0 0 10px}
+.foot p{margin:0 0 4px}
+.foot a{color:var(--text)}
+details{margin-top:16px}
+summary{cursor:pointer;color:var(--text);font-weight:600;display:inline-block;padding:4px 0}
+summary:hover{color:var(--glut2)}
+details p{max-width:60em;margin-top:8px}
+.copy{margin-top:26px;font-size:13px}
+
+/* Handy-Leiste */
+.mleiste{position:fixed;left:0;right:0;bottom:0;z-index:45;padding-bottom:env(safe-area-inset-bottom);background:rgba(22,23,26,.97);border-top:1px solid var(--line);backdrop-filter:blur(8px)}
+.korbstreifen{display:none;width:100%;align-items:center;justify-content:space-between;gap:10px;height:46px;padding:0 16px;border:0;background:var(--glut);color:#16171a;font:800 15.5px/1 var(--head);cursor:pointer}
+.korbstreifen svg{width:18px;height:18px}
+body.voll .korbstreifen{display:flex}
+.mbar{display:grid;grid-template-columns:repeat(3,1fr)}
+.mbar a,.mbar button{display:flex;align-items:center;justify-content:center;gap:7px;height:52px;text-decoration:none;font:700 15px/1 var(--head);color:var(--text);background:transparent;border:0;cursor:pointer}
+.mbar > * + *{border-left:1px solid var(--line)}
+.mbar a:first-child{color:var(--glut)}
+.mbar svg{width:18px;height:18px}
+.mbar .badge{background:var(--glut);color:#16171a}
+body{padding-bottom:calc(52px + env(safe-area-inset-bottom))}
+body.voll{padding-bottom:calc(98px + env(safe-area-inset-bottom))}
+@media(min-width:1000px){.mleiste{display:none}body,body.voll{padding-bottom:0}}
+
+/* Meldung */
+.toast{position:fixed;z-index:95;left:50%;bottom:calc(112px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;visibility:hidden;padding:11px 16px;border-radius:999px;background:#f2eee8;color:#16171a;font-weight:600;font-size:15px;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:opacity .25s,transform .25s,visibility .25s;max-width:calc(100vw - 32px);text-align:center}
+.toast.auf{opacity:1;visibility:visible;transform:translate(-50%,0)}
+@media(min-width:1000px){.toast{bottom:28px}}
+
+/* Einblenden */
+.rein{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rein.da{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rein{opacity:1;transform:none;transition:none}
+  .status.offen .dot,.hero .foto img,.hero::after,.scroll-hint::after{animation:none}
+  .band img{transform:none!important}
+  .gericht,.btn,.galerie img,.ansicht,.ansicht img,.korb,.dlg-box,.menue,.scrim,.toast,.empf-karte{transition:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#karte">Zur Speisekarte springen</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-tel" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-karte" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h10"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="m3 7 9 6 9-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H8v4h2v8h4v-8h3l1-4h-4V8.5c0-.3.2-.5.5-.5z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4C10 4 4 9 4 16c0 1.4.3 2.6.7 3.6C6 14 10 11 15 9c-4 3-7 6-8.6 11 1 .6 2.3 1 3.6 1C17 21 20 13 20 4z"/></symbol>
+  <symbol id="i-chili" viewBox="0 0 24 24"><path fill="currentColor" d="M15 6c2-1 4 0 5 2-1 6-6 12-14 13-2 0-3-1-2-2 6-2 9-6 10-11 0-1 0-1.5 1-2zM15 6c0-2 1-3 3-4l1 1c-2 .5-2.5 1.5-2.5 3z"/></symbol>
+  <symbol id="i-stern" viewBox="0 0 24 24"><path fill="currentColor" d="m12 2 3 6.6 7 .7-5.3 4.8 1.6 7L12 17.6 5.7 21l1.6-7L2 9.3l7-.7z"/></symbol>
+  <symbol id="i-lupe" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4M11 8v6M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-korb" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 8h14l-1.3 11.1a2 2 0 0 1-2 1.9H8.3a2 2 0 0 1-2-1.9zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+  <symbol id="i-menue" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-geld" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-uhr" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-tisch" viewBox="0 0 24 24"><path d="M3 9h18M6 9v10M18 9v10M12 9v4M8 13h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <!-- Kategorie-Symbole -->
+  <symbol id="sym-antipasti" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><ellipse cx="12" cy="15" rx="9" ry="4"/><circle cx="9" cy="10" r="2.2"/><circle cx="14.5" cy="9" r="2.2"/><path d="M15.5 6.5 18 3"/></g></symbol>
+  <symbol id="sym-insalata" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 12c0-3 1.5-5 4-6M12 12c0-3 2-6 6-6-1 3-3 5-6 6"/></g></symbol>
+  <symbol id="sym-pizza" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21 3.5 5.5A14 14 0 0 1 20.5 5.5z"/><path d="M5 8.2a12 12 0 0 1 14 0"/></g><circle cx="11" cy="11" r="1.4" fill="currentColor"/><circle cx="14" cy="14.5" r="1.2" fill="currentColor"/><circle cx="9.6" cy="15" r="1" fill="currentColor"/></symbol>
+  <symbol id="sym-pasta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13h18a9 6 0 0 1-18 0z"/><path d="M7 13c0-3 2-3 2-6M11 13c0-3 2-4 2-7M15 13c0-2 2-3 2-6"/></g></symbol>
+  <symbol id="sym-forno" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 20V11a9 9 0 0 1 18 0v9z"/><path d="M8 20v-4a4 4 0 0 1 8 0v4"/><path d="M12 15.5c-1 .8-1 2 0 2.5 1-.5 1-1.7 0-2.5z"/></g></symbol>
+  <symbol id="sym-imbiss" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16a9 9 0 0 1 18 0z"/><path d="M5.5 16c.8-1.2 1.6-1.2 2.4 0s1.6 1.2 2.4 0 1.6-1.2 2.4 0 1.6 1.2 2.4 0 1.6-1.2 2.4 0"/></g></symbol>
+  <symbol id="sym-carne" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 12c3-4 8-5.5 13-3l4.5-3v12l-4.5-3c-5 2.5-10 1-13-3z"/><circle cx="7.5" cy="11.2" r=".9" fill="currentColor"/></g></symbol>
+  <symbol id="sym-kinder" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5a5 5 0 0 0 8 0"/></g><circle cx="9" cy="10" r="1.2" fill="currentColor"/><circle cx="15" cy="10" r="1.2" fill="currentColor"/></symbol>
+</svg>
+
+<header class="top" id="kopf">
+  <div class="wrap">
+    <a class="brand" href="#start" aria-label="Gabriel's, zum Seitenanfang">
+      <img src="assets/logo.png" alt="" width="42" height="42">
+      <span><b>Gabriel's</b><small class="js-zusatz"></small></span>
+    </a>
+    <nav aria-label="Hauptnavigation" id="hauptnav">
+      <a href="#karte">Speisekarte</a>
+      <a href="#bestellen">Bestellen</a>
+      <a href="#einblicke">Einblicke</a>
+      <a href="#zeiten">Öffnungszeiten</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="kopf-tel js-tel" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg><span class="js-telnr"></span></a>
+    <button type="button" class="kopf-korb js-korb-auf" aria-label="Warenkorb öffnen"><svg aria-hidden="true"><use href="#i-korb"/></svg>Warenkorb <span class="badge js-anzahl"></span></button>
+    <button type="button" class="menue-knopf" id="menue-auf" aria-expanded="false" aria-controls="menue"><svg aria-hidden="true"><use href="#i-menue"/></svg>Menü</button>
+  </div>
+</header>
+
+<main id="start">
+  <section class="hero" aria-labelledby="titel" style="padding:0">
+    <div class="foto"><img src="fotos/theke.jpg" alt="Theke im Gabriel's mit Kaffeemaschine, beleuchteten Regalen und Blick in die Küche" fetchpriority="high"></div>
+    <div class="wrap">
+      <p class="eyebrow"><span class="js-zusatz"></span> · <span class="js-ort"></span></p>
+      <h1 id="titel">Gabriel's<span>Pizza frisch aus dem Ofen</span></h1>
+      <p class="lead">Pizza, Pasta, Salate und Klassiker aus dem Ofen – im Centrum von Postbauer-Heng. Jetzt online zur Abholung bestellen oder einfach anrufen.</p>
+      <div class="status" id="status" role="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Öffnungszeiten</span></div>
+      <div class="btns">
+        <a class="btn primary" href="#karte"><svg aria-hidden="true"><use href="#i-korb"/></svg>Online bestellen</a>
+        <a class="btn js-tel" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+        <a class="btn js-route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+      </div>
+      <p class="unter">Tisch reservieren: <a class="js-tel" href="#"><span class="js-telnr"></span></a></p>
+    </div>
+    <span class="scroll-hint" aria-hidden="true"></span>
+  </section>
+
+  <section id="bestellen" aria-labelledby="bestellen-titel" style="padding-bottom:40px">
+    <div class="wrap">
+      <div class="sec-head rein">
+        <div><p class="eyebrow">Zum Abholen</p><h2 id="bestellen-titel">So bestellen Sie</h2></div>
+        <p>Online auswählen, Abholzeit wählen, frisch abholen. Keine Lieferung – nur Abholung im Lokal.</p>
+      </div>
+      <ol class="schritte rein">
+        <li><div><b>Gerichte wählen</b><span>Antippen, Extras dazu, fertig.</span></div></li>
+        <li><div><b>Abholzeit wählen</b><span>Name, Telefon und Uhrzeit angeben.</span></div></li>
+        <li><div><b>Abholen und bezahlen</b><span>Bezahlung bei Abholung im Lokal.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <figure class="band">
+    <img src="assets/pizza.jpg" alt="Pizza Margherita mit Tomaten, Mozzarella und Basilikum auf einem Holzbrett" loading="lazy" data-parallax>
+    <figcaption>Frisch aus dem <em>Ofen</em></figcaption>
+  </figure>
+
+  <section id="karte" aria-labelledby="karte-titel" style="padding-top:40px;padding-bottom:40px">
+    <div class="wrap">
+      <div class="sec-head rein">
+        <div><p class="eyebrow">La Carta</p><h2 id="karte-titel">Speisekarte</h2></div>
+        <p>Tippen Sie auf ein Gericht für Extras und Anmerkungen – oder direkt auf „+“.</p>
+      </div>
+    </div>
+    <nav class="catnav" aria-label="Kategorien der Speisekarte"><ul id="catnav"></ul></nav>
+    <div class="wrap karte-layout">
+      <div class="karte-haupt">
+        <div class="hinweise">
+          <p class="hinweis"><svg aria-hidden="true"><use href="#i-plus"/></svg><span id="zutat"></span></p>
+          <p class="hinweis"><svg aria-hidden="true"><use href="#i-info"/></svg><span>Allergene und Zusatzstoffe: Bitte fragen Sie unser Personal.</span></p>
+        </div>
+        <div class="legende" aria-label="Zeichenerklärung">
+          <span class="tag veg"><svg aria-hidden="true"><use href="#i-leaf"/></svg>vegetarisch</span>
+          <span class="tag scharf"><svg aria-hidden="true"><use href="#i-chili"/></svg>scharf</span>
+          <span class="tag neu">Neu</span>
+          <span class="tag haus"><svg aria-hidden="true"><use href="#i-stern"/></svg>Hausspezialität</span>
+        </div>
+        <div class="empf" aria-labelledby="empf-titel">
+          <h3 id="empf-titel"><svg aria-hidden="true"><use href="#i-stern"/></svg>Unsere Empfehlungen</h3>
+          <div class="empf-reihe" id="empfehlungen"></div>
+        </div>
+        <div id="speisen"></div>
+      </div>
+
+      <aside class="korb" id="korb" aria-labelledby="korb-titel" tabindex="-1">
+        <div class="korb-kopf">
+          <h3 id="korb-titel"><svg aria-hidden="true"><use href="#i-korb"/></svg>Warenkorb</h3>
+          <button type="button" class="x js-zu" aria-label="Warenkorb schließen">×</button>
+        </div>
+        <div class="korb-leer" id="korb-leer"><svg aria-hidden="true"><use href="#i-korb"/></svg>Noch leer.<br>Tippen Sie auf ein Gericht oder auf „+“.</div>
+        <ul class="korb-liste" id="korb-liste"></ul>
+        <div class="korb-fuss">
+          <div class="summe"><span>Summe</span><span id="korb-summe">0,00 €</span></div>
+          <button type="button" class="btn primary voll" id="zur-kasse" disabled>Zur Kasse</button>
+          <small>Nur Abholung · Bezahlung bei Abholung</small>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <figure class="band">
+    <img src="fotos/gastraum.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen und Kerzen" loading="lazy" data-parallax>
+    <figcaption>Platz <em>nehmen</em></figcaption>
+  </figure>
+
+  <section class="einblicke" id="einblicke" aria-labelledby="einblicke-titel">
+    <div class="wrap">
+      <div class="sec-head rein">
+        <div><p class="eyebrow">Vor Ort</p><h2 id="einblicke-titel">Einblicke</h2></div>
+        <p>Theke, Bar und Gastraum im Centrum 12. Zum Vergrößern antippen.</p>
+      </div>
+      <ul class="galerie" id="galerie">
+        <li class="quer rein"><button type="button"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine und Blick in die Küche, an der Wand ein gerahmtes Porträt" loading="lazy"><span class="cap">Die Theke mit dem gerahmten Porträt</span><span class="lupe" aria-hidden="true"><svg><use href="#i-lupe"/></svg></span></button></li>
+        <li class="hoch rein"><button type="button"><img src="fotos/bar-hoch.jpg" alt="Bar mit beleuchteter Theke und Barhockern" loading="lazy"><span class="cap">Die Bar</span><span class="lupe" aria-hidden="true"><svg><use href="#i-lupe"/></svg></span></button></li>
+        <li class="hoch rein"><button type="button"><img src="fotos/raum-hoch.jpg" alt="Blick entlang der Theke durch das Lokal" loading="lazy"><span class="cap">Blick durch das Lokal</span><span class="lupe" aria-hidden="true"><svg><use href="#i-lupe"/></svg></span></button></li>
+        <li class="quer rein"><button type="button"><img src="fotos/theke-lang.jpg" alt="Lange Theke mit leuchtenden Lichtleisten" loading="lazy"><span class="cap">Die lange Theke mit Lichtleisten</span><span class="lupe" aria-hidden="true"><svg><use href="#i-lupe"/></svg></span></button></li>
+        <li class="quer rein"><button type="button"><img src="fotos/gastraum.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen und Kerzen" loading="lazy"><span class="cap">Gastraum mit Weinregalen</span><span class="lupe" aria-hidden="true"><svg><use href="#i-lupe"/></svg></span></button></li>
+        <li class="quer rein"><button type="button"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinfass und gedeckten Tischen" loading="lazy"><span class="cap">Gastraum mit Weinfass</span><span class="lupe" aria-hidden="true"><svg><use href="#i-lupe"/></svg></span></button></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="info" aria-label="Öffnungszeiten, Kontakt und Anfahrt">
+    <div class="wrap">
+      <div class="info-grid">
+        <div class="box rein" id="zeiten">
+          <p class="eyebrow">Wann</p>
+          <h3>Öffnungszeiten</h3>
+          <ul class="zeiten" id="zeitliste"></ul>
+        </div>
+        <div class="box rein" id="kontakt">
+          <p class="eyebrow">Wie</p>
+          <h3>Kontakt</h3>
+          <ul class="kontakt">
+            <li><a class="js-tel" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg><span><small>Telefon · auch für Tischreservierungen</small><span class="js-telnr"></span></span></a></li>
+            <li><a id="mail" href="#"><svg aria-hidden="true"><use href="#i-mail"/></svg><span><small>E-Mail</small><span id="mailtext"></span></span></a></li>
+            <li><a id="fb" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-fb"/></svg><span><small>Facebook</small>Gabriel's auf Facebook</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="finden rein" id="anfahrt">
+        <figure>
+          <img src="fotos/fassade.jpg" alt="Fassade des Gabriel's am Abend: beleuchtetes Lokal, rotes Schild und Tische vor dem Eingang" loading="lazy">
+          <figcaption>Das rote Schild „Café · Gabriel's · Pizzeria · Ristorante“</figcaption>
+        </figure>
+        <div class="txt">
+          <p class="eyebrow">Wo</p>
+          <h3>So finden Sie uns</h3>
+          <address id="adresse"></address>
+          <ul id="finden-liste"></ul>
+          <div class="btns">
+            <a class="btn primary js-route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>In Google Maps öffnen</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="abholband rein">
+        <div><strong>Bestellen oder Tisch reservieren</strong><p>Online zur Abholung bestellen – Tische reservieren Sie telefonisch.</p></div>
+        <div class="btns">
+          <a class="btn" href="#karte"><svg aria-hidden="true"><use href="#i-korb"/></svg>Jetzt bestellen</a>
+          <a class="btn hell js-tel" href="#"><svg aria-hidden="true"><use href="#i-tisch"/></svg>Tisch reservieren</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <img src="assets/logo.png" alt="Logo des Gabriel's: gezeichnetes Frauenporträt" width="84" height="84" loading="lazy">
+      <div>
+        <h4>Impressum</h4>
+        <div id="impressum"></div>
+        <details>
+          <summary>Datenschutz</summary>
+          <p>Diese Seite setzt keine Cookies. Der Warenkorb wird nur in Ihrem Browser gespeichert. Beim Laden werden Schriften von Google Fonts abgerufen; dabei wird Ihre IP-Adresse an Google übermittelt. Links zu Google Maps und Facebook führen zu Angeboten der jeweiligen Anbieter, für die deren Datenschutzbestimmungen gelten. Die vollständige Datenschutzerklärung folgt. (Platzhaltertext)</p>
+        </details>
+        <p class="copy" id="copy"></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="mleiste">
+  <button type="button" class="korbstreifen js-korb-auf" id="korbstreifen"><span id="streifen-text"></span><span>Warenkorb <svg aria-hidden="true" style="vertical-align:-3px"><use href="#i-korb"/></svg></span></button>
+  <nav class="mbar" aria-label="Schnellzugriff">
+    <a class="js-tel" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+    <a class="js-route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+    <button type="button" class="js-korb-auf"><svg aria-hidden="true"><use href="#i-korb"/></svg>Warenkorb <span class="badge js-anzahl"></span></button>
+  </nav>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<nav class="menue" id="menue" aria-label="Menü" aria-hidden="true">
+  <button type="button" class="x js-zu" aria-label="Menü schließen">×</button>
+  <ul>
+    <li><a href="#karte">Speisekarte</a></li>
+    <li><a href="#bestellen">Bestellen</a></li>
+    <li><a href="#einblicke">Einblicke</a></li>
+    <li><a href="#zeiten">Öffnungszeiten</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+    <li><a href="#anfahrt">Anfahrt</a></li>
+  </ul>
+  <a class="btn primary js-tel" href="#"><svg aria-hidden="true"><use href="#i-tel"/></svg>Anrufen</a>
+  <a class="btn js-tel" href="#"><svg aria-hidden="true"><use href="#i-tisch"/></svg>Tisch reservieren</a>
+  <a class="btn js-route" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-route"/></svg>Route</a>
+</nav>
+
+<!-- Fenster: Gericht -->
+<div class="dlg" id="dlg-gericht" role="dialog" aria-modal="true" aria-labelledby="dg-name" aria-hidden="true">
+  <div class="dlg-box">
+    <div class="dlg-kopf">
+      <div><p class="eyebrow" id="dg-kat"></p><h3 id="dg-name"></h3><p class="t" id="dg-text"></p></div>
+      <button type="button" class="x js-zu" aria-label="Fenster schließen">×</button>
+    </div>
+    <div class="dlg-inhalt">
+      <div class="feld-zeile"><b id="menge-label">Menge</b>
+        <div class="stepper gross" role="group" aria-labelledby="menge-label">
+          <button type="button" id="dg-minus" aria-label="Menge verringern">−</button><output id="dg-menge" aria-live="polite">1</output><button type="button" id="dg-plus" aria-label="Menge erhöhen">+</button>
+        </div>
+      </div>
+      <fieldset id="dg-extras">
+        <legend>Zusatzzutaten <small>je +1,00 €</small></legend>
+        <div class="zutaten" id="dg-zutaten"></div>
+      </fieldset>
+      <div class="feld">
+        <label for="dg-anm">Anmerkung <small>(optional)</small></label>
+        <input id="dg-anm" maxlength="120" placeholder="z. B. ohne Zwiebeln" autocomplete="off">
+      </div>
+    </div>
+    <div class="dlg-fuss"><button type="button" class="btn primary voll" id="dg-ok"></button></div>
+  </div>
+</div>
+
+<!-- Fenster: Kasse -->
+<div class="dlg" id="dlg-kasse" role="dialog" aria-modal="true" aria-labelledby="kasse-titel" aria-hidden="true">
+  <div class="dlg-box">
+    <div class="dlg-kopf">
+      <div><p class="eyebrow">Abholung im Lokal</p><h3 id="kasse-titel">Kasse</h3></div>
+      <button type="button" class="x js-zu" aria-label="Kasse schließen">×</button>
+    </div>
+    <form class="dlg-inhalt" id="kasse-form" novalidate>
+      <ul class="kasse-liste" id="kasse-liste"></ul>
+      <div class="summe" style="margin-top:12px"><span>Summe</span><span id="kasse-summe"></span></div>
+      <p class="fehler" id="f-warenkorb" role="alert"></p>
+      <div class="feld" id="w-name">
+        <label for="k-name">Name</label>
+        <input id="k-name" name="name" autocomplete="name" aria-describedby="f-name">
+        <p class="fehler" id="f-name"></p>
+      </div>
+      <div class="feld" id="w-telefon">
+        <label for="k-tel">Telefon <small>(für Rückfragen)</small></label>
+        <input id="k-tel" name="telefon" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="f-telefon">
+        <p class="fehler" id="f-telefon"></p>
+      </div>
+      <div class="feld" id="w-zeit">
+        <label for="k-zeit">Abholzeit</label>
+        <select id="k-zeit" name="zeit" aria-describedby="f-zeit"></select>
+        <p class="fehler" id="f-zeit"></p>
+      </div>
+      <div class="feld">
+        <label for="k-hinweis">Hinweis <small>(optional)</small></label>
+        <textarea id="k-hinweis" name="hinweis" maxlength="300" placeholder="z. B. Pizza bitte geschnitten"></textarea>
+      </div>
+      <p class="bezahl"><svg aria-hidden="true"><use href="#i-geld"/></svg><span><b>Bezahlung bei Abholung</b> im Lokal.</span></p>
+      <p class="demo" id="kasse-demo" hidden>Entwurf – diese Bestellung wird noch nicht übertragen. In der fertigen Seite geht sie direkt an die Pizzeria.</p>
+    </form>
+    <div class="dlg-fuss"><button type="submit" form="kasse-form" class="btn primary voll" id="kasse-ok">Bestellung absenden</button></div>
+  </div>
+</div>
+
+<!-- Fenster: Bestätigung -->
+<div class="dlg" id="dlg-danke" role="dialog" aria-modal="true" aria-labelledby="danke-titel" aria-hidden="true">
+  <div class="dlg-box">
+    <div class="dlg-kopf"><div></div><button type="button" class="x js-zu" aria-label="Schließen">×</button></div>
+    <div class="dlg-inhalt danke">
+      <div class="haken" aria-hidden="true"><svg><use href="#i-check"/></svg></div>
+      <h3 id="danke-titel">Danke!</h3>
+      <p id="danke-satz" style="margin:6px 0 0;color:var(--muted)"></p>
+      <dl>
+        <dt>Bestellnummer</dt><dd class="nr" id="danke-nr"></dd>
+        <dt>Abholung</dt><dd id="danke-zeit"></dd>
+        <dt>Summe</dt><dd id="danke-summe"></dd>
+      </dl>
+      <p class="bezahl" style="justify-content:center"><svg aria-hidden="true"><use href="#i-geld"/></svg><span>Bezahlung bei Abholung</span></p>
+      <p class="demo" id="danke-demo" hidden>Entwurf – diese Bestellung wird noch nicht übertragen. In der fertigen Seite geht sie direkt an die Pizzeria.</p>
+    </div>
+    <div class="dlg-fuss"><button type="button" class="btn primary voll js-zu">Fertig</button></div>
+  </div>
+</div>
+
+<!-- Bildansicht -->
+<div class="ansicht" id="ansicht" role="dialog" aria-modal="true" aria-label="Bildansicht" aria-hidden="true">
+  <button type="button" class="x js-zu" aria-label="Bildansicht schließen">×</button>
+  <button type="button" class="pfeil zurueck" aria-label="Vorheriges Bild">‹</button>
+  <img alt="">
+  <span class="zaehler"></span>
+  <p></p>
+  <button type="button" class="pfeil vor" aria-label="Nächstes Bild">›</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/karte.js"></script>
+<script src="assets/bestellung.js"></script>
+<script>
+(function () {
+  var G = window.GABRIELS, B = window.BESTELLUNG;
+  if (!G) return;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var ic = function (id) { return "<svg aria-hidden=\"true\"><use href=\"#" + id + "\"/></svg>"; };
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------- Stammdaten ---------- */
+  $$(".js-tel").forEach(function (a) { a.href = G.telefonLink; });
+  $$(".js-telnr").forEach(function (e) { e.textContent = G.telefon; });
+  $$(".js-route").forEach(function (a) { a.href = G.karteLink; });
+  $$(".js-ort").forEach(function (e) { e.textContent = G.ort; });
+  $$(".js-zusatz").forEach(function (e) { e.textContent = G.zusatz || "Pizzeria"; });
+  $("#mail").href = "mailto:" + G.mail; $("#mailtext").textContent = G.mail;
+  $("#fb").href = G.facebook;
+  $("#zutat").textContent = G.hinweis;
+  $("#adresse").innerHTML = "Gabriel's – " + esc(G.zusatz || "") + "<br>" + esc(G.strasse) + "<br>" + esc(G.plzOrt);
+  $("#finden-liste").innerHTML =
+    "<li>" + ic("i-route") + "<span>Im Centrum von " + esc(G.ort) + ", am roten Schild über dem Eingang zu erkennen.</span></li>" +
+    (G.terrasse ? "<li>" + ic("i-tisch") + "<span>Tische auch draußen vor dem Lokal.</span></li>" : "") +
+    "<li>" + ic("i-korb") + "<span>Online-Bestellungen holen Sie im Lokal ab.</span></li>";
+  $("#impressum").innerHTML =
+    "<p>" + esc(G.name) + (G.zusatz ? " (" + esc(G.zusatz) + ")" : "") + " · Inhaber: " + esc(G.inhaber) + "</p>" +
+    "<p>" + esc(G.strasse) + ", " + esc(G.plzOrt) + "</p>" +
+    "<p>Telefon: <a href=\"" + G.telefonLink + "\">" + esc(G.telefon) + "</a> · E-Mail: <a href=\"mailto:" + esc(G.mail) + "\">" + esc(G.mail) + "</a></p>" +
+    "<p>Steuernummer: " + esc(G.ustId) + "</p>";
+  $("#copy").textContent = "© " + new Date().getFullYear() + " " + G.name + ", " + G.ort;
+
+  /* ---------- Öffnungszeiten ---------- */
+  var tage = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+  var zeitFuer = function (t) { for (var i = 0; i < G.zeiten.length; i++) if (G.zeiten[i].von.indexOf(t) >= 0) return G.zeiten[i]; return null; };
+  var heute = new Date().getDay(), html = "";
+  [1, 2, 3, 4, 5, 6, 0].forEach(function (t) {
+    var z = zeitFuer(t);
+    html += "<li" + (t === heute ? " class=\"heute\" aria-current=\"date\"" : "") + "><span>" + tage[t] + "</span><span>" + (z ? z.auf + " – " + z.zu + " Uhr" : "Ruhetag") + "</span></li>";
+  });
+  $("#zeitliste").innerHTML = html;
+  var st = $("#status"), stt = $("#status-text");
+  function status() {
+    var d = new Date(), hm = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2), z = zeitFuer(d.getDay());
+    if (G.offen(d)) { st.className = "status offen"; stt.textContent = "Jetzt geöffnet · bis " + z.zu + " Uhr"; return; }
+    st.className = "status";
+    if (z && hm < z.auf) { stt.textContent = "Heute ab " + z.auf + " Uhr geöffnet"; return; }
+    for (var i = 1; i <= 7; i++) {
+      var n = zeitFuer((d.getDay() + i) % 7);
+      if (n) { stt.textContent = (i === 1 ? "Geschlossen · morgen ab " : "Geschlossen · " + tage[(d.getDay() + i) % 7] + " ab ") + n.auf + " Uhr"; return; }
+    }
+  }
+  status(); setInterval(status, 60000);
+
+  /* ---------- Schema.org ---------- */
+  try {
+    var ld = {
+      "@context": "https://schema.org", "@type": "Restaurant",
+      name: "Gabriel's", alternateName: G.name, description: G.zusatz,
+      servesCuisine: ["Italienisch", "Pizza"], telephone: "+499188541", email: G.mail,
+      image: "fotos/fassade.jpg", priceRange: "€",
+      address: { "@type": "PostalAddress", streetAddress: G.strasse, postalCode: G.plzOrt.split(" ")[0], addressLocality: G.ort, addressCountry: "DE" },
+      sameAs: [G.facebook], hasMap: G.karteLink, acceptsReservations: "Telefonisch",
+      openingHoursSpecification: G.zeiten.map(function (z) {
+        return { "@type": "OpeningHoursSpecification", dayOfWeek: z.von.map(function (t) { return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][t]; }), opens: z.auf, closes: z.zu };
+      }),
+      hasMenu: { "@type": "Menu", name: "Speisekarte", hasMenuSection: G.karte.map(function (k) {
+        return { "@type": "MenuSection", name: k.titel, description: k.untertitel, hasMenuItem: k.gerichte.map(function (g) {
+          return { "@type": "MenuItem", name: g.name, description: g.text, offers: { "@type": "Offer", price: g.preis.toFixed(2), priceCurrency: "EUR" } };
+        }) };
+      }) }
+    };
+    var sc = document.createElement("script"); sc.type = "application/ld+json"; sc.textContent = JSON.stringify(ld); document.head.appendChild(sc);
+  } catch (e) {}
+
+  /* ---------- Fenster-Verwaltung (Zurück-Taste schließt zuerst) ---------- */
+  var stapel = [], scrim = $("#scrim"), toastEl = $("#toast"), toastT;
+  function korbAlsLeiste() { return matchMedia("(min-width:1100px)").matches; }
+  function sichtbar(el, an) {
+    el.classList.toggle("auf", an); el.setAttribute("aria-hidden", an ? "false" : "true");
+  }
+  function aktualisiereHintergrund() {
+    var n = stapel.length;
+    scrim.classList.toggle("auf", n > 0 && stapel[n - 1].id !== "ansicht");
+    document.body.classList.toggle("gesperrt", n > 0);
+  }
+  function oeffne(el, opts) {
+    opts = opts || {};
+    if (stapel.some(function (o) { return o.el === el; })) return;
+    stapel.push({ el: el, id: el.id, vorher: document.activeElement, beimZu: opts.beimZu });
+    sichtbar(el, true); aktualisiereHintergrund(); toastEl.classList.remove("auf");
+    try { history.pushState({ fenster: stapel.length }, ""); } catch (e) {}
+    setTimeout(function () { var f = opts.fokus || $(".js-zu", el) || el; try { f.focus({ preventScroll: true }); } catch (e) {} }, 30);
+  }
+  function entferneOben() {
+    var o = stapel.pop(); if (!o) return;
+    sichtbar(o.el, false); aktualisiereHintergrund();
+    if (o.beimZu) o.beimZu();
+    if (o.vorher && document.contains(o.vorher)) try { o.vorher.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function schliesse() {
+    if (!stapel.length) return;
+    if (history.state && history.state.fenster) history.back(); else entferneOben();
+  }
+  window.addEventListener("popstate", function (e) {
+    var tiefe = (e.state && e.state.fenster) || 0;
+    while (stapel.length > tiefe) entferneOben();
+  });
+  scrim.addEventListener("click", schliesse);
+  document.addEventListener("click", function (e) { if (e.target.closest(".js-zu")) { e.preventDefault(); schliesse(); } });
+  document.addEventListener("keydown", function (e) {
+    if (!stapel.length) return;
+    var oben = stapel[stapel.length - 1].el;
+    if (e.key === "Escape") { e.preventDefault(); schliesse(); return; }
+    if (e.key === "Tab") {
+      var f = $$("button:not([disabled]),a[href],input,select,textarea", oben).filter(function (x) { return x.offsetParent !== null; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  /* Menü */
+  var menue = $("#menue"), menueAuf = $("#menue-auf");
+  menueAuf.addEventListener("click", function () { menueAuf.setAttribute("aria-expanded", "true"); oeffne(menue, { beimZu: function () { menueAuf.setAttribute("aria-expanded", "false"); } }); });
+  $$("#menue ul a").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault(); var ziel = a.getAttribute("href");
+      schliesse(); setTimeout(function () { var z = $(ziel); if (z) z.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth" }); }, 120);
+    });
+  });
+
+  /* Kopfleiste fest */
+  var kopf = $("#kopf");
+  function kopfZustand() { kopf.classList.toggle("fest", scrollY > 40); }
+  window.addEventListener("scroll", kopfZustand, { passive: true }); kopfZustand();
+
+  /* ---------- Speisekarte ---------- */
+  var MIT_EXTRAS = { pizza: 1, pasta: 1, forno: 1, imbiss: 1, insalata: 1 };
+  function tagsHtml(g, lang) {
+    var t = "";
+    if (g.haus) t += "<span class=\"tag haus\">" + ic("i-stern") + (lang ? "Hausspezialität" : "Haus") + "</span>";
+    if (g.neu) t += "<span class=\"tag neu\">Neu</span>";
+    if (g.veg) t += "<span class=\"tag veg\" title=\"vegetarisch\">" + ic("i-leaf") + (lang ? "vegetarisch" : "veg.") + "</span>";
+    if (g.scharf) t += "<span class=\"tag scharf\" title=\"scharf\">" + ic("i-chili") + "scharf</span>";
+    return t;
+  }
+  function finde(katId, name) {
+    var k = G.karte.filter(function (x) { return x.id === katId; })[0]; if (!k) return null;
+    for (var i = 0; i < k.gerichte.length; i++) if (k.gerichte[i].name === name) return { k: k, g: k.gerichte[i], i: i };
+    return null;
+  }
+  function gerichtZu(s) { var t = s.split(":"), k = G.karte.filter(function (x) { return x.id === t[0]; })[0]; return { k: k, g: k.gerichte[+t[1]] }; }
+
+  var nav = "", out = "";
+  G.karte.forEach(function (k) {
+    nav += "<li><a href=\"#k-" + k.id + "\" data-k=\"" + k.id + "\">" + ic("sym-" + k.id) + esc(k.titel) + "</a></li>";
+    out += "<div class=\"kat\" id=\"k-" + k.id + "\"><div class=\"kat-kopf\"><span class=\"kico\">" + ic("sym-" + k.id) + "</span><div><h3>" + esc(k.titel) + "</h3><small>" + esc(k.untertitel) + "</small></div></div><div class=\"raster\">";
+    k.gerichte.forEach(function (g, i) {
+      var s = B ? B.schluessel(k.id, i) : k.id + ":" + i, tags = tagsHtml(g, false);
+      out += "<article class=\"gericht rein" + (g.haus ? " haus" : "") + "\">" +
+        "<button type=\"button\" class=\"oeffnen\" data-s=\"" + s + "\" aria-label=\"" + esc(g.name + ", " + G.preis(g.preis) + " – Details und Extras") + "\">" +
+        "<span class=\"nr\">" + (g.nr ? esc(g.nr) : "<span aria-hidden=\"true\">–</span>") + "</span>" +
+        "<span class=\"name\">" + esc(g.name) + (tags ? "<span class=\"tags\">" + tags + "</span>" : "") + "</span>" +
+        "<span class=\"preis\">" + G.preis(g.preis) + "</span>" +
+        "<span class=\"txt\">" + esc(g.text) + "</span></button>" +
+        "<button type=\"button\" class=\"plus\" data-s=\"" + s + "\" aria-label=\"" + esc(g.name) + " in den Warenkorb\" title=\"In den Warenkorb\">" + ic("i-plus") + "</button>" +
+        "</article>";
+    });
+    out += "</div></div>";
+  });
+  $("#catnav").innerHTML = nav;
+  $("#speisen").innerHTML = out;
+
+  /* Empfehlungen (nur aus der Karte) */
+  var empf = [
+    { f: finde("pizza", "Gabriel's"), art: "Hausspezialität" },
+    { f: finde("antipasti", "Caprese"), art: "Neu auf der Karte" },
+    { f: finde("pizza", "Vincenzo"), art: "Pizza" },
+    { f: finde("pizza", "Calzone"), art: "Pizza, gefüllt" }
+  ].filter(function (x) { return x.f; });
+  $("#empfehlungen").innerHTML = empf.map(function (x) {
+    var s = B ? B.schluessel(x.f.k.id, x.f.i) : "", g = x.f.g;
+    return "<article class=\"empf-karte rein\">" +
+      "<button type=\"button\" class=\"oeffnen\" data-s=\"" + s + "\" aria-label=\"" + esc(g.name + " – Details und Extras") + "\"></button>" +
+      "<svg class=\"ico\" aria-hidden=\"true\"><use href=\"#sym-" + x.f.k.id + "\"/></svg>" +
+      "<span class=\"art\">" + esc(x.art) + (g.nr ? " · Nr. " + esc(g.nr) : "") + "</span>" +
+      "<h4>" + esc(g.name) + "</h4><p>" + esc(g.text) + "</p>" +
+      "<div class=\"fuss\"><span class=\"preis\">" + G.preis(g.preis) + "</span>" +
+      "<button type=\"button\" class=\"plus\" data-s=\"" + s + "\" aria-label=\"" + esc(g.name) + " in den Warenkorb\" title=\"In den Warenkorb\">" + ic("i-plus") + "</button></div></article>";
+  }).join("");
+
+  /* aktive Kategorie */
+  var links = $$("#catnav a"), aktiv = null, kats = $$(".kat");
+  function setAktiv(id) {
+    if (id === aktiv) return; aktiv = id;
+    links.forEach(function (a) {
+      var on = a.getAttribute("data-k") === id;
+      a.classList.toggle("aktiv", on);
+      if (on) {
+        a.setAttribute("aria-current", "true");
+        var ul = a.closest("ul");
+        if (ul.scrollWidth > ul.clientWidth) ul.scrollTo({ left: a.parentNode.offsetLeft - 16, behavior: reduce.matches ? "auto" : "smooth" });
+      } else a.removeAttribute("aria-current");
+    });
+  }
+  function pruefe() {
+    var cur = kats[0].id.slice(2);
+    kats.forEach(function (k) { if (k.getBoundingClientRect().top <= 170) cur = k.id.slice(2); });
+    setAktiv(cur);
+  }
+  window.addEventListener("scroll", pruefe, { passive: true }); pruefe();
+
+  /* ---------- Bestellung ---------- */
+  function toast(t) { toastEl.textContent = t; toastEl.classList.add("auf"); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("auf"); }, 2200); }
+
+  if (!B) { $$(".plus,.js-korb-auf,#korb").forEach(function (e) { e.hidden = true; }); }
+  else {
+    /* Gericht-Fenster */
+    var dg = $("#dlg-gericht"), dgS = null, dgM = 1;
+    $("#dg-zutaten").innerHTML = B.zutaten.map(function (z, i) {
+      return "<label><input type=\"checkbox\" value=\"" + esc(z) + "\" id=\"z" + i + "\"><span>" + esc(z) + "</span></label>";
+    }).join("");
+    function dgPreis() {
+      var t = gerichtZu(dgS), n = $$("#dg-zutaten input:checked").length;
+      $("#dg-menge").textContent = dgM;
+      $("#dg-ok").textContent = "In den Warenkorb · " + G.preis((t.g.preis + n * B.aufpreis) * dgM);
+    }
+    function oeffneGericht(s) {
+      var t = gerichtZu(s); dgS = s; dgM = 1;
+      $("#dg-kat").textContent = t.k.titel + (t.g.nr ? " · Nr. " + t.g.nr : "");
+      $("#dg-name").innerHTML = esc(t.g.name) + (tagsHtml(t.g, true) ? " <span class=\"tags\" style=\"vertical-align:6px\">" + tagsHtml(t.g, true) + "</span>" : "");
+      $("#dg-text").textContent = t.g.text + " · " + G.preis(t.g.preis);
+      $$("#dg-zutaten input").forEach(function (c) { c.checked = false; });
+      $("#dg-extras").hidden = !MIT_EXTRAS[t.k.id];
+      $("#dg-anm").value = "";
+      dgPreis();
+      oeffne(dg, { fokus: $("#dg-plus") });
+    }
+    $("#dg-zutaten").addEventListener("change", dgPreis);
+    $("#dg-minus").addEventListener("click", function () { if (dgM > 1) { dgM--; dgPreis(); } });
+    $("#dg-plus").addEventListener("click", function () { if (dgM < 30) { dgM++; dgPreis(); } });
+    $("#dg-ok").addEventListener("click", function () {
+      var ex = $$("#dg-zutaten input:checked").map(function (c) { return c.value; }), anm = $("#dg-anm").value;
+      for (var i = 0; i < dgM; i++) B.hinzu(dgS, ex, anm);
+      var name = gerichtZu(dgS).g.name;
+      schliesse(); toast((dgM > 1 ? dgM + "× " : "") + name + " im Warenkorb");
+    });
+
+    document.addEventListener("click", function (e) {
+      var o = e.target.closest(".oeffnen[data-s]");
+      if (o) { oeffneGericht(o.getAttribute("data-s")); return; }
+      var p = e.target.closest(".plus[data-s]");
+      if (p) {
+        var s = p.getAttribute("data-s"); B.hinzu(s, [], "");
+        p.classList.add("ok"); p.innerHTML = ic("i-check");
+        setTimeout(function () { p.classList.remove("ok"); p.innerHTML = ic("i-plus"); }, 1100);
+        toast(gerichtZu(s).g.name + " im Warenkorb");
+      }
+    });
+
+    /* Warenkorb */
+    var korb = $("#korb");
+    function zeichneKorb(inh) {
+      inh = inh || B.inhalt();
+      var leer = !inh.anzahl;
+      $("#korb-leer").hidden = !leer;
+      $("#korb-liste").innerHTML = inh.positionen.map(function (p) {
+        var zusatz = [];
+        if (p.extras.length) zusatz.push("+ " + p.extras.map(esc).join(", "));
+        if (p.anmerkung) zusatz.push("„" + esc(p.anmerkung) + "“");
+        return "<li><span class=\"kn\">" + (p.nr ? "<small>" + esc(p.nr) + "</small>" : "") + esc(p.name) + "</span><span class=\"kp\">" + G.preis(p.gesamt) + "</span>" +
+          (zusatz.length ? "<span class=\"kx\">" + zusatz.join(" · ") + "</span>" : "") +
+          "<span class=\"stepper\" role=\"group\" aria-label=\"Menge " + esc(p.name) + "\"><button type=\"button\" data-pos=\"" + p.position + "\" data-d=\"-1\" aria-label=\"" + (p.menge === 1 ? "Entfernen" : "Weniger") + "\">" + (p.menge === 1 ? "×" : "−") + "</button><output>" + p.menge + "</output><button type=\"button\" data-pos=\"" + p.position + "\" data-d=\"1\" aria-label=\"Mehr\">+</button></span></li>";
+      }).join("");
+      $("#korb-summe").textContent = G.preis(inh.summe);
+      $("#zur-kasse").disabled = leer;
+      $$(".js-anzahl").forEach(function (b) { b.textContent = inh.anzahl ? inh.anzahl : ""; });
+      document.body.classList.toggle("voll", !leer);
+      $("#streifen-text").textContent = inh.anzahl + (inh.anzahl === 1 ? " Artikel" : " Artikel") + " · " + G.preis(inh.summe);
+    }
+    $("#korb-liste").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-pos]"); if (!b) return;
+      var pos = +b.getAttribute("data-pos"), inh = B.inhalt();
+      var p = inh.positionen.filter(function (x) { return x.position === pos; })[0]; if (!p) return;
+      B.menge(pos, p.menge + (+b.getAttribute("data-d")));
+    });
+    B.beiAenderung(zeichneKorb); zeichneKorb();
+
+    function korbAuf() {
+      if (korbAlsLeiste()) {
+        $("#karte").scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth" });
+        setTimeout(function () { korb.focus({ preventScroll: true }); }, 400);
+      } else oeffne(korb);
+    }
+    $$(".js-korb-auf").forEach(function (b) { b.addEventListener("click", korbAuf); });
+    matchMedia("(min-width:1100px)").addEventListener("change", function (m) {
+      if (m.matches) while (stapel.length && stapel[stapel.length - 1].el === korb) schliesse();
+    });
+
+    /* Kasse */
+    var kasse = $("#dlg-kasse"), form = $("#kasse-form");
+    $("#kasse-demo").hidden = !B.demo; $("#danke-demo").hidden = !B.demo;
+    function fuelleKasse() {
+      var inh = B.inhalt();
+      $("#kasse-liste").innerHTML = inh.positionen.map(function (p) {
+        var z = []; if (p.extras.length) z.push("+ " + p.extras.map(esc).join(", ")); if (p.anmerkung) z.push("„" + esc(p.anmerkung) + "“");
+        return "<li><span>" + p.menge + "× " + esc(p.name) + (z.length ? "<small>" + z.join(" · ") + "</small>" : "") + "</span><span>" + G.preis(p.gesamt) + "</span></li>";
+      }).join("");
+      $("#kasse-summe").textContent = G.preis(inh.summe);
+      var sel = $("#k-zeit"), alt = sel.value, zeiten = B.abholzeiten();
+      sel.innerHTML = "<option value=\"\">Bitte wählen …</option>" + zeiten.map(function (z) { return "<option value=\"" + esc(z.text) + "\">" + esc(z.text) + "</option>"; }).join("");
+      if (alt) sel.value = alt;
+    }
+    function zeigeFehler(f) {
+      ["warenkorb", "name", "telefon", "zeit"].forEach(function (k) {
+        var el = $("#f-" + k); el.textContent = f[k] || "";
+        var w = $("#w-" + k); if (w) w.classList.toggle("fehlerhaft", !!f[k]);
+        var inp = w && $("input,select", w); if (inp) inp.setAttribute("aria-invalid", f[k] ? "true" : "false");
+      });
+    }
+    $("#zur-kasse").addEventListener("click", function () { zeigeFehler({}); fuelleKasse(); oeffne(kasse, { fokus: $("#k-name") }); });
+    B.beiAenderung(function () { if (kasse.classList.contains("auf")) fuelleKasse(); });
+    ["k-name", "k-tel", "k-zeit"].forEach(function (id) {
+      $("#" + id).addEventListener("input", function () { var w = this.closest(".feld"); if (w.classList.contains("fehlerhaft")) { w.classList.remove("fehlerhaft"); $(".fehler", w).textContent = ""; } });
+    });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var daten = { name: $("#k-name").value.trim(), telefon: $("#k-tel").value.trim(), zeit: $("#k-zeit").value, hinweis: $("#k-hinweis").value.trim() };
+      var summe = B.inhalt().summe;
+      var r = B.absenden(daten);
+      if (!r.ok) {
+        zeigeFehler(r.fehler || {});
+        var erstes = ["name", "telefon", "zeit"].filter(function (k) { return r.fehler && r.fehler[k]; })[0];
+        if (erstes) $("#w-" + erstes + " input, #w-" + erstes + " select").focus();
+        return;
+      }
+      $("#danke-titel").textContent = "Vielen Dank!";
+      $("#danke-satz").textContent = B.demo ? "So sieht Ihre Bestätigung später aus, " + daten.name + "." : "Ihre Bestellung zur Abholung ist aufgenommen, " + daten.name + ".";
+      $("#danke-nr").textContent = r.nummer;
+      $("#danke-zeit").textContent = daten.zeit;
+      $("#danke-summe").textContent = G.preis(r.summe != null ? r.summe : summe);
+      form.reset();
+      /* Kasse und ggf. Warenkorb-Tafel schließen, dann Bestätigung zeigen */
+      var n = stapel.length;
+      function zeigDanke() { oeffne($("#dlg-danke")); }
+      if (n && history.state && history.state.fenster) {
+        var warte = function () { if (!stapel.length) { window.removeEventListener("popstate", warte); setTimeout(zeigDanke, 10); } };
+        window.addEventListener("popstate", warte);
+        history.go(-n);
+      } else { while (stapel.length) entferneOben(); zeigDanke(); }
+    });
+  }
+
+  /* ---------- Parallaxe ---------- */
+  var par = $$("[data-parallax]"), tick = false;
+  function parallaxe() {
+    tick = false; if (reduce.matches) return;
+    var vh = innerHeight;
+    par.forEach(function (img) {
+      var r = img.parentNode.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) return;
+      var t = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
+      img.style.transform = "translate3d(0," + (t * -11).toFixed(2) + "%,0)";
+    });
+  }
+  window.addEventListener("scroll", function () { if (!tick) { tick = true; requestAnimationFrame(parallaxe); } }, { passive: true });
+  window.addEventListener("resize", parallaxe); parallaxe();
+
+  /* ---------- Bildansicht ---------- */
+  var ans = $("#ansicht"), ansImg = $("img", ans), ansTxt = $("p", ans), ansZ = $(".zaehler", ans);
+  var bilder = $$("#galerie button"), idx = 0;
+  function zeige(i) {
+    idx = (i + bilder.length) % bilder.length;
+    var q = $("img", bilder[idx]);
+    ansImg.src = q.getAttribute("src"); ansImg.alt = q.alt;
+    ansTxt.textContent = $(".cap", bilder[idx]).textContent;
+    ansZ.textContent = (idx + 1) + " / " + bilder.length;
+  }
+  bilder.forEach(function (b, i) { b.addEventListener("click", function () { zeige(i); oeffne(ans); }); });
+  ans.addEventListener("click", function (e) {
+    if (e.target.closest(".vor")) { zeige(idx + 1); return; }
+    if (e.target.closest(".zurueck")) { zeige(idx - 1); return; }
+    if (!e.target.closest(".js-zu")) schliesse();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!ans.classList.contains("auf")) return;
+    if (e.key === "ArrowRight") zeige(idx + 1); else if (e.key === "ArrowLeft") zeige(idx - 1);
+  });
+  var sx = null;
+  ans.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
+  ans.addEventListener("touchend", function (e) {
+    if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) > 50) { e.preventDefault(); zeige(idx + (dx < 0 ? 1 : -1)); }
+  });
+
+  /* ---------- Einblenden ---------- */
+  var rein = $$(".rein");
+  if (reduce.matches || !("IntersectionObserver" in window)) rein.forEach(function (e) { e.classList.add("da"); });
+  else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("da"); io.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -6% 0px" });
+    rein.forEach(function (e) { io.observe(e); });
+  }
+})();
+</script>
+</body>
+</html>
