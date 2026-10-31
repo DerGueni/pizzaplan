@@ -42,6 +42,10 @@
   section.text li { margin: 3px 0; }
   .zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 760px) { .zwei { grid-template-columns: 1fr; } header { padding-top: 24px; } header img { width: 60px; height: 60px; } }
+  .entwurf p.fassung { flex: 0; color: var(--gruen); font-weight: 600; font-size: 14px; margin-top: 4px; }
+  .entwurf p.alt { flex: 0; font-size: 14px; margin-top: 6px; }
+  .entwurf p.alt a { color: var(--leise); }
+  .entwurf p.alt a:hover { color: var(--text); }
   footer { color: var(--leise); font-size: 14px; padding: 10px 0 40px; }
 </style>
 </head>
@@ -51,7 +55,7 @@
     <img src="assets/logo.png" alt="Porträtzeichnung, Erkennungszeichen der Pizzeria Gabriel's">
     <div>
       <h1>Pizzeria Gabriel's – fünf Entwürfe für die neue Webseite</h1>
-      <p>Alle fünf sind fertige Seiten mit der kompletten Speisekarte. Jeweils am PC oder in der Handy-Ansicht ansehen.</p>
+      <p>Jeder Entwurf startet mit einer Startseite, die das Lokal vorstellt; die Speisekarte erreicht man über das Menü, bestellt wird zum Abholen per Anruf. Die erste Fassung ist jeweils darunter weiter abrufbar.</p>
       <p class="it">Cinque proposte per il nuovo sito – da guardare sul computer o sul telefono.</p>
     </div>
   </header>
@@ -62,7 +66,8 @@
     <section class="text">
       <h2>Was neu ist</h2>
       <ul>
-        <li><b>Online bestellen zur Abholung:</b> Warenkorb, Extra-Zutaten, Wunsch-Abholzeit nach den Öffnungszeiten</li>
+        <li><b>Startseite stellt das Lokal vor</b> – mit Bilderfolge, Galerie, Öffnungszeiten und Anfahrt; die Speisekarte hat eine eigene Seite</li>
+        <li>Zum Abholen bestellen mit einem Tipp per Anruf (die erste Fassung zeigt zusätzlich eine Online-Bestellung zum Ausprobieren)</li>
         <li>Mit einem Tipp anrufen, Tisch reservieren oder die Route starten</li>
         <li>Echte Fotos vom Lokal, professionell aufbereitet, mit Großansicht</li>
         <li>Speisekarte mit Empfehlungen, Kennzeichen vegetarisch, scharf, neu, Hausspezialität</li>
@@ -87,7 +92,7 @@
       <li>Pizza Margherita steht einmal mit 12,50 € und auf der Unterseite mit 8,00 € – im Entwurf steht 12,50 €</li>
       <li>Doppelte Nummern: 29 (Vincenzo und Garnele), 64 (Scampi und Chicken Crossies) – bitte prüfen</li>
       <li>Pizza Gorgonzola ohne Beschreibung, keine Getränke- und Dessertkarte</li>
-      <li>Die Online-Bestellung ist im Entwurf nur zum Ausprobieren – es wird noch nichts übertragen</li>
+      <li>Die Online-Bestellung in der ersten Fassung ist nur zum Ausprobieren – es wird nichts übertragen</li>
       <li>Schreibweisen vereinheitlicht: Capricciosa, Piccante, Arrabbiata, Cannelloni</li>
     </ul>
   </section>
@@ -105,10 +110,12 @@
   ENTWUERFE.forEach(function (e, i) {
     var n = i + 1, d = document.createElement("article");
     d.className = "entwurf";
-    d.innerHTML = '<a class="bild" href="variante-' + n + '.html" style="background-image:url(assets/vorschau-' + n + '.jpg)" aria-label="Entwurf ' + n + ' öffnen"></a>' +
+    d.innerHTML = '<a class="bild" href="start-' + n + '.html" style="background-image:url(assets/vorschau-' + n + '.jpg)" aria-label="Entwurf ' + n + ' öffnen"></a>' +
       '<div class="inhalt"><h2><span>' + n + '</span> ' + e[0] + '</h2><p>' + e[1] + '</p>' +
-      '<div class="knoepfe"><a class="pc" href="variante-' + n + '.html">Am PC ansehen</a>' +
-      '<a class="handy" href="vorschau.html?v=' + n + '">Handy-Ansicht</a></div></div>';
+      '<p class="fassung">Neu – mit Startseite, Speisekarte über das Menü, Bestellen per Anruf</p>' +
+      '<div class="knoepfe"><a class="pc" href="start-' + n + '.html">Am PC ansehen</a>' +
+      '<a class="handy" href="vorschau.html?v=' + n + '&neu=1">Handy-Ansicht</a></div>' +
+      '<p class="alt">Erste Fassung: <a href="variante-' + n + '.html">PC</a> · <a href="vorschau.html?v=' + n + '">Handy</a></p></div>';
     raster.appendChild(d);
   });
 </script>

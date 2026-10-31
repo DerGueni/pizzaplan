@@ -1,0 +1,30 @@
+{
+ "name": "Gabriel's – Café · Pizzeria · Ristorante",
+ "short_name": "Gabriel's",
+ "lang": "de",
+ "description": "Speisekarte, Online-Bestellung zur Abholung, Öffnungszeiten und Anfahrt.",
+ "start_url": "../start-2.html",
+ "scope": "../",
+ "display": "standalone",
+ "background_color": "#16171a",
+ "theme_color": "#16171a",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "id": "gabriels-start-2"
+}

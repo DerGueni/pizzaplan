@@ -57,20 +57,22 @@
   ];
   var n = parseInt(new URLSearchParams(location.search).get("v"), 10);
   if (!(n >= 1 && n <= 5)) n = 1;
-  document.getElementById("seite").src = "variante-" + n + ".html";
-  document.getElementById("titel").textContent = n + " · " + ENTWUERFE[n - 1][0];
+  var neu = new URLSearchParams(location.search).get("neu") === "1";
+  var datei = (neu ? "start-" : "variante-") + n + ".html";
+  document.getElementById("seite").src = datei;
+  document.getElementById("titel").textContent = n + " · " + ENTWUERFE[n - 1][0] + (neu ? " – mit Startseite" : " – erste Fassung");
   document.getElementById("text").textContent = ENTWUERFE[n - 1][1];
-  document.getElementById("pc").href = "variante-" + n + ".html";
+  document.getElementById("pc").href = datei;
   document.title = "Handy-Ansicht " + n + " – Pizzeria Gabriel's";
   var nav = document.getElementById("wahl");
   ENTWUERFE.forEach(function (e, i) {
     var a = document.createElement("a");
-    a.href = "?v=" + (i + 1); a.textContent = (i + 1) + " " + e[0]; a.title = e[1];
+    a.href = "?v=" + (i + 1) + (neu ? "&neu=1" : ""); a.textContent = (i + 1) + " " + e[0]; a.title = e[1];
     if (i + 1 === n) a.setAttribute("aria-current", "page");
     nav.appendChild(a);
   });
   /* Auf einem echten Handy den Entwurf direkt öffnen statt im Rahmen */
-  if (window.matchMedia("(max-width: 500px)").matches && !/rahmen=1/.test(location.search)) location.replace("variante-" + n + ".html");
+  if (window.matchMedia("(max-width: 500px)").matches && !/rahmen=1/.test(location.search)) location.replace(datei);
 </script>
 </body>
 </html>

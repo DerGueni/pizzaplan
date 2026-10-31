@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><!-- Vorschau, vor Live-Gang entfernen -->
+<link rel="manifest" href="assets/app-start-3.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gabriel's">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<style>/* alle Geräte: kein Schriftaufblähen (iPhone quer), kein Hineinzoomen beim Antippen von Feldern */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}button,a,[role=button]{touch-action:manipulation}@media (max-width:820px){input,select,textarea{font-size:16px!important}}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng</title>
+<meta name="description" content="Gabriel's – Café, Pizzeria und Ristorante mitten in Postbauer-Heng. Bar, Gastraum und Plätze draußen. Speisekarte ansehen, telefonisch zum Abholen bestellen oder Tisch per Anruf reservieren.">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="restaurant">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Gabriel's – Café · Pizzeria · Ristorante in Postbauer-Heng">
+<meta property="og:description" content="Café, Pizzeria und Ristorante mitten in Postbauer-Heng. Telefonisch zum Abholen bestellen oder Tisch per Anruf reservieren.">
+<meta property="og:image" content="fotos/fassade.jpg">
+<meta property="og:image:alt" content="Beleuchtete Fassade von Gabriel's bei Nacht mit rotem Schild und Tischen vor dem Lokal">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fff'/%3E%3Crect x='6' y='6' width='17' height='6' rx='3' fill='%232f7a3a'/%3E%3Crect x='41' y='6' width='17' height='6' rx='3' fill='%23c8361f'/%3E%3Ctext x='32' y='51' font-family='Arial,sans-serif' font-size='38' font-weight='800' text-anchor='middle' fill='%23c8361f'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rot:#c8361f; --rot-dunkel:#a62a16; --rot-hell:#fdeeea;
+  --gruen:#2f7a3a; --gruen-dunkel:#215a29; --gruen-hell:#e9f4ea;
+  --text:#1d1d1f; --leise:#5b5b63; --linie:#ececef; --flaeche:#f7f7f8; --weiss:#fff;
+  --radius:12px; --leiste:58px; --kopf:58px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--kopf) + 6px)}
+body{margin:0;background:var(--weiss);color:var(--text);font:400 16px/1.5 "Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+body.gesperrt{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:var(--rot-dunkel)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gruen);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:16px;padding-right:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tricolore{height:4px;background:linear-gradient(90deg,var(--gruen) 0 33.3%,#fff 33.3% 66.6%,var(--rot) 66.6%)}
+
+/* Knöpfe */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 14px;white-space:nowrap;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;border:1.5px solid var(--linie);background:#fff;color:var(--text);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:hover{border-color:#cfcfd5;background:var(--flaeche)}
+.btn.haupt{background:var(--rot);border-color:var(--rot);color:#fff}
+.btn.haupt:hover{background:var(--rot-dunkel);border-color:var(--rot-dunkel)}
+.btn.gruen{background:var(--gruen);border-color:var(--gruen);color:#fff}
+.btn.gruen:hover{background:var(--gruen-dunkel);border-color:var(--gruen-dunkel)}
+.btn.breit{width:100%}
+
+/* Kopfleiste (haftend) */
+.kopfleiste{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--linie)}
+.kopf{display:flex;align-items:center;gap:10px;height:var(--kopf)}
+.marke{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);min-width:0}
+.marke img{width:38px;height:38px;object-fit:contain;flex:none}
+.marke b{display:block;font-size:18px;font-weight:800;line-height:1.1;white-space:nowrap}
+.marke small{display:block;font-size:12px;color:var(--leise);font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.hauptnav{display:none;margin-left:auto;gap:2px}
+.hauptnav a{color:var(--text);text-decoration:none;font-weight:700;font-size:15px;padding:8px 11px;border-radius:999px;white-space:nowrap}
+.hauptnav a:hover{background:var(--flaeche);color:var(--rot-dunkel)}
+.kopf-aktionen{margin-left:auto;display:flex;gap:6px;align-items:center}
+.rund{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--linie);background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);text-decoration:none;flex:none}
+.rund:hover{background:var(--flaeche)}
+.rund svg{width:20px;height:20px}
+.rund.rot{background:var(--rot);border-color:var(--rot);color:#fff}
+.kopf-anruf{display:none}
+
+/* Menü-Tafel (Handy) */
+.menue-tafel{position:fixed;inset:0;z-index:60;background:rgba(20,20,22,.45)}
+.menue-tafel .innen{position:absolute;top:0;left:0;right:0;background:#fff;border-radius:0 0 18px 18px;padding:10px 16px 18px;transform:translateY(-12px);opacity:0;transition:transform .2s,opacity .2s}
+.menue-tafel.auf .innen{transform:none;opacity:1}
+.menue-tafel .tafel-kopf{display:flex;align-items:center;justify-content:space-between;height:44px;margin-bottom:6px}
+.menue-tafel nav a{display:flex;align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--linie);text-decoration:none;color:var(--text);font-weight:800;font-size:17px}
+.menue-tafel nav a:hover{color:var(--rot-dunkel)}
+.menue-tafel .btn{margin-top:14px}
+
+/* Hero */
+.hero{position:relative;display:flex;flex-direction:column;gap:14px;padding:12px 0 18px}
+.hero-text{position:relative;z-index:1}
+.hero-foto{order:-1;position:relative;margin:0;height:150px;border-radius:16px;overflow:hidden;background:#3a3029}
+.hero-foto img{width:100%;height:100%;object-fit:cover;object-position:center;animation:heran 16s ease-out both}
+@keyframes heran{from{transform:scale(1.14)}to{transform:scale(1)}}
+.hero-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.45))}
+.hero-foto figcaption{position:absolute;left:12px;bottom:10px;z-index:1;color:#fff;font-size:14px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.zusatz{margin:0 0 2px;font-size:13px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--rot)}
+.hero h1{margin:0;font-size:25px;line-height:1.2;font-weight:800;letter-spacing:-.3px}
+.hero h1 em{font-style:normal;color:var(--rot)}
+.hero p.lead{margin:6px 0 0;color:var(--leise);font-size:15px}
+.status{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;padding:6px 12px;border-radius:999px;background:var(--flaeche);margin-top:10px}
+.status i{width:10px;height:10px;border-radius:50%;background:#9a9aa2;flex:none}
+.status.auf{background:var(--gruen-hell);color:var(--gruen-dunkel)}
+.status.auf i{background:var(--gruen);animation:puls 2s infinite}
+@keyframes puls{0%{box-shadow:0 0 0 0 rgba(47,122,58,.5)}70%{box-shadow:0 0 0 8px rgba(47,122,58,0)}100%{box-shadow:0 0 0 0 rgba(47,122,58,0)}}
+.knoepfe{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hero-klein{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:14px;color:var(--leise);margin-top:12px}
+.hero-klein span{display:inline-flex;align-items:center;gap:6px}
+.hero-klein svg{width:16px;height:16px;color:var(--gruen);flex:none}
+
+/* Hauptbereich */
+.haupt-raster{display:block;padding-bottom:24px}
+.abschnitt-titel{margin:0 0 10px;font-size:23px;font-weight:800;letter-spacing:-.3px}
+
+/* Suche */
+.suche-box{position:relative}
+.suche-box>svg{position:absolute;left:14px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--leise);pointer-events:none}
+.suche-box input{width:100%;height:46px;border:1.5px solid var(--linie);border-radius:999px;padding:0 44px 0 42px;font-size:16px;background:var(--flaeche)}
+.suche-box input:hover{border-color:#d5d5db}
+.suche-box input:focus{outline:none;border-color:var(--gruen);background:#fff;box-shadow:0 0 0 3px rgba(47,122,58,.18)}
+.suche-box .leeren{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;border-radius:50%;cursor:pointer;color:var(--leise);display:none;font-size:20px;line-height:1}
+.suche-box .leeren:hover{background:var(--linie)}
+.suche-box.hat .leeren{display:block}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 0}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:999px;border:1.5px solid var(--linie);background:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.chip svg{width:16px;height:16px}
+.chip:hover{border-color:#cfcfd5}
+.chip[aria-pressed="true"].veg{background:var(--gruen);border-color:var(--gruen);color:#fff}
+.chip[aria-pressed="true"].scharf{background:var(--rot);border-color:var(--rot);color:#fff}
+.treffer{font-size:14px;color:var(--leise);margin-left:auto}
+
+/* Kategorie-Leiste */
+.katnav{position:sticky;top:calc(var(--kopf) + 5px);z-index:20;background:rgba(255,255,255,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--linie);margin:12px -16px 0;padding:8px 16px}
+.katnav ul{list-style:none;margin:0;padding:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.katnav ul::-webkit-scrollbar{display:none}
+.katnav li{flex:none}
+.katnav a{display:block;padding:7px 14px;border-radius:999px;text-decoration:none;color:var(--text);font-weight:700;font-size:15px;white-space:nowrap;background:var(--flaeche)}
+.katnav a:hover{color:var(--rot-dunkel)}
+.katnav a.aktiv{background:var(--rot);color:#fff}
+.katnav a.leer{opacity:.4}
+
+.hinweise{display:grid;gap:6px;margin:14px 0 4px}
+.hinweis{display:flex;gap:8px;align-items:flex-start;margin:0;padding:8px 12px;border-radius:10px;background:var(--gruen-hell);color:var(--gruen-dunkel);font-size:15px;font-weight:600}
+.hinweis.grau{background:var(--flaeche);color:var(--leise)}
+.hinweis svg{width:18px;height:18px;flex:none;margin-top:2px}
+
+/* Empfehlungen */
+.empf{margin:18px 0 6px}
+.empf h3{margin:0 0 8px;font-size:19px;font-weight:800;display:flex;align-items:center;gap:8px}
+.empf h3 svg{width:20px;height:20px;color:var(--rot)}
+.empf-liste{list-style:none;margin:0 -16px;padding:2px 16px 6px;display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;scrollbar-width:none}
+.empf-liste::-webkit-scrollbar{display:none}
+.empf-liste li{flex:0 0 72%;scroll-snap-align:start;display:flex}
+.empf-karte{position:relative;display:flex;flex-direction:column;gap:4px;width:100%;padding:12px 12px 10px;border:1.5px solid var(--linie);border-radius:14px;background:#fff;text-align:left}
+.empf-karte .oben{display:flex;gap:4px;flex-wrap:wrap}
+.empf-karte b{font-size:17px;font-weight:800;line-height:1.25}
+.empf-karte .txt{font-size:15px;color:var(--leise);line-height:1.35;flex:1}
+.empf-karte .unten{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.empf-karte .preis{font-weight:800}
+
+/* Kategorien */
+.kat{border-bottom:1px solid var(--linie);scroll-margin-top:54px}
+.kat-kopf{margin:0}
+.kat-kopf button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;padding:16px 0 8px;cursor:pointer}
+.kat-kopf button:focus-visible{outline:3px solid var(--gruen);outline-offset:2px}
+.kat-symbol{width:38px;height:38px;border-radius:11px;background:var(--rot-hell);color:var(--rot);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.kat-symbol svg{width:22px;height:22px}
+.kat-kopf .t{display:block;font-size:20px;font-weight:800;letter-spacing:-.2px;line-height:1.15}
+.kat-kopf .u{display:block;font-size:14px;color:var(--leise);font-weight:600}
+.kat-kopf .n{margin-left:auto;font-size:13px;color:var(--leise);font-weight:700;background:var(--flaeche);border-radius:999px;padding:2px 9px}
+.kat-kopf .pfeil{width:20px;height:20px;color:var(--leise);transition:transform .2s;flex:none}
+.kat.zu .pfeil{transform:rotate(-90deg)}
+.kat.zu .liste{display:none}
+.liste{list-style:none;margin:0 0 10px;padding:0}
+.gericht{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:2px 10px;padding:9px 4px 9px 6px;border-radius:10px;align-items:baseline}
+.gericht .nr{font-size:13px;font-weight:800;color:var(--rot);text-align:center;background:var(--rot-hell);border-radius:6px;padding:1px 0;align-self:start;margin-top:3px}
+.gericht .nr.ohne{background:none}
+.gericht .name{font-weight:800;font-size:16px}
+.gericht .preis{font-weight:800;font-size:16px;white-space:nowrap;text-align:right}
+.gericht .txt{grid-column:2/4;color:var(--leise);font-size:15px;line-height:1.4}
+.marken{display:inline-flex;gap:4px;flex-wrap:wrap;vertical-align:2px;margin-left:4px}
+.mk{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:800;line-height:1;padding:3px 7px;border-radius:999px;white-space:nowrap}
+.mk svg{width:12px;height:12px}
+.mk.veg{background:var(--gruen-hell);color:var(--gruen-dunkel)}
+.mk.scharf{background:var(--rot-hell);color:#9e2412}
+.mk.neu{background:#fff4d6;color:#7a5200}
+.mk.haus{background:#1d1d1f;color:#fff}
+mark{background:#ffe58a;color:inherit;border-radius:3px;padding:0 1px}
+.keine{display:none;text-align:center;padding:28px 12px;color:var(--leise)}
+.keine.zeigen{display:block}
+.legende{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--leise);margin:14px 0 0}
+.legende b{color:var(--text);font-size:14px}
+
+/* Infospalte (PC) */
+.info{display:none}
+.box{border:1.5px solid var(--linie);border-radius:var(--radius);padding:16px;background:#fff}
+.box h2{margin:0 0 10px;font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.box h2 svg{width:20px;height:20px;color:var(--rot)}
+.info-foto{margin:-16px -16px 12px;height:120px;border-radius:var(--radius) var(--radius) 0 0;overflow:hidden}
+.info-foto img{width:100%;height:100%;object-fit:cover;object-position:center}
+.info-zeile{display:flex;justify-content:space-between;gap:8px;font-size:15px;margin:8px 0 12px}
+
+/* Einblicke */
+.einblicke{padding-top:10px;padding-bottom:26px}
+.einblicke h2,.finden h2{margin:0 0 4px;font-size:23px;font-weight:800;letter-spacing:-.3px}
+.unter{margin:0 0 12px;color:var(--leise);font-size:15px}
+.fotos{list-style:none;margin:0 -16px;padding:0 16px 6px;display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;scrollbar-width:none}
+.fotos::-webkit-scrollbar{display:none}
+.fotos li{flex:none;height:210px;aspect-ratio:4/3;scroll-snap-align:start}
+.fotos li.hoch{aspect-ratio:3/4}
+.bild{all:unset;box-sizing:border-box;display:block;position:relative;width:100%;height:100%;border-radius:var(--radius);overflow:hidden;cursor:zoom-in;background:#3a3029}
+.bild img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .5s ease}
+.bild span{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;color:#fff;font-size:14px;font-weight:700;line-height:1.3;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.6))}
+.bild:hover img{transform:scale(1.05)}
+.bild:focus-visible{outline:3px solid var(--gruen);outline-offset:2px}
+.wisch-hinweis{font-size:13px;color:var(--leise);margin:6px 0 0}
+
+/* So finden Sie uns */
+.finden{padding-bottom:28px}
+.finden-raster{display:grid;gap:14px}
+.fassade{margin:0;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;background:#2a2522;position:relative}
+.fassade img{width:100%;height:100%;object-fit:cover;object-position:center}
+.fassade figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 12px 10px;color:#fff;font-size:14px;font-weight:700;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.6))}
+.adresse{font-style:normal;font-size:16px;margin-bottom:12px}
+.box-knoepfe{display:flex;flex-wrap:wrap;gap:8px}
+.box-knoepfe .btn{flex:1 1 150px}
+.zeiten{width:100%;border-collapse:collapse;font-size:15px}
+.zeiten td{padding:7px 8px}
+.zeiten td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.zeiten tr.heute td{background:var(--gruen-hell);color:var(--gruen-dunkel);font-weight:800}
+.zeiten tr.heute td:first-child{border-radius:8px 0 0 8px}
+.zeiten tr.heute td:last-child{border-radius:0 8px 8px 0}
+.heute-mk{font-size:12px;font-weight:800;background:var(--gruen);color:#fff;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+.kontakt-liste{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.kontakt-liste a{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;color:var(--text);text-decoration:none;font-size:15px;font-weight:600;word-break:break-word}
+.kontakt-liste a:hover{background:var(--flaeche);color:var(--rot-dunkel)}
+.kontakt-liste svg{width:18px;height:18px;color:var(--gruen);flex:none}
+.klein{font-size:14px;color:var(--leise);margin:10px 0 0}
+
+/* Fuß */
+footer{background:var(--flaeche);border-top:1px solid var(--linie);padding:22px 0 calc(var(--leiste) + 24px + env(safe-area-inset-bottom));font-size:14px;color:var(--leise)}
+footer h2{font-size:15px;color:var(--text);margin:0 0 6px}
+footer p{margin:0 0 4px}
+footer .spalten{display:grid;gap:16px}
+footer details{margin-top:14px}
+footer summary{cursor:pointer;font-weight:800;color:var(--text);display:inline-block;padding:4px 0}
+footer summary:hover{color:var(--rot-dunkel)}
+footer details p{max-width:70ch;margin-top:6px}
+footer .ende{margin-top:16px;padding-top:12px;border-top:1px solid var(--linie)}
+
+/* Leiste unten (Handy) */
+.unten-fest{position:fixed;left:0;right:0;bottom:0;z-index:30;padding-bottom:env(safe-area-inset-bottom);background:#fff;box-shadow:0 -4px 14px rgba(0,0,0,.07)}
+.leiste{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--linie)}
+.leiste a,.leiste button{display:flex;align-items:center;justify-content:center;gap:6px;height:var(--leiste);text-decoration:none;color:var(--text);font-weight:800;font-size:15px;border:0;background:none;cursor:pointer;position:relative}
+.leiste>*+*{border-left:1px solid var(--linie)}
+.leiste svg{width:20px;height:20px;color:var(--rot)}
+.leiste a:first-child{color:var(--rot-dunkel)}
+.leiste a:active,.leiste button:active{background:var(--flaeche)}
+/* Bildansicht */
+.lb{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(15,12,10,.93);padding:16px}
+.lb[hidden]{display:none}
+.lb figure{margin:0;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center;gap:10px}
+.lb-bild{max-width:min(1400px,100%);max-height:calc(100vh - 110px);width:auto;height:auto;border-radius:10px;object-fit:contain;opacity:0;transition:opacity .25s}
+.lb-bild.da{opacity:1}
+.lb figcaption{color:#fff;font-size:15px;font-weight:600;text-align:center}
+.lb button{position:absolute;width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb button:hover{background:rgba(255,255,255,.28)}
+.lb .lb-zu{top:12px;right:12px}
+.lb .lb-vor{right:12px;top:50%;transform:translateY(-50%)}
+.lb .lb-zurueck{left:12px;top:50%;transform:translateY(-50%)}
+.lb button svg{width:22px;height:22px}
+
+@media (max-width:420px){.hero .knoepfe .btn svg{display:none}.hero .knoepfe{flex-wrap:nowrap}.hero .knoepfe .btn{flex:1 1 auto;padding:0 10px}}
+@media (max-width:370px){.marke small{display:none}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .status.auf i,.hero-foto img{animation:none}
+  .bild img,.lb-bild,.menue-tafel .innen{transition:none!important}
+  .bild:hover img{transform:none}
+}
+
+/* Tablet */
+@media (min-width:640px){
+  .hero-foto{height:210px}
+  .hero h1{font-size:30px}
+  .empf-liste{margin:0;padding:2px 0 6px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}
+  .empf-liste li{flex:none}
+  .fotos{margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;grid-auto-flow:dense;overflow:visible}
+  .fotos li,.fotos li.hoch{height:auto;aspect-ratio:auto}
+  .fotos li.hoch{grid-row:span 2}
+  .wisch-hinweis{display:none}
+  .finden-raster{grid-template-columns:1fr 1fr}
+  .finden-raster .fassade{grid-column:1/-1}
+  footer .spalten{grid-template-columns:repeat(3,1fr)}
+}
+/* PC */
+@media (min-width:980px){
+  :root{--kopf:64px}
+  .hauptnav{display:flex}
+  .kopf-aktionen{margin-left:8px}
+  .menue-knopf{display:none}
+  .kopf-anruf{display:inline-flex}
+  .kopf-anruf-rund{display:none}
+  .marke img{width:44px;height:44px}
+  .marke b{font-size:20px}
+  .hero{display:block;min-height:360px;padding:40px 0 34px;margin-bottom:8px}
+  .hero-text{max-width:540px}
+  .hero h1{font-size:38px}
+  .hero-foto{position:absolute;top:16px;right:0;bottom:16px;width:64%;height:auto;border-radius:22px}
+  .hero-foto::after{background:linear-gradient(90deg,#fff 0,rgba(255,255,255,.92) 22%,rgba(255,255,255,.4) 42%,rgba(255,255,255,0) 62%)}
+  .hero-foto figcaption{left:auto;right:16px;bottom:14px}
+  .haupt-raster{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:36px;align-items:start}
+  .info{display:grid;gap:14px;position:sticky;top:calc(var(--kopf) + 14px);max-height:calc(100vh - var(--kopf) - 28px);overflow:auto;padding:2px}
+  .katnav{margin:12px 0 0;padding:8px 0}
+  .katnav ul{flex-wrap:wrap;overflow:visible}
+  .kat-kopf button{cursor:default}
+  .kat-kopf .pfeil{display:none}
+  .kat.zu .liste{display:block}
+  .liste{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+  .empf-liste{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .fotos{grid-auto-rows:190px;gap:12px}
+  .finden-raster{grid-template-columns:1.3fr 1fr 1fr}
+  .finden-raster .fassade{grid-column:auto;grid-row:span 2;aspect-ratio:auto;min-height:100%}
+  .unten-fest{display:none}
+  footer{padding-bottom:22px}
+}
+@media (min-width:980px) and (max-width:1120px){.hauptnav a{padding:8px 7px;font-size:14px}.kat{scroll-margin-top:96px}}
+
+/* ===== Zwei-Seiten-Aufbau ===== */
+.hauptnav a[aria-current="page"]{color:var(--rot-dunkel);background:var(--rot-hell)}
+.menue-tafel nav a[aria-current="page"]{color:var(--rot-dunkel)}
+
+/* Titelbild mit Bilderfolge */
+.titel{position:relative;margin:12px 0 0;height:min(66svh,520px);min-height:420px;border-radius:18px;overflow:hidden;background:#2a2522;color:#fff}
+.dia{position:absolute;inset:0;margin:0;opacity:0;transition:opacity 1.2s ease}
+.dia.aktiv{opacity:1}
+.dia img{width:100%;height:100%;object-fit:cover;object-position:center}
+.dia.aktiv img{animation:heran 10s ease-out both}
+.dia figcaption{position:absolute;top:12px;right:12px;z-index:2;font-size:13px;font-weight:700;background:rgba(0,0,0,.45);padding:3px 10px;border-radius:999px}
+.titel::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.08) 0,rgba(0,0,0,.18) 35%,rgba(0,0,0,.78) 100%)}
+.titel-text{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:18px 16px 46px}
+.titel .zusatz{color:#ffd2c7}
+.titel h1{margin:0;font-size:42px;line-height:1.05;font-weight:800;letter-spacing:-.6px;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.titel .lead{margin:8px 0 0;font-size:16px;line-height:1.45;max-width:540px;color:#f4f4f4}
+.titel .status{background:rgba(255,255,255,.94);color:var(--text)}
+.titel .status.auf{background:#e9f4ea;color:var(--gruen-dunkel)}
+.titel .knoepfe .btn:not(.haupt){background:rgba(255,255,255,.96);border-color:transparent}
+.dia-pfeil{position:absolute;z-index:3;top:16%;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.38);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.dia-pfeil:hover{background:rgba(0,0,0,.6)}
+.dia-pfeil svg{width:22px;height:22px}
+.dia-pfeil.links{left:10px}.dia-pfeil.rechts{right:10px}
+.dia-punkte{position:absolute;z-index:3;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:2px}
+.punkt{width:26px;height:26px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.punkt::before{content:"";width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.55);transition:width .2s,background .2s}
+.punkt[aria-current="true"]::before{width:22px;border-radius:5px;background:#fff}
+
+/* Startseiten-Abschnitte */
+.abschnitt{padding-top:30px;padding-bottom:6px}
+.abschnitt>h2,.abschnitt-kopf h2{margin:0 0 6px;font-size:25px;font-weight:800;letter-spacing:-.3px}
+.abschnitt-kopf{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px;margin-bottom:10px}
+.lokal-text{font-size:16px;max-width:66ch;margin:0 0 14px}
+.merkmale{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.merkmale li{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1.5px solid var(--linie);border-radius:12px;font-size:14px;color:var(--leise);line-height:1.35}
+.merkmale b{display:block;font-size:16px;color:var(--text);margin-bottom:1px}
+.merkmale .kat-symbol{width:34px;height:34px}
+.merkmale .kat-symbol svg{width:20px;height:20px}
+.einblicke-titel{margin:0 0 8px;font-size:19px;font-weight:800}
+.kueche-raster{display:grid;gap:14px}
+.kueche-foto{margin:0;border-radius:16px;overflow:hidden;aspect-ratio:16/10;background:#e9e2d6;position:relative}
+.kueche-foto img{width:100%;height:100%;object-fit:cover}
+.kueche-foto figcaption{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.92);color:var(--text);font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px}
+.vorgeschmack{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.vorgeschmack li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:9px 6px;border-bottom:1px solid var(--linie)}
+.vorgeschmack .name{font-weight:800;font-size:16px}
+.vorgeschmack .preis{font-weight:800;white-space:nowrap}
+.vorgeschmack .txt{grid-column:1/-1;color:var(--leise);font-size:15px;line-height:1.4}
+.vorgeschmack .mk{margin-left:4px;vertical-align:2px}
+.kueche-knopf{margin-top:12px}
+.abhol-box{margin-top:6px;display:grid;gap:12px;align-items:center;background:var(--gruen-hell);border-radius:16px;padding:18px 16px}
+.abhol-box h2{margin:0 0 4px;font-size:22px;font-weight:800;color:var(--gruen-dunkel);display:flex;align-items:center;gap:8px}
+.abhol-box h2 svg{width:24px;height:24px}
+.abhol-box p{margin:0;font-size:16px}
+.abhol-box .knoepfe{margin-top:0}
+
+/* Anruf-Hinweis: zum Abholen telefonisch bestellen */
+.anruf-hinweis{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:12px 0 0;padding:12px 14px;border-radius:14px;background:var(--gruen-hell);color:var(--gruen-dunkel)}
+.anruf-hinweis p{margin:0;font-size:16px;font-weight:800;flex:1 1 200px}
+.anruf-hinweis .btn{flex:none}
+.anruf-hinweis.unten{margin:18px 0 6px}
+
+/* Speisekarten-Seite: kurzer Seitenkopf */
+.seitenkopf{padding-top:14px;padding-bottom:12px}
+.pfad{font-size:14px;color:var(--leise);margin:0 0 4px}
+.pfad a{color:var(--leise)}
+.seitenkopf h1{margin:0;font-size:27px;line-height:1.15;font-weight:800;letter-spacing:-.4px}
+.seitenkopf .unter{margin:4px 0 0}
+.seitenkopf .status{margin-top:8px}
+
+@media (prefers-reduced-motion:reduce){.dia{transition:none}.dia.aktiv img{animation:none}.punkt::before{transition:none}}
+@media (min-width:640px){
+  .titel{height:min(70vh,560px)}
+  .titel-text{padding:28px 32px 52px}
+  .titel h1{font-size:54px}
+  .merkmale{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .kueche-raster{grid-template-columns:1fr 1fr;align-items:start}
+  .abhol-box{grid-template-columns:1fr auto;padding:22px 24px}
+  .dia-pfeil{top:22%}
+}
+@media (min-width:980px){
+  .titel{height:min(76vh,620px);border-radius:22px}
+  .titel-text{padding:40px 56px 60px;max-width:760px}
+  .titel h1{font-size:68px}
+  .titel .lead{font-size:18px}
+  .abschnitt{padding-top:44px}
+  .abschnitt>h2,.abschnitt-kopf h2{font-size:30px}
+  .seitenkopf{padding-top:22px;padding-bottom:14px}
+  .seitenkopf h1{font-size:34px}
+}
+@media (min-width:980px) and (max-width:1180px){.kopf-anruf{display:none}.kopf-anruf-rund{display:inline-flex}.marke small{font-size:11px}}
+</style>
+</head>
+<body data-seite="start">
+
+<header class="kopfleiste">
+  <div class="tricolore" aria-hidden="true"></div>
+  <div class="wrap kopf">
+    <a class="marke" href="start-3.html#start" aria-label="Zur Startseite">
+      <img src="assets/logo.png" alt="" width="44" height="44">
+      <span><b id="kopf-name">Gabriel's</b><small id="kopf-zusatz">Café · Pizzeria · Ristorante</small></span>
+    </a>
+    <nav class="hauptnav" aria-label="Hauptmenü">
+      <a href="start-3.html#start" aria-current="page">Start</a>
+      <a href="start-3.html#lokal">Unser Lokal</a>
+      <a href="speisekarte-3.html">Speisekarte</a>
+      <a href="start-3.html#zeiten">Öffnungszeiten</a>
+      <a href="start-3.html#kontakt">Kontakt</a>
+    </nav>
+    <div class="kopf-aktionen">
+      <a class="btn haupt kopf-anruf" data-tel href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span data-telnr>Anrufen</span></a>
+      <a class="rund rot kopf-anruf-rund" data-tel href="#" aria-label="Anrufen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <button class="rund menue-knopf" id="menue-auf" type="button" aria-label="Menü öffnen" aria-controls="menue-tafel" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="menue-tafel" id="menue-tafel" role="dialog" aria-modal="true" aria-label="Menü" hidden>
+  <div class="innen">
+    <div class="tafel-kopf"><b>Menü</b><button class="rund" type="button" data-zu aria-label="Menü schließen">×</button></div>
+    <nav aria-label="Menü">
+      <a href="start-3.html#start" aria-current="page">Start <span aria-hidden="true">›</span></a>
+      <a href="start-3.html#lokal">Unser Lokal <span aria-hidden="true">›</span></a>
+      <a href="speisekarte-3.html">Speisekarte <span aria-hidden="true">›</span></a>
+      <a href="start-3.html#zeiten">Öffnungszeiten <span aria-hidden="true">›</span></a>
+      <a href="start-3.html#kontakt">Kontakt <span aria-hidden="true">›</span></a>
+    </nav>
+    <a class="btn haupt breit" data-tel href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Anrufen: <span data-telnr></span></a>
+  </div>
+</div>
+
+<main>
+<div class="wrap" id="start">
+  <section class="titel" id="titel" aria-roledescription="Bilderfolge" aria-labelledby="hero-titel">
+    <figure class="dia aktiv" aria-roledescription="Bild" aria-label="1 von 4"><img src="fotos/gastraum.jpg" alt="Gastraum mit Holztischen, Kerzen, Weinfass und Weinregal-Säulen" width="2400" height="1351" fetchpriority="high"><figcaption>Unser Gastraum</figcaption></figure>
+    <figure class="dia" aria-roledescription="Bild" aria-label="2 von 4"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine, Gläserregal und Blick in die Küche" width="2400" height="1351" loading="lazy"><figcaption>Theke und Küche</figcaption></figure>
+    <figure class="dia" aria-roledescription="Bild" aria-label="3 von 4"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinregal-Säulen und Weinfass" width="2400" height="1351" loading="lazy"><figcaption>Weinregal und Weinfass</figcaption></figure>
+    <figure class="dia" aria-roledescription="Bild" aria-label="4 von 4"><img src="fotos/fassade.jpg" alt="Fassade bei Nacht mit rotem Schild „Café · Gabriel's · Pizzeria · Ristorante“ und Tischen vor dem Lokal" width="2400" height="1351" loading="lazy"><figcaption>Unser Eingang am Abend</figcaption></figure>
+    <button class="dia-pfeil links" id="dia-zurueck" type="button" aria-label="Vorheriges Bild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
+    <button class="dia-pfeil rechts" id="dia-vor" type="button" aria-label="Nächstes Bild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+    <div class="titel-text">
+      <p class="zusatz" id="h-zusatz">Café · Pizzeria · Ristorante</p>
+      <h1 id="hero-titel">Gabriel's</h1>
+      <p class="lead">Willkommen mitten in Postbauer-Heng – auf einen Kaffee an der Bar, eine Pizza mit Freunden oder ein Essen im Gastraum.</p>
+      <div class="status" data-status role="status"><i aria-hidden="true"></i><span>Öffnungszeiten werden geladen …</span></div>
+      <div class="knoepfe">
+        <a class="btn haupt" href="speisekarte-3.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Speisekarte ansehen</a>
+        <a class="btn" data-tel href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Tisch reservieren</a>
+      </div>
+    </div>
+    <div class="dia-punkte" role="group" aria-label="Bild wählen"><button class="punkt" type="button" aria-label="Bild 1 zeigen"></button><button class="punkt" type="button" aria-label="Bild 2 zeigen"></button><button class="punkt" type="button" aria-label="Bild 3 zeigen"></button><button class="punkt" type="button" aria-label="Bild 4 zeigen"></button></div>
+  </section>
+</div>
+
+<section class="wrap abschnitt" id="lokal" aria-labelledby="lokal-titel">
+  <h2 id="lokal-titel">Unser Lokal</h2>
+  <p class="lokal-text">Gabriel's ist Café, Pizzeria und Ristorante in einem – mitten in Postbauer-Heng. An der langen Theke mit Bar gibt es den Kaffee zwischendurch, im Gastraum mit Holztischen und Weinregalen das Essen in Ruhe<span data-terrasse> und bei schönem Wetter Plätze draußen vor dem Lokal</span>.</p>
+  <ul class="merkmale">
+    <li><span class="kat-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3c-.6 1 .6 2 0 3M12 3c-.6 1 .6 2 0 3"/></svg></span><span><b>Café</b>Kaffee an der Bar</span></li>
+    <li><span class="kat-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21 3.5 6.5a14 14 0 0 1 17 0z"/><path d="M5.5 9.5a11 11 0 0 1 13 0"/><circle cx="12" cy="12" r="1.3"/><circle cx="9.5" cy="15.5" r=".9"/><circle cx="14" cy="16" r=".9"/></svg></span><span><b>Pizzeria</b>Pizza, Pasta, Salate – auch zum Abholen</span></li>
+    <li><span class="kat-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18M5 9v11M19 9v11M8 9V5h8v4"/><path d="M12 13v7"/></svg></span><span><b>Ristorante</b>Gastraum mit Holztischen</span></li>
+    <li data-terrasse><span class="kat-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span><span><b>Draußen</b>Tische vor dem Lokal</span></li>
+  </ul>
+  <h3 class="einblicke-titel" id="einblicke">Einblicke</h3>
+  <p class="unter">Theke, Gastraum und Bar – zum Vergrößern antippen.</p>
+  <ul class="fotos">
+    <li class="hoch"><button class="bild" type="button" aria-label="Foto vergrößern: Gastraum"><img src="fotos/raum-hoch.jpg" alt="Blick in den Gastraum (Hochformat)" width="1351" height="2400" loading="lazy"><span>Gastraum</span></button></li>
+    <li><button class="bild" type="button" aria-label="Foto vergrößern: Theke und Küche"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine, Gläserregal und Blick in die Küche" width="2400" height="1351" loading="lazy"><span>Theke und Küche</span></button></li>
+    <li><button class="bild" type="button" aria-label="Foto vergrößern: Die lange Theke"><img src="fotos/theke-lang.jpg" alt="Lange Theke mit beleuchteten LED-Lamellen" width="2400" height="1351" loading="lazy"><span>Die lange Theke</span></button></li>
+    <li class="hoch"><button class="bild" type="button" aria-label="Foto vergrößern: Bar"><img src="fotos/bar-hoch.jpg" alt="Bar (Hochformat)" width="1351" height="2400" loading="lazy"><span>Bar</span></button></li>
+    <li><button class="bild" type="button" aria-label="Foto vergrößern: Gastraum"><img src="fotos/gastraum.jpg" alt="Gastraum mit Holztischen, Kerzen, Weinfass und Weinregal-Säulen" width="2400" height="1351" loading="lazy"><span>Gastraum</span></button></li>
+    <li><button class="bild" type="button" aria-label="Foto vergrößern: Weinregal und Weinfass"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinregal-Säulen und Weinfass" width="2400" height="1351" loading="lazy"><span>Weinregal und Weinfass</span></button></li>
+  </ul>
+  <p class="wisch-hinweis" aria-hidden="true">Zur Seite wischen für weitere Fotos →</p>
+</section>
+
+<section class="wrap abschnitt" id="kueche" aria-labelledby="kueche-titel">
+  <div class="abschnitt-kopf"><h2 id="kueche-titel">Aus unserer Küche</h2></div>
+  <div class="kueche-raster">
+    <figure class="kueche-foto"><img src="assets/pizza.jpg" alt="Pizza Margherita von oben auf hellem Holz" width="1600" height="1067" loading="lazy"><figcaption>Margherita</figcaption></figure>
+    <div>
+      <p class="unter">Ein kleiner Vorgeschmack – die ganze Karte mit Pizza, Pasta, Salaten und mehr finden Sie auf der Speisekarte.</p>
+      <ul class="vorgeschmack" id="vorgeschmack"></ul>
+      <a class="btn haupt kueche-knopf" href="speisekarte-3.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Zur Speisekarte</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap abschnitt" id="abholen" aria-labelledby="abholen-titel">
+  <div class="abhol-box">
+    <div>
+      <h2 id="abholen-titel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Telefonisch bestellen &amp; abholen</h2>
+      <p>Rufen Sie uns an, wir bereiten alles frisch zu – Sie holen es bei uns ab.</p>
+    </div>
+    <div class="knoepfe">
+      <a class="btn gruen" data-tel href="#">Jetzt anrufen: <span data-telnr></span></a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap finden abschnitt" id="anfahrt" aria-labelledby="f-titel">
+  <h2 id="f-titel">Öffnungszeiten, Anfahrt &amp; Kontakt</h2>
+  <p class="unter" id="f-unter">Mitten in Postbauer-Heng.</p>
+  <div class="finden-raster">
+    <figure class="fassade"><img src="fotos/fassade.jpg" alt="Fassade von Gabriel's bei Nacht: beleuchtetes Lokal, rotes Schild „Café · Gabriel's · Pizzeria · Ristorante“ und Tische vor dem Lokal" width="2400" height="1351" loading="lazy"><figcaption id="fassade-text">Unser Eingang am Abend</figcaption></figure>
+    <div class="box">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Anfahrt</h2>
+      <address class="adresse" id="adresse"></address>
+      <div class="box-knoepfe">
+        <a class="btn haupt" data-route href="#" target="_blank" rel="noopener">Route in Google Maps</a>
+      </div>
+    </div>
+    <div class="box" id="zeiten">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Öffnungszeiten</h2>
+      <div class="status" data-status style="margin:0 0 10px"><i aria-hidden="true"></i><span></span></div>
+      <table class="zeiten"><caption class="sr">Öffnungszeiten</caption><tbody id="zeiten-tab"></tbody></table>
+    </div>
+    <div class="box" id="kontakt">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.7A8 8 0 1 1 21 12z"/></svg>Kontakt</h2>
+      <ul class="kontakt-liste">
+        <li><a id="ko-tel" data-tel href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span></span></a></li>
+        <li><a id="ko-mail" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span></span></a></li>
+        <li><a id="ko-fb" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8V6.5c0-.8.2-1.3 1.4-1.3H17V2.2C16.6 2.1 15.5 2 14.3 2 11.7 2 10 3.6 10 6.4V8H7v3.4h3V22h4V11.4h2.9l.5-3.4z"/></svg><span>Facebook</span></a></li>
+      </ul>
+      <a class="btn haupt breit" data-tel href="#" style="margin-top:10px">Tisch reservieren · anrufen</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="spalten">
+      <div><h2>Impressum</h2><div id="impressum"></div></div>
+      <div><h2>Öffnungszeiten</h2><div id="f-zeiten"></div></div>
+      <div><h2>Abholung</h2><p>Telefonisch bestellen und selbst abholen. Keine Lieferung.</p><p id="f-tel"></p></div>
+    </div>
+    <details>
+      <summary>Datenschutz</summary>
+      <p>Platzhalter: Diese Seite setzt keine Cookies und verwendet keine Analysewerkzeuge. Schriftarten werden von Google Fonts geladen; dabei wird Ihre IP-Adresse an Google übermittelt. Beim Klick auf „Route“ oder „Facebook“ verlassen Sie diese Seite. Die vollständige Datenschutzerklärung wird vor Veröffentlichung ergänzt.</p>
+    </details>
+    <p class="ende" id="copy"></p>
+  </div>
+</footer>
+
+<div class="unten-fest">
+  <nav class="leiste" aria-label="Schnellzugriff">
+    <a data-tel href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Anrufen</a>
+    <a data-route href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Route</a>
+    <a href="speisekarte-3.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Speisekarte</a>
+  </nav>
+</div>
+
+<!-- Bildansicht -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Bildansicht" hidden>
+  <button class="lb-zu" type="button" data-zu aria-label="Bildansicht schließen">×</button>
+  <button class="lb-zurueck" type="button" aria-label="Vorheriges Foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>
+  <figure><img class="lb-bild" id="lb-bild" alt=""><figcaption id="lb-text"></figcaption></figure>
+  <button class="lb-vor" type="button" aria-label="Nächstes Foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+</div>
+
+<script src="assets/karte.js"></script>
+<script>
+(function () {
+  "use strict";
+  var G = window.GABRIELS, SEITE = document.body.getAttribute("data-seite");
+  var $ = function (id) { return document.getElementById(id); };
+  var alle = function (sel, w) { return [].slice.call((w || document).querySelectorAll(sel)); };
+  var TAGE = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  function text(id, t) { var e = $(id); if (e) e.textContent = t; }
+  function html(id, h) { var e = $(id); if (e) e.innerHTML = h; }
+
+  /* ---------- Stammdaten ---------- */
+  var zusatz = G.zusatz || "Café · Pizzeria · Ristorante";
+  var kurzName = G.name.replace(/^Pizzeria\s+/, "");
+  text("kopf-name", kurzName); text("kopf-zusatz", zusatz); text("h-zusatz", zusatz);
+  alle("[data-tel]").forEach(function (a) { a.href = G.telefonLink; });
+  alle("[data-telnr]").forEach(function (s) { s.textContent = G.telefon; });
+  alle("[data-route]").forEach(function (a) { a.href = G.karteLink; });
+  alle("[data-name]").forEach(function (s) { s.textContent = G.name; });
+  alle("[data-adresse]").forEach(function (s) { s.textContent = G.strasse + ", " + G.plzOrt; });
+  if ($("ko-tel")) {
+    $("ko-tel").querySelector("span").textContent = G.telefon;
+    $("ko-mail").href = "mailto:" + G.mail; $("ko-mail").querySelector("span").textContent = G.mail;
+    $("ko-fb").href = G.facebook;
+  }
+  html("adresse", "<strong>" + esc(kurzName) + "</strong> – " + esc(zusatz) + "<br>" + esc(G.strasse) + "<br>" + esc(G.plzOrt));
+  text("i-adresse", G.strasse + ", " + G.plzOrt);
+  text("f-unter", G.strasse + ", " + G.plzOrt + (G.terrasse ? " – bei schönem Wetter auch mit Tischen draußen vor dem Lokal." : "."));
+  if (G.terrasse) text("fassade-text", "Unser Eingang am Abend – mit Tischen draußen");
+  if ($("hinweis")) $("hinweis").querySelector("span").textContent = G.hinweis;
+  html("impressum",
+    "<p>" + esc(G.name) + " – " + esc(zusatz) + "</p><p>Inhaber: " + esc(G.inhaber) + "</p><p>" + esc(G.strasse) + ", " + esc(G.plzOrt) + "</p>" +
+    '<p>Telefon: <a href="' + esc(G.telefonLink) + '">' + esc(G.telefon) + "</a></p>" +
+    '<p>E-Mail: <a href="mailto:' + esc(G.mail) + '">' + esc(G.mail) + "</a></p><p>Steuernummer: " + esc(G.ustId) + "</p>");
+  html("f-zeiten", G.zeiten.map(function (z) { return "<p>" + esc(z.tage) + ": " + esc(z.zeit) + "</p>"; }).join(""));
+  html("f-tel", 'Telefon: <a href="' + esc(G.telefonLink) + '">' + esc(G.telefon) + "</a>");
+  text("copy", "© " + new Date().getFullYear() + " " + G.name + " · " + G.plzOrt);
+
+  /* ---------- Schema.org ---------- */
+  (function () {
+    var tageEn = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var ld = {
+      "@context": "https://schema.org", "@type": "Restaurant", name: G.name, alternateName: kurzName + " – " + zusatz,
+      servesCuisine: "Italienisch", telephone: G.telefonLink.replace("tel:", ""), email: G.mail, sameAs: [G.facebook], image: "fotos/fassade.jpg",
+      address: { "@type": "PostalAddress", streetAddress: G.strasse, postalCode: G.plzOrt.split(" ")[0], addressLocality: G.plzOrt.replace(/^\d+\s*/, ""), addressCountry: "DE" },
+      openingHoursSpecification: G.zeiten.map(function (z) { return { "@type": "OpeningHoursSpecification", dayOfWeek: z.von.map(function (d) { return tageEn[d]; }), opens: z.auf, closes: z.zu }; }),
+      acceptsReservations: true,
+      hasMenu: SEITE !== "karte" ? "speisekarte-3.html" : { "@type": "Menu", name: "Speisekarte", hasMenuSection: G.karte.map(function (k) {
+        return { "@type": "MenuSection", name: k.titel, description: k.untertitel, hasMenuItem: k.gerichte.map(function (g) {
+          return { "@type": "MenuItem", name: (g.nr ? g.nr + " " : "") + g.name, description: g.text, offers: { "@type": "Offer", price: g.preis.toFixed(2), priceCurrency: "EUR" } };
+        }) };
+      }) }
+    };
+    var s = document.createElement("script"); s.type = "application/ld+json"; s.textContent = JSON.stringify(ld);
+    document.head.appendChild(s);
+  })();
+
+  /* ---------- Öffnungszeiten + Status ---------- */
+  function zeitFuer(tag) { for (var i = 0; i < G.zeiten.length; i++) if (G.zeiten[i].von.indexOf(tag) >= 0) return G.zeiten[i]; return null; }
+  function status() {
+    var jetzt = new Date(), txt, auf = G.offen(jetzt);
+    var hm = ("0" + jetzt.getHours()).slice(-2) + ":" + ("0" + jetzt.getMinutes()).slice(-2);
+    if (auf) txt = "Jetzt geöffnet · bis " + zeitFuer(jetzt.getDay()).zu + " Uhr";
+    else {
+      var heute = zeitFuer(jetzt.getDay());
+      if (heute && hm < heute.auf) txt = "Heute ab " + heute.auf + " Uhr geöffnet";
+      else for (var d = 1; d <= 7; d++) {
+        var t = (jetzt.getDay() + d) % 7, z = zeitFuer(t);
+        if (z) { txt = (d === 1 ? "Morgen" : TAGE[t]) + " ab " + z.auf + " Uhr geöffnet"; break; }
+      }
+    }
+    alle("[data-status]").forEach(function (el) { el.classList.toggle("auf", auf); el.querySelector("span").textContent = txt || ""; });
+    var hz = zeitFuer(jetzt.getDay());
+    text("i-heute-tag", "Heute (" + TAGE[jetzt.getDay()] + ")");
+    text("i-heute-zeit", hz ? hz.zeit : "geschlossen");
+    html("zeiten-tab", G.zeiten.map(function (z) {
+      var ist = z.von.indexOf(jetzt.getDay()) >= 0;
+      return '<tr class="' + (ist ? "heute" : "") + '"><td>' + esc(z.tage) + (ist ? '<span class="heute-mk">heute</span>' : "") + "</td><td>" + esc(z.zeit) + "</td></tr>";
+    }).join(""));
+  }
+  status(); setInterval(status, 60000);
+
+  /* ---------- Fenster-Verwaltung (Zurück-Taste schließt zuerst) ---------- */
+  var stapel = [], nachZu = null;
+  function fokussierbar(el) { return alle('button:not([disabled]),a[href],input,select,textarea,[tabindex="0"]', el).filter(function (x) { return x.getClientRects().length > 0 || x === document.activeElement; }); }
+  function oeffne(el, fokus) {
+    if (stapel.length && stapel[stapel.length - 1].el === el) return;
+    el.hidden = false;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add("auf"); }); });
+    stapel.push({ el: el, zurueck: document.activeElement });
+    try { history.pushState({ fenster: stapel.length }, ""); } catch (e) {}
+    document.body.classList.add("gesperrt");
+    var f = fokus || el.querySelector("[data-zu]") || fokussierbar(el)[0];
+    if (f) f.focus({ preventScroll: true });
+    if (el.id === "menue-tafel") $("menue-auf").setAttribute("aria-expanded", "true");
+  }
+  function wirklichZu() {
+    var t = stapel.pop(); if (!t) return;
+    t.el.classList.remove("auf"); t.el.hidden = true;
+    if (t.el.id === "menue-tafel") $("menue-auf").setAttribute("aria-expanded", "false");
+    if (!stapel.length) document.body.classList.remove("gesperrt");
+    var cb = nachZu; nachZu = null;
+    if (t.zurueck && t.zurueck.focus && document.contains(t.zurueck)) t.zurueck.focus({ preventScroll: true });
+    if (cb) cb();
+  }
+  function schliesse(cb) {
+    if (!stapel.length) { if (cb) cb(); return; }
+    nachZu = cb || null;
+    history.back();
+  }
+  window.addEventListener("popstate", function () { if (stapel.length) wirklichZu(); });
+  document.addEventListener("keydown", function (e) {
+    if (!stapel.length) return;
+    var oben = stapel[stapel.length - 1].el;
+    if (e.key === "Escape") { e.preventDefault(); schliesse(); }
+    else if (e.key === "Tab") {
+      var f = fokussierbar(oben); if (!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+  alle(".menue-tafel").forEach(function (el) {
+    el.addEventListener("click", function (e) { if (e.target === el || e.target.closest("[data-zu]")) schliesse(); });
+  });
+
+  /* Menü-Tafel: Ziel auf dieser Seite = hinscrollen, sonst Seite wechseln */
+  $("menue-auf").addEventListener("click", function () { oeffne($("menue-tafel")); });
+  alle("#menue-tafel nav a").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var u = new URL(a.getAttribute("href"), location.href);
+      e.preventDefault();
+      if (u.pathname === location.pathname) {
+        var ziel = u.hash ? document.querySelector(u.hash) : null;
+        schliesse(function () { setTimeout(function () { if (ziel) { ziel.scrollIntoView({ block: "start" }); try { history.replaceState(null, "", u.hash); } catch (x) {} } else window.scrollTo(0, 0); }, 40); });
+      } else {
+        schliesse(function () { location.href = a.getAttribute("href"); });
+      }
+    });
+  });
+
+  /* ---------- Startseite ---------- */
+  function seiteStart() {
+    /* Bilderfolge */
+    var dias = alle(".dia"), punkte = alle(".punkt"), nr = 0, uhr = null, pause = false;
+    var ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function zeige(i) {
+      nr = (i + dias.length) % dias.length;
+      dias.forEach(function (d, j) {
+        d.classList.toggle("aktiv", j === nr); d.setAttribute("aria-hidden", j === nr ? "false" : "true");
+        if (Math.abs(j - nr) <= 1 || (nr === dias.length - 1 && j === 0)) { var im = d.querySelector("img"); if (im.loading === "lazy") im.loading = "eager"; }
+      });
+      punkte.forEach(function (p, j) { p.setAttribute("aria-current", j === nr ? "true" : "false"); });
+    }
+    function lauf() { if (ruhig) return; clearInterval(uhr); uhr = setInterval(function () { if (!pause && !document.hidden) zeige(nr + 1); }, 6500); }
+    $("dia-vor").addEventListener("click", function () { zeige(nr + 1); lauf(); });
+    $("dia-zurueck").addEventListener("click", function () { zeige(nr - 1); lauf(); });
+    punkte.forEach(function (p, j) { p.addEventListener("click", function () { zeige(j); lauf(); }); });
+    var titel = $("titel");
+    titel.addEventListener("mouseenter", function () { pause = true; });
+    titel.addEventListener("mouseleave", function () { pause = false; });
+    titel.addEventListener("focusin", function () { pause = true; });
+    titel.addEventListener("focusout", function () { pause = false; });
+    var x0 = null;
+    titel.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    titel.addEventListener("touchend", function (e) {
+      if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50) { zeige(nr + (dx < 0 ? 1 : -1)); lauf(); }
+    });
+    zeige(0); lauf();
+
+    /* Aus unserer Küche: nur Anzeige, Daten aus der Karte */
+    var wunsch = [["pizza", "Gabriel's"], ["antipasti", "Caprese"], ["pizza", "Vincenzo"], ["pizza", "Calzone"]], h = "";
+    wunsch.forEach(function (w) {
+      var k = G.karte.filter(function (x) { return x.id === w[0]; })[0]; if (!k) return;
+      var g = k.gerichte.filter(function (x) { return x.name === w[1]; })[0]; if (!g) return;
+      var mk = (g.haus ? '<span class="mk haus">Hausspezialität</span>' : "") + (g.neu ? '<span class="mk neu">Neu</span>' : "") + (g.veg ? '<span class="mk veg">vegetarisch</span>' : "");
+      h += '<li><span><span class="name">' + (g.nr ? esc(g.nr) + " · " : "") + esc(g.name) + "</span>" + mk + '</span><span class="preis">' + G.preis(g.preis) + '</span><span class="txt">' + esc(g.text) + "</span></li>";
+    });
+    html("vorgeschmack", h);
+    if (!G.terrasse) alle("[data-terrasse]").forEach(function (e) { e.hidden = true; });
+
+  /* ---------- Bildansicht ---------- */
+    (function () {
+      var lb = $("lb"), bild = $("lb-bild"), text = $("lb-text"), knoepfe = alle(".bild"), nr = 0;
+      function zeige(i) {
+        nr = (i + knoepfe.length) % knoepfe.length;
+        var img = knoepfe[nr].querySelector("img");
+        bild.classList.remove("da");
+        bild.onload = function () { bild.classList.add("da"); };
+        bild.src = img.getAttribute("src"); bild.alt = img.alt;
+        text.textContent = knoepfe[nr].querySelector("span").textContent;
+        if (bild.complete) bild.classList.add("da");
+      }
+      knoepfe.forEach(function (k, i) { k.addEventListener("click", function () { zeige(i); oeffne(lb); }); });
+      lb.addEventListener("click", function (e) {
+        if (e.target.closest(".lb-vor")) { zeige(nr + 1); return; }
+        if (e.target.closest(".lb-zurueck")) { zeige(nr - 1); return; }
+        if (e.target.closest("figure") && !e.target.closest("figcaption")) return; /* Tipp aufs Foto schließt nicht */
+        schliesse();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (lb.hidden) return;
+        if (e.key === "ArrowRight") zeige(nr + 1); else if (e.key === "ArrowLeft") zeige(nr - 1);
+      });
+      var x0 = null;
+      lb.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      lb.addEventListener("touchend", function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0; x0 = null;
+        if (Math.abs(dx) > 50) { e.preventDefault(); zeige(nr + (dx < 0 ? 1 : -1)); }
+      });
+    })();
+  
+  }
+
+  if (SEITE === "start") seiteStart();
+})();
+</script>
+</body>
+</html>
