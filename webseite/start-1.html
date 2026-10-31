@@ -309,6 +309,8 @@ body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
   .fotos{grid-template-columns:2fr 1fr 1fr;gap:20px}
   .fotos .breit{grid-column:1}
   .fotos .hoch{grid-row:span 2}
+  .fotos li.breit:last-child{grid-column:1/-1}
+  .fotos li.breit:last-child .innen{aspect-ratio:21/8}
   .fotos .hoch .rahmen{position:relative}
   .fotos .hoch .innen{position:absolute;inset:6px;height:auto;aspect-ratio:auto}
   .cap{font-size:18px}
@@ -370,6 +372,21 @@ body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
 @media (min-width:720px){.merkmale{grid-template-columns:repeat(3,1fr)}.merkmale li{flex-direction:column;text-align:center;padding:18px 14px}}
 @media (min-width:1000px){.regler{top:auto;bottom:26px;right:28px}}
 @media (prefers-reduced-motion:reduce){.folie{transition:none}.hero-bild .folie.an img{animation:none}}
+/* Handy und Tablet: Foto füllt den Titelbereich, Logo und Text in der unteren Hälfte, ab dem unteren Drittel sanfter Verlauf ins Helle */
+@media (max-width:999px){
+  .hero{display:block;padding:calc(46vh - 40px) 0 24px;padding:calc(46svh - 40px) 0 24px}
+  .hero-bild{position:absolute;inset:0;height:auto}
+  .hero-bild{bottom:auto;height:calc(46vh + 70px);height:calc(46svh + 70px)}
+  .hero-bild::after{background:linear-gradient(180deg,rgba(120,60,30,.08) 0%,rgba(246,239,226,0) 55%,rgba(246,239,226,.6) 70%,rgba(246,239,226,.94) 82%,var(--papier) 93%,var(--papier) 100%)}
+  .hero-bild{-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 58%,rgba(0,0,0,.45) 76%,transparent 97%);mask-image:linear-gradient(180deg,#000 0%,#000 58%,rgba(0,0,0,.45) 76%,transparent 97%)}
+  .hero{background:var(--papier)}
+  .hero-inhalt{position:relative;z-index:3;margin-top:0}
+  .hero .logo{width:min(110px,28vw);filter:none}
+  .hero h1{font-size:clamp(40px,11vw,60px)}
+  .hero .lead{margin-top:8px;font-size:16px}
+  .hero .status{margin-top:12px}
+  .hero .knoepfe{margin-top:14px}
+}
 </style>
 </head>
 <body>
@@ -420,10 +437,11 @@ body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
       <div class="folie an"><img src="fotos/gastraum.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen und Kerzen" width="2400" height="1351" fetchpriority="high"></div>
       <div class="folie"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine, einem gerahmten Porträt an der Wand und Blick in die Küche" width="2400" height="1351" loading="lazy"></div>
       <div class="folie"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Holztischen, Kerzen und einem Weinfass" width="2400" height="1351" loading="lazy"></div>
+      <div class="folie"><img src="fotos/speiseraum.jpg" alt="Zweiter Gastraum mit Weinflaschen auf dem Wandbord, Holztischen und Kerzen" width="2400" height="1351" loading="lazy"></div>
     </div>
       <div class="regler" role="group" aria-label="Bilder wechseln">
         <button type="button" data-zurueck aria-label="Vorheriges Bild"><svg aria-hidden="true"><use href="#i-links"/></svg></button>
-        <span class="punkte"><button type="button" aria-label="Bild 1: Gastraum"></button><button type="button" aria-label="Bild 2: Theke"></button><button type="button" aria-label="Bild 3: Gastraum mit Weinfass"></button></span>
+        <span class="punkte"><button type="button" aria-label="Bild 1: Gastraum"></button><button type="button" aria-label="Bild 2: Theke"></button><button type="button" aria-label="Bild 3: Gastraum mit Weinfass"></button><button type="button" aria-label="Bild 4: Zweiter Gastraum"></button></span>
         <button type="button" data-vor aria-label="Nächstes Bild"><svg aria-hidden="true"><use href="#i-rechts"/></svg></button>
       </div>
     </div>
@@ -459,17 +477,18 @@ body{padding-bottom:calc(50px + env(safe-area-inset-bottom))}
         <li data-terrasse hidden><span class="kat-sym"><svg aria-hidden="true"><use href="#c-sonne"/></svg></span><span><b>Plätze draußen</b><span class="t">Tische vor dem Lokal</span></span></li>
       </ul>
       <ul class="fotos">
-        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/theke.jpg" data-text="Theke mit Blick in die Küche" aria-label="Bild vergrößern: Theke"><span class="innen"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine, einem gerahmten Porträt an der Wand und Blick in die Küche mit Pizzaofen" width="2400" height="1351" loading="lazy"></span></button><p class="cap">Theke mit Blick in die Küche</p></li>
-        <li class="hoch"><button class="rahmen" type="button" data-gross="fotos/bar-hoch.jpg" data-text="Bar" aria-label="Bild vergrößern: Bar"><span class="innen"><img src="fotos/bar-hoch.jpg" alt="Bar mit beleuchteter Theke und Barhockern" width="1351" height="2400" loading="lazy"></span></button><p class="cap">Bar</p></li>
-        <li class="hoch"><button class="rahmen" type="button" data-gross="fotos/raum-hoch.jpg" data-text="Theke und Gastraum" aria-label="Bild vergrößern: Theke und Gastraum"><span class="innen"><img src="fotos/raum-hoch.jpg" alt="Blick entlang der Theke in den Gastraum" width="1351" height="2400" loading="lazy"></span></button><p class="cap">Theke und Gastraum</p></li>
-        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/gastraum-fass.jpg" data-text="Gastraum" aria-label="Bild vergrößern: Gastraum"><span class="innen"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen, Kerzen und einem Weinfass" width="2400" height="1351" loading="lazy"></span></button><p class="cap">Gastraum</p></li>
+        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/theke.jpg" data-text="" aria-label="Bild vergrößern: Theke"><span class="innen"><img src="fotos/theke.jpg" alt="Theke mit Kaffeemaschine, einem gerahmten Porträt an der Wand und Blick in die Küche mit Pizzaofen" width="2400" height="1351" loading="lazy"></span></button></li>
+        <li class="hoch"><button class="rahmen" type="button" data-gross="fotos/bar-hoch.jpg" data-text="" aria-label="Bild vergrößern: Bar"><span class="innen"><img src="fotos/bar-hoch.jpg" alt="Bar mit beleuchteter Theke und Barhockern" width="1351" height="2400" loading="lazy"></span></button></li>
+        <li class="hoch"><button class="rahmen" type="button" data-gross="fotos/raum-hoch.jpg" data-text="" aria-label="Bild vergrößern: Theke und Gastraum"><span class="innen"><img src="fotos/raum-hoch.jpg" alt="Blick entlang der Theke in den Gastraum" width="1351" height="2400" loading="lazy"></span></button></li>
+        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/gastraum-fass.jpg" data-text="" aria-label="Bild vergrößern: Gastraum"><span class="innen"><img src="fotos/gastraum-fass.jpg" alt="Gastraum mit Weinregal-Säulen, Holztischen, Kerzen und einem Weinfass" width="2400" height="1351" loading="lazy"></span></button></li>
+        <li class="breit"><button class="rahmen" type="button" data-gross="fotos/speiseraum.jpg" data-text="" aria-label="Bild vergrößern: Zweiter Gastraum"><span class="innen"><img src="fotos/speiseraum.jpg" alt="Zweiter Gastraum mit Weinflaschen auf dem Wandbord, Holztischen, Kerzen und großen Fenstern" width="2400" height="1351" loading="lazy"></span></button></li>
       </ul>
     </div>
   </section>
 
   <section class="abschnitt karte-bg vorgeschmack" id="kueche" aria-labelledby="kueche-titel">
     <div class="wrap">
-      <div class="pizza-rund"><img src="assets/pizza.jpg" alt="Pizza von oben auf einem hellen Holzbrett" width="1600" height="1524" loading="lazy"></div>
+      <div class="pizza-rund"><img src="assets/pizza-angeschnitten.jpg" alt="Reich belegte Pizza von oben auf einem Holzbrett, ein Stück herausgezogen" width="1254" height="1254" loading="lazy"></div>
       <h2 id="kueche-titel">Aus unserer Küche</h2>
       <p class="unter">Ein kleiner Vorgeschmack</p>
       <ul class="empf" id="vorgeschmack"></ul>
