@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mitarbeiter-App</title>
+</head>
+<body style="margin:0;background:#fff;color:#000;font:16px system-ui,sans-serif;text-align:left;padding:16px">
+<p>Mitarbeiter-App wird geöffnet …</p>
+<script src="js/kern.js?v=7"></script>
+<script>
+/* Vorführung: öffnet die Mitarbeiter-App sofort ohne Namensauswahl und PIN,
+   angemeldet als erster Beispiel-Mitarbeiter (Daten nur auf diesem Gerät). */
+Kern.bereit.then(function () {
+  var leute = Kern.maListe(false).filter(function (m) { return !m.ist_chef && m.zugangscode; });
+  location.replace(leute.length ? 'team.html?k=' + encodeURIComponent(leute[0].zugangscode) : 'team.html');
+}).catch(function () { location.replace('team.html'); });
+</script>
+</body>
+</html>
