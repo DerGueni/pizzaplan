@@ -313,3 +313,112 @@
   .team-app .zifferblock button{min-height:46px;font-size:20px}
   .team-app #an_los,.team-app #an_zurueck{min-height:44px;padding:8px 14px}
 }
+
+/* ================================================================ Handy dichter
+   Stand 08.11.2026 (Günther): alles enger zusammenrücken, damit je Seite mehr
+   passt. Nur am Handy; Feldschrift bleibt 16 px (kein Zoom am iPhone), kleine
+   Knöpfe behalten über eine unsichtbare Fläche genug Trefferfläche. */
+@media (max-width:699.98px){
+  .team-app{font-size:14px}
+  .team-app .inhalt{padding-top:5px;padding-bottom:calc(54px + env(safe-area-inset-bottom));
+    padding-left:max(7px,env(safe-area-inset-left));padding-right:max(7px,env(safe-area-inset-right))}
+  .team-app h3{font-size:13.5px;margin-bottom:4px}
+
+  /* ---- Kopfleiste */
+  .team-app .kopf{gap:6px;padding-top:calc(3px + env(safe-area-inset-top));padding-bottom:3px;
+    padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+  .team-app .kopf .zeichen{font-size:19px;width:24px}
+  .team-app .kopf .name{font-size:14.5px;line-height:1.15}
+  .team-app .kopf .name small{font-size:11px;line-height:1.15}
+  .team-app .kopf button{min-width:34px;min-height:30px;height:30px;padding:0 6px;font-size:12.5px}
+  .team-app .kopf button.rund{width:30px;height:30px;min-width:30px;font-size:13px}
+  .team-app .kopf button::after{inset:-5px -2px}
+
+  /* ---- Fußleiste */
+  .team-app .fussleiste button{min-height:44px;padding:2px 1px;gap:0;font-size:11.5px;line-height:1.1}
+  .team-app .fussleiste button .bild{font-size:17px;line-height:20px;height:22px;padding:1px 12px}
+  .team-app .melder,.team-app .rueckstreifen{bottom:calc(50px + env(safe-area-inset-bottom))}
+
+  /* ---- Abschnitte, Karten, Hinweise */
+  .team-app .abschnitt{font-size:11.5px;margin:7px 0 3px;line-height:1.25}
+  .team-app .karte{padding:6px 9px;margin-bottom:5px;border-radius:10px}
+  .team-app .hinweis{padding:5px 8px;font-size:12.5px;margin-bottom:5px;line-height:1.3}
+  .team-app .leer{font-size:12.5px}
+  .team-app #st_heute .leer,.team-app #st_naechste .leer,.team-app #wu_liste .leer{padding:5px 8px;line-height:1.3}
+
+  /* ---- Stempeluhr */
+  .team-app .stempelkarte{padding:4px 9px 7px}
+  .team-app .stempeluhr .uhrzeit{font-size:26px;line-height:1.1}
+  .team-app .stempeluhr .lage{font-size:12.5px;margin:0 0 5px}
+  .team-app .stempeluhr .laufband{font-size:12.5px;margin-bottom:4px}
+  .team-app .stempeluhr .grossknopf{min-height:38px;padding:4px 12px;font-size:15px;border-radius:10px}
+
+  /* ---- Listen */
+  .team-app .zeile{padding:4px 8px 4px 10px;margin:0 0 3px;border-radius:8px;gap:6px}
+  .team-app .zeile .haupttext > b{font-size:14px;line-height:1.25}
+  .team-app .zeile .haupttext > span{font-size:12.5px;line-height:1.25;margin-top:0}
+  .team-app .zeile .rechts{font-size:12.5px;line-height:1.25}
+  .team-app .zeile.tippbar,.team-app .zeile[data-w]{min-height:34px}
+
+  /* ---- Mein Plan */
+  .team-app .planleiste{gap:6px;margin-bottom:3px}
+  .team-app .streifen{gap:4px}
+  .team-app .streifen button{min-height:30px;padding:0 10px;font-size:12.5px}
+  .team-app .streifen button::after{top:-5px;bottom:-5px}
+  .team-app #pl_zurueck,.team-app #pl_vor{min-width:34px;font-size:17px}
+  .team-app #pl_titel{font-size:13px}
+  .team-app .wischhinweis{margin:0 0 3px}
+  .team-app #pl_liste .zeile{min-height:30px;padding:2px 8px 2px 10px;margin-bottom:3px}
+  .team-app #pl_liste .haupttext{gap:6px}
+  .team-app #pl_liste .haupttext > b{font-size:13.5px}
+  .team-app #pl_liste .haupttext > span{font-size:12.5px}
+  .team-app #pl_liste .rechts b{font-size:13px!important}
+  .team-app .plansumme{margin-top:5px}
+  .team-app .plansumme h3{font-size:12.5px;margin-bottom:2px}
+
+  /* ---- Wünsche, Stunden, Ich */
+  .team-app button.gross{padding:3px 12px;min-height:34px;font-size:14px;border-radius:9px}
+  .team-app #wu_neu{min-height:34px;font-size:13.5px;padding:3px 10px;margin-bottom:5px!important}
+  .team-app .kacheln{gap:4px;margin-bottom:5px}
+  .team-app .kachel{padding:3px 8px;min-height:40px;border-radius:8px}
+  .team-app .kachel .wert{font-size:16.5px;line-height:1.15}
+  .team-app .kachel .bez{font-size:11.5px;margin-top:0}
+  .team-app .feld{margin-bottom:5px}
+  .team-app label{font-size:12px;margin-bottom:1px}
+  .team-app #s_ich .karte h3{font-size:13.5px;margin-bottom:3px}
+  .team-app #s_ich .karte p{font-size:12.5px!important;margin-bottom:4px;line-height:1.3}
+  .team-app #s_ich .karte > div:first-child[style*="flex"]{gap:8px!important}
+  .team-app #ic_kreis{width:30px!important;height:30px!important;font-size:12px!important}
+  .team-app #ic_rolle{font-size:12.5px!important;line-height:1.2}
+  .team-app #ic_daten{font-size:12.5px!important;margin-top:4px!important;line-height:1.3}
+  .team-app #ic_sprache{overflow:hidden}
+  .team-app #ic_sprache button{min-width:76px}
+  .team-app #ic_abmelden{margin-bottom:4px}
+
+  /* ---- Felder */
+  .team-app input:not([type=checkbox]):not([type=radio]):not([type=range]):not(.pinfeld),
+  .team-app select{min-height:34px;height:34px;padding:3px 9px;line-height:1.2}
+
+  /* ---- Fenster von unten */
+  .team-app .fkopf{padding:8px 10px 5px}
+  .team-app .fkopf h2{font-size:15px}
+  .team-app .fkopf [data-x]{min-width:34px;min-height:34px;margin:-4px -4px -4px 0;font-size:15px}
+  .team-app .frumpf{padding:6px 10px}
+  .team-app .fenster .feldreihe{gap:6px}
+  .team-app .ffuss{padding:6px 9px;padding-bottom:calc(6px + env(safe-area-inset-bottom));gap:5px}
+  .team-app .ffuss button{min-height:36px;padding:3px 10px;font-size:14px}
+
+  /* ---- Anmeldung */
+  .team-app .anmeldung .karte{padding:10px 11px 11px}
+  .team-app .anmeldelogo{font-size:28px!important}
+  .team-app .anmeldung h1{font-size:16px;margin:0 0 5px}
+  .team-app .personenliste{gap:4px}
+  .team-app .personenliste button{min-height:38px;padding:3px 9px;gap:8px;font-size:14px}
+  .team-app .personenliste .kreis{width:28px;height:28px;font-size:12px}
+  .team-app #an_kreis{width:36px!important;height:36px!important;font-size:14px!important}
+  .team-app #an_name{font-size:15px}
+  .team-app .pinfeld{font-size:21px;padding:3px}
+  .team-app .zifferblock{gap:5px;margin-top:6px}
+  .team-app .zifferblock button{min-height:40px;font-size:18px}
+  .team-app #an_los,.team-app #an_zurueck{min-height:36px;padding:3px 12px}
+}
