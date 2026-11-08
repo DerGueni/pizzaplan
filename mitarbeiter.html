@@ -14,7 +14,9 @@
    angemeldet als erster Beispiel-Mitarbeiter (Daten nur auf diesem Gerät). */
 Kern.bereit.then(function () {
   var leute = Kern.maListe(false).filter(function (m) { return !m.ist_chef && m.zugangscode; });
-  location.replace(leute.length ? 'team.html?k=' + encodeURIComponent(leute[0].zugangscode) : 'team.html');
+  var deutsch = leute.filter(function (m) { return (m.sprache || 'de') === 'de'; });
+  var person = deutsch[0] || leute[0];
+  location.replace(person ? 'team.html?k=' + encodeURIComponent(person.zugangscode) : 'team.html');
 }).catch(function () { location.replace('team.html'); });
 </script>
 </body>
